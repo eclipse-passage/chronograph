@@ -14,23 +14,21 @@
 <project
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.chronograph.root</artifactId>
+	<artifactId>org.eclipse.chronograph.aggregator</artifactId>
 	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>org.eclipse.chronograph</groupId>
 		<artifactId>org.eclipse.chronograph.parent</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
-		<relativePath>./releng/org.eclipse.chronograph.parent</relativePath>
+		<relativePath>../../releng/org.eclipse.chronograph.parent</relativePath>
 	</parent>
 
 	<modules>
-		<module>./releng/org.eclipse.chronograph.target</module>
-
-		<module>./releng/org.eclipse.chronograph.aggregator</module>
 	</modules>
+
 </project>
