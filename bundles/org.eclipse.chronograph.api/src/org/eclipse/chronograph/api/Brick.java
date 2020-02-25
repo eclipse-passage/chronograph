@@ -14,20 +14,15 @@ package org.eclipse.chronograph.api;
 
 public interface Brick {
 
-	Area area();
+	String getId();
 
 	Position position();
 
-	String getLabel();
+	Area area();
 
 	int start();
 
 	int end();
 
 	int length();
-
-	boolean isSelected();
-
-	void setSelected(boolean b);
-
 }

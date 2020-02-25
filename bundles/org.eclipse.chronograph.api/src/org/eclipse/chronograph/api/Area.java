@@ -12,6 +12,11 @@
  *******************************************************************************/
 package org.eclipse.chronograph.api;
 
+/**
+ * 
+ * The Area describe the region with left top point, height and width. 
+ *
+ */
 public interface Area {
 
 	Position position();

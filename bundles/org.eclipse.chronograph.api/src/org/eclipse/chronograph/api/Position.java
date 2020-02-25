@@ -13,10 +13,14 @@
 
 package org.eclipse.chronograph.api;
 
+/**
+ * 
+ * The Position describe the point by  x and y axis position. 
+ *
+ */
 public interface Position {
 
 	int x();
 
 	int y();
-
 }

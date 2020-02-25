@@ -14,9 +14,9 @@ package org.eclipse.chronograph.api;
 
 public interface Group extends BrickContainer {
 
-	String getLabel();
-
-	Area area();
+	String getId();
 
 	Position position();
+
+	Area area();
 }

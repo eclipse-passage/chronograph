@@ -13,16 +13,11 @@
 
 package org.eclipse.chronograph.api;
 
-import java.util.List;
+public interface Section extends GroupContainer, BrickContainer {
 
-public interface Section extends GroupContainer {
-
-	Area area();
+	String getId();
 
 	Position position();
 
-	String getLabel();
-
-	List<Brick> bricks();
-
+	Area area();
 }
