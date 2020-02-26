@@ -14,15 +14,33 @@ package org.eclipse.chronograph.api;
 
 /**
  * 
- * The Area describe the region with left top point, height and width. 
+ * The Area describes the drawing region from left top point, width and height.
  *
  */
 public interface Area {
+	/**
+	 * 
+	 * @return value by X axis
+	 */
+	int x();
 
-	Position position();
+	/**
+	 * 
+	 * @return value by Y axis
+	 */
 
+	int y();
+
+	/**
+	 * 
+	 * @return width value
+	 */
 	int width();
 
+	/**
+	 * 
+	 * @return height value
+	 */
 	int height();
 
 }

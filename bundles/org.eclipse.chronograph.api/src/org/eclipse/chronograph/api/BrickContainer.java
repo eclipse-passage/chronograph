@@ -14,7 +14,16 @@ package org.eclipse.chronograph.api;
 
 import java.util.List;
 
+/**
+ * 
+ * Container for Brick typed elements
+ *
+ */
 public interface BrickContainer {
 
+	/**
+	 * 
+	 * @return stored Brick elements in List data structure 
+	 */
 	List<? extends Brick> bricks();
 }

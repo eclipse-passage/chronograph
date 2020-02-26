@@ -13,11 +13,16 @@
 
 package org.eclipse.chronograph.api;
 
+/**
+ * 
+ * The Section describes typed container with sequence Group items  
+ *
+ */
 public interface Section extends GroupContainer, BrickContainer {
 
-	String getId();
-
-	Position position();
-
-	Area area();
+	/**
+	 * 
+	 * @return the String identifier of Section element
+	 */
+	String id();
 }

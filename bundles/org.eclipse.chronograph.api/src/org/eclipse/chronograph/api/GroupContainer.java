@@ -15,7 +15,16 @@ package org.eclipse.chronograph.api;
 
 import java.util.List;
 
+/**
+ * 
+ * Container for Group typed elements
+ *
+ */
 public interface GroupContainer {
 
+	/**
+	 * 
+	 * @return stored Group elements in List data structure 
+	 */
 	List<? extends Group> groups();
 }

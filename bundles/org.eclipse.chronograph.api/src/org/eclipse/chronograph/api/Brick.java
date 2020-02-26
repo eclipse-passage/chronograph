@@ -12,17 +12,28 @@
  *******************************************************************************/
 package org.eclipse.chronograph.api;
 
+/**
+ * 
+ * The Brick describes the drawing element on the stage 
+ *
+ */
 public interface Brick {
 
-	String getId();
+	/**
+	 * 
+	 * @return the String identifier of Brick
+	 */
+	String id();
 
+	/**
+	 * 
+	 * @return BrickContainer as a parent element
+	 */
+	BrickContainer container();
+
+	/**
+	 * 
+	 * @return original Brick position 
+	 */
 	Position position();
-
-	Area area();
-
-	int start();
-
-	int end();
-
-	int length();
 }

@@ -15,12 +15,27 @@ package org.eclipse.chronograph.api;
 
 /**
  * 
- * The Position describe the point by  x and y axis position. 
+ * Described the object positioning in internal interpretation. 
  *
  */
 public interface Position {
 
-	int x();
+	/**
+	 * 
+	 * @return start value of position 
+	 */
+	long start();
 
-	int y();
+	/**
+	 * 
+	 * @return end value of position
+	 */
+	long end();
+
+	/**
+	 * 
+	 * @return duration value
+	 */
+	long duration();
+
 }
