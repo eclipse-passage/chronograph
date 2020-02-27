@@ -20,13 +20,13 @@ package org.eclipse.chronograph.api;
 public interface Area {
 	/**
 	 * 
-	 * @return value by X axis
+	 * @return value by X axis, by default considered the left top point 
 	 */
 	int x();
 
 	/**
 	 * 
-	 * @return value by Y axis
+	 * @return value by Y axis, by default considered the left top point
 	 */
 
 	int y();
