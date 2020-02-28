@@ -24,5 +24,11 @@ public interface Group extends BrickContainer {
 	 * @return String identifier of group
 	 */
 	String id();
+	
+	/**
+	 * 
+	 * @return GroupContainer as a parent element
+	 */
+	GroupContainer container();
 
 }
