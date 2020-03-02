@@ -9,8 +9,7 @@
 	SPDX-License-Identifier: EPL-2.0
 
 	Contributors:
-		Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
-						initial API and implementation
+		ArSysOp - initial API and implementation
 -->
 <project
 	xmlns="http://maven.apache.org/POM/4.0.0"
@@ -19,7 +18,7 @@
 >
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.chronograph.bundles</artifactId>
+	<artifactId>org.eclipse.chronograph.features</artifactId>
 	<packaging>pom</packaging>
 
 	<parent>

@@ -29,6 +29,8 @@
 	</parent>
 
 	<modules>
+		<module>../../bundles/org.eclipse.chronograph.api</module>
+		<module>../../features/org.eclipse.chronograph.feature</module>
 	</modules>
 
 </project>
