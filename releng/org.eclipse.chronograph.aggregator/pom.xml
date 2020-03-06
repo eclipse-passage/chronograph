@@ -31,6 +31,7 @@
 	<modules>
 		<module>../../bundles/org.eclipse.chronograph.api</module>
 		<module>../../features/org.eclipse.chronograph.feature</module>
+		<module>../../releng/org.eclipse.chronograph.repository</module>
 	</modules>
 
 </project>
