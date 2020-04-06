@@ -17,7 +17,7 @@ package org.eclipse.chronograph.api;
  * The Group describes typed container with sequence Brick items  
  *
  */
-public interface Group extends BrickContainer {
+public interface Group extends BrickContainer,GroupContainer {
 
 	/**
 	 * 
