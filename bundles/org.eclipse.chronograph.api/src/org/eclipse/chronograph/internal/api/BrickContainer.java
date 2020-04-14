@@ -10,19 +10,20 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
+package org.eclipse.chronograph.internal.api;
 
-package org.eclipse.chronograph.api;
+import java.util.List;
 
 /**
  * 
- * The Section describes typed container with sequence of Group and Brick items  
+ * Container for Brick typed elements
  *
  */
-public interface Section extends GroupContainer, BrickContainer {
+public interface BrickContainer {
 
 	/**
 	 * 
-	 * @return the String identifier of Section element
+	 * @return stored Brick elements in List data structure 
 	 */
-	String id();
+	List<? extends Brick> bricks();
 }

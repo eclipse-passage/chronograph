@@ -11,31 +11,20 @@
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.api;
+package org.eclipse.chronograph.internal.api;
+
+import java.util.List;
 
 /**
  * 
- * Described the object positioning in internal interpretation. 
+ * Container for Group typed elements
  *
  */
-public interface Position {
+public interface GroupContainer {
 
 	/**
 	 * 
-	 * @return start value of position 
+	 * @return stored Group elements in List data structure 
 	 */
-	long start();
-
-	/**
-	 * 
-	 * @return end value of position
-	 */
-	long end();
-
-	/**
-	 * 
-	 * @return duration value
-	 */
-	long duration();
-
+	List<? extends Group> groups();
 }

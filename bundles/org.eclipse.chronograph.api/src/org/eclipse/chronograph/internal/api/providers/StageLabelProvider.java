@@ -11,19 +11,31 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api.builders;
+package org.eclipse.chronograph.internal.api.providers;
 
-import java.util.List;
-import java.util.function.Function;
-
-import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * Function interface intended to organize input objects to required build
- * object for {@link Section}
+ * The label provider designed to provide specific data for input objects
+ * presented on user interface
  * 
- * @param <I> - input object type
- * @param <S> - output object type
+ *
  */
-public interface SectionBuilder<I, S> extends Function<I, List<S>> {
+public interface StageLabelProvider {
+
+	/**
+	 * Image for input object
+	 * 
+	 * @param element - input object
+	 * @return {@link Image}
+	 */
+	Image getImage(Object element);
+
+	/**
+	 * Label for input object
+	 * 
+	 * @param element - input object
+	 * @return
+	 */
+	String getText(Object element);
 }

@@ -16,8 +16,8 @@ package org.eclipse.chronograph.internal.api.builders;
 import java.util.List;
 import java.util.function.Function;
 
-import org.eclipse.chronograph.api.Group;
-import org.eclipse.chronograph.api.Section;
+import org.eclipse.chronograph.internal.api.Group;
+import org.eclipse.chronograph.internal.api.Section;
 
 /**
  * Function interface intended to organize input objects to required build
@@ -31,10 +31,10 @@ public interface SubGroupBuilder<I, S> extends Function<I, List<S>> {
 	 * Function interface intended to organize input objects to required build
 	 * object for {@link Group}
 	 * 
-	 * @param <I> - input object type
+	 * @param <I>       - input object type
 	 * @param sectionId - identifier of {@link Section} object
-	 * @param groupId - identifier of {@link Group} object
-	 * @param <S> - output object type
+	 * @param groupId   - identifier of {@link Group} object
+	 * @param <S>       - output object type
 	 */
 	List<S> applySectionGroup(I input, String sectionId, String groupId);
 }

@@ -15,7 +15,7 @@ package org.eclipse.chronograph.internal.api.adapters;
 
 import java.util.List;
 
-import org.eclipse.chronograph.api.Section;
+import org.eclipse.chronograph.internal.api.Section;
 
 /**
  * Intended for adapt input objects to {@link Section} container
