@@ -13,8 +13,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api.providers;
 
-import java.awt.Image;
-
 /**
  * The label provider designed to provide specific data for input objects
  * presented on user interface
