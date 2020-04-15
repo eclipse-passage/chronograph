@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api.providers;
 
-import org.eclipse.swt.graphics.Image;
+import java.awt.Image;
 
 /**
  * The label provider designed to provide specific data for input objects
@@ -29,7 +29,7 @@ public interface StageLabelProvider {
 	 * @param element - input object
 	 * @return {@link Image}
 	 */
-	Image getImage(Object element);
+	Object getImage(Object element);
 
 	/**
 	 * Label for input object

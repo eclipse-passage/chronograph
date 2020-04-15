@@ -11,4 +11,3 @@ Export-Package: org.eclipse.chronograph.internal.api,
  org.eclipse.chronograph.internal.api.adapters,
  org.eclipse.chronograph.internal.api.builders,
  org.eclipse.chronograph.internal.api.providers
-Import-Package: org.eclipse.swt.graphics
