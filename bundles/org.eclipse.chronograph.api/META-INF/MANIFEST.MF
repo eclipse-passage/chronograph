@@ -7,4 +7,7 @@ Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Copyright: %Bundle-Copyright
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.eclipse.chronograph.api
+Export-Package: org.eclipse.chronograph.internal.api,
+ org.eclipse.chronograph.internal.api.adapters,
+ org.eclipse.chronograph.internal.api.builders,
+ org.eclipse.chronograph.internal.api.providers

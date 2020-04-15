@@ -10,30 +10,32 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.api;
+
+package org.eclipse.chronograph.internal.api;
 
 /**
  * 
- * The Brick describes the drawing element on the stage 
+ * Described the object positioning in internal interpretation.
  *
  */
-public interface Brick {
+public interface Position {
 
 	/**
 	 * 
-	 * @return the String identifier of Brick
+	 * @return start value of position
 	 */
-	String id();
+	long start();
 
 	/**
 	 * 
-	 * @return BrickContainer as a parent element
+	 * @return end value of position
 	 */
-	BrickContainer container();
+	long end();
 
 	/**
 	 * 
-	 * @return original Brick position 
+	 * @return duration value
 	 */
-	Position position();
+	long duration();
+
 }

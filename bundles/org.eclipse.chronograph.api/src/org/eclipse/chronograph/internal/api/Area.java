@@ -10,20 +10,37 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.api;
-
-import java.util.List;
+package org.eclipse.chronograph.internal.api;
 
 /**
  * 
- * Container for Brick typed elements
+ * The Area describes the drawing region from left top point, width and height.
  *
  */
-public interface BrickContainer {
+public interface Area {
+	/**
+	 * 
+	 * @return value by X axis, by default considered the left top point 
+	 */
+	int x();
 
 	/**
 	 * 
-	 * @return stored Brick elements in List data structure 
+	 * @return value by Y axis, by default considered the left top point
 	 */
-	List<? extends Brick> bricks();
+
+	int y();
+
+	/**
+	 * 
+	 * @return width value
+	 */
+	int width();
+
+	/**
+	 * 
+	 * @return height value
+	 */
+	int height();
+
 }

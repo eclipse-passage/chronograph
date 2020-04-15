@@ -16,13 +16,14 @@ package org.eclipse.chronograph.internal.api.builders;
 import java.util.List;
 import java.util.function.Function;
 
-import org.eclipse.chronograph.api.Brick;
-import org.eclipse.chronograph.api.Group;
+import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.Group;
 
 /**
- * Function interface intended to organize input objects to required build object for {@link Brick}  
+ * Function interface intended to organize input objects to required build
+ * object for {@link Brick}
  * 
- * @param <I> - input object type 	
+ * @param <I> - input object type
  * @param <S> - output object type
  */
 public interface BrickBuilder<I, S> extends Function<I, List<S>> {
@@ -30,8 +31,8 @@ public interface BrickBuilder<I, S> extends Function<I, List<S>> {
 	/**
 	 * 
 	 * Organize elements on input arguments
-	 *  
-	 * @param input - input object type
+	 * 
+	 * @param input   - input object type
 	 * @param groupId - filtering parameter
 	 * @return - list of output objects
 	 */
@@ -40,11 +41,12 @@ public interface BrickBuilder<I, S> extends Function<I, List<S>> {
 	/**
 	 * 
 	 * Organize elements on input arguments
-	 *  
-	 * @param input - input object type
-	 * @param subGroupId - identifier of nested {@link Group} object 
+	 * 
+	 * @param input      - input object type
+	 * @param groupId    - identifier of nested {@link Group}
+	 * @param subGroupId - identifier of nested subGroup as {@link Group} object
 	 * @return - list of output objects
 	 */
-	List<S> applySubGroup(I input, String subGroupId);
+	List<S> applySubGroup(I input, String groupId, String subGroupId);
 
 }

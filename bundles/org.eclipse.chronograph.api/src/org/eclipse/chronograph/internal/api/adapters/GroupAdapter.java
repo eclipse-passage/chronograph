@@ -15,12 +15,12 @@ package org.eclipse.chronograph.internal.api.adapters;
 
 import java.util.List;
 
-import org.eclipse.chronograph.api.Group;
-import org.eclipse.chronograph.api.Section;
+import org.eclipse.chronograph.internal.api.Group;
+import org.eclipse.chronograph.internal.api.Section;
 
 /**
- * Intended for adapt input objects to {@link Group} container
- * for defined {@link Section} object.
+ * Intended for adapt input objects to {@link Group} container for defined
+ * {@link Section} object.
  *
  * @param <T> - type of input objects
  * @param <S> - type of adapted objects

@@ -11,31 +11,30 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api.builders;
+package org.eclipse.chronograph.internal.api.providers;
 
 import java.util.List;
-import java.util.function.Function;
 
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
 
 /**
- * Function interface intended to organize input objects to required build
- * object for {@link Group}
  * 
- * @param <I> - input object type
- * @param <S> - output object type
+ * The top level parameterized interface designed to create {@link Group} by
+ * input by parameters.
+ * 
+ * @param <I> - type of template class.
  */
-public interface GroupBuilder<I, S> extends Function<I, List<S>> {
-
+public interface SubGroupContentProvider<I> {
 	/**
+	 * The method designed to create subgroup as {@link Group} from specified
+	 * parameters
 	 * 
-	 * Organize elements on input arguments
-	 * 
-	 * @param input   - input object type
-	 * @param groupId - identifier of {@link Section} object
-	 * @return - list of output objects
+	 * @param input   - typed input
+	 * @param section - {@link Section}
+	 * @param group   - {@link Group}
+	 * @return - List of {@link Group}
 	 */
-	List<S> applySection(I input, String sectionId);
+	List<Group> getGroupsBySectionGroup(List<I> input, Section section, Group group);
 
 }
