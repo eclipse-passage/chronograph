@@ -19,10 +19,9 @@ import org.eclipse.chronograph.internal.api.Position;
 
 public class BrickImpl implements Brick {
 
-	//public static final int DRAWING_ITEM_HEIGHT = 20;
-	private String id;
-	private Position position;
-	private BrickContainer parent;
+	private final String id;
+	private final Position position;
+	private final BrickContainer parent;
 
 	public BrickImpl(BrickContainer parent, String id, int start, int end) {
 		this.id = id;

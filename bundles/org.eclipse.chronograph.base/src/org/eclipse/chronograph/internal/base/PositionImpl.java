@@ -21,8 +21,8 @@ import org.eclipse.chronograph.internal.api.Position;
  *
  */
 public class PositionImpl implements Position {
-	private long start;
-	private long end;
+	private final long start;
+	private final long end;
 
 	public PositionImpl(long start, long end) {
 		this.start = start;

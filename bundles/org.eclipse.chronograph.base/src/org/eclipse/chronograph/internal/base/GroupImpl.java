@@ -27,17 +27,19 @@ import org.eclipse.chronograph.internal.api.GroupContainer;
  */
 public class GroupImpl implements Group {
 
-	private String id;
-	private GroupContainer parent;
-	private List<Brick> bricks = new ArrayList<Brick>();
+	private final String id;
+	private final GroupContainer parent;
+	private final List<Brick> bricks;
 
 	public GroupImpl(String id, GroupContainer parent) {
 		this.id = id;
 		this.parent = parent;
+		this.bricks = new ArrayList<Brick>();
 	}
 
 	public GroupImpl(String id, List<Brick> bricks) {
 		this.id = id;
+		this.parent = null;
 		this.bricks = bricks;
 	}
 

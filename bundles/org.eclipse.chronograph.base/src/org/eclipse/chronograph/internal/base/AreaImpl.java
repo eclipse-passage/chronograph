@@ -24,18 +24,17 @@ import org.eclipse.chronograph.internal.api.Area;
 
 /**
  * 
- * Implementation of {@link Area} interface intended to store graphical
- * object location
+ * Implementation of {@link Area} interface intended to store graphical object
+ * location
  */
 public class AreaImpl implements Area {
 
-	private int x = 0;
-	private int y = 0;
-	private int width;
-	private int height;
+	private final int x ;
+	private final int y ;
+	private final int width;
+	private final int height;
 
 	public AreaImpl(int x, int y, int width, int height) {
-		super();
 		this.x = x;
 		this.y = y;
 		this.width = width;

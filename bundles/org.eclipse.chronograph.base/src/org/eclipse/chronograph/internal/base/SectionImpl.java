@@ -27,11 +27,12 @@ import org.eclipse.chronograph.internal.api.Section;
  */
 public class SectionImpl implements Section {
 
-	private String id;
-	private List<Group> groups = new ArrayList<>();
+	private final String id;
+	private final List<Group> groups;
 
 	public SectionImpl(String id) {
 		this.id = id;
+		this.groups = new ArrayList<>();
 	}
 
 	public SectionImpl(String id, List<Group> groups) {
