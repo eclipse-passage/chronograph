@@ -30,7 +30,12 @@
 
 	<modules>
 		<module>../../bundles/org.eclipse.chronograph.api</module>
+		<module>../../bundles/org.eclipse.chronograph.base</module>
+		<!-- features -->	                                                                     	
 		<module>../../features/org.eclipse.chronograph.feature</module>
+		<!-- tests -->
+		<module>../../tests/org.eclipse.chronograph.api.tests</module>
+		<!-- releng -->	
 		<module>../../releng/org.eclipse.chronograph.repository</module>
 	</modules>
 

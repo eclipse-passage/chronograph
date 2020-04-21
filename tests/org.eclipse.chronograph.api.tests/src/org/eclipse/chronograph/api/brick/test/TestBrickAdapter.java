@@ -1,4 +1,4 @@
-package org.eclipse.chronograph.api.test;
+package org.eclipse.chronograph.api.brick.test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.eclipse.chronograph.api.test.TestInputObject;
 import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.adapters.BrickAdapter;

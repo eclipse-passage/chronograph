@@ -1,5 +1,10 @@
 package org.eclipse.chronograph.api.test;
 
+/**
+ * 
+ * Test input object implementation  
+ *
+ */
 public class TestInputObject {
 
 	public String id;
