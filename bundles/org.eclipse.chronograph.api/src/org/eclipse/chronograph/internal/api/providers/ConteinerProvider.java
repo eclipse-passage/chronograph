@@ -15,7 +15,7 @@ public interface ConteinerProvider<I> {
 	 * 
 	 * @return provider {@link SectionContentProvider}
 	 */
-	SectionContentProvider getSectionContentProvider();
+	SectionContentProvider<I> getSectionContentProvider();
 
 	/**
 	 * The method designed to provide {@link GroupContentProvider} provider
