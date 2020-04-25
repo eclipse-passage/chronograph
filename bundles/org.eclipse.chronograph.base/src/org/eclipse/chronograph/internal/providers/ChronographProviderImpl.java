@@ -16,7 +16,7 @@ package org.eclipse.chronograph.internal.providers;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
-import org.eclipse.chronograph.internal.api.providers.ConteinerProvider;
+import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.GroupContentProvider;
 import org.eclipse.chronograph.internal.api.providers.SectionContentProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
@@ -24,11 +24,11 @@ import org.eclipse.chronograph.internal.api.providers.SubGroupContentProvider;
 
 /**
  * 
- * Aggregated provider implementation of {@link ConteinerProvider}
+ * Aggregated provider implementation of {@link ContainerProvider}
  *
  * @param <I> - provider type
  */
-public class ChronographProviderImpl<I> implements ConteinerProvider<I> {
+public class ChronographProviderImpl<I> implements ContainerProvider<I> {
 
 	private final SectionContentProvider<I> sectionProvider;
 	private final GroupContentProvider<I> groupProvider;

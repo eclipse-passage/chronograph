@@ -31,6 +31,7 @@
 	<modules>
 		<module>../../bundles/org.eclipse.chronograph.api</module>
 		<module>../../bundles/org.eclipse.chronograph.base</module>
+		<module>../../bundles/org.eclipse.chronograph.swt</module>
 		<!-- features -->	                                                                     	
 		<module>../../features/org.eclipse.chronograph.feature</module>
 		<!-- tests -->
