@@ -17,6 +17,7 @@ package org.eclipse.chronograph.internal.swt;
 import static org.eclipse.chronograph.internal.swt.GroupStyler.GROUP_HEIGHT_DEFAULT;
 
 import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
  * Styler class dedicated to coloring {@link Section}
  *
  */
-public class SectionStyler {
+public class SectionStyler implements Styler {
 	private static final Display DISPLAY = Display.getDefault();
 	private static final int SECTION_HEIGHT = 100;
 	private static final int SECTION_WIDTH = 30;
@@ -51,13 +52,15 @@ public class SectionStyler {
 		return SECTION_WIDTH;
 	}
 
-	public static void classicTheme() {
+	@Override
+	public void initClassicTheme() {
 		SECTION_TOP_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		SECTION_BTM_COLOR = new Color(DISPLAY, new RGB(150, 150, 150));
 		SECTION_TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
 	}
 
-	public static void darkTheme() {
+	@Override
+	public void initDarkTheme() {
 		SECTION_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
 		SECTION_BTM_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
 		SECTION_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));

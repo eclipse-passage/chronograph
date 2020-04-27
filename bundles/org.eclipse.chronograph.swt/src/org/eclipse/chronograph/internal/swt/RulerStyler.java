@@ -14,6 +14,7 @@
 
 package org.eclipse.chronograph.internal.swt;
 
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerDayRendererImpl;
 import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerMonthRendererImpl;
 import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerYearRendererImpl;
@@ -29,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  *
  */
-public class RullerStyler {
+public class RulerStyler implements Styler {
 	public static final int RULER_DAY_HEIGHT = 20;
 	public static final int RULER_MOUNTH_HEIGHT = 20;
 	public static final int RULER_YEAR_HEIGHT = 20;
@@ -43,17 +44,18 @@ public class RullerStyler {
 	public static Color RULER_CUREENT_DAY_COLOR_BTM;
 	private static final Display DISPLAY = Display.getDefault();
 
-	public void darkTheme() {
+	@Override
+	public void initClassicTheme() {
 		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(106, 155, 164));
 		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(55, 99, 124));
 		RULER_BRD_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(82, 148, 226));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(64, 69, 82));
-
 	}
 
-	public void classicTheme() {
+	@Override
+	public void initDarkTheme() {
 		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(106, 155, 164));
 		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(55, 99, 124));
 		RULER_BRD_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));

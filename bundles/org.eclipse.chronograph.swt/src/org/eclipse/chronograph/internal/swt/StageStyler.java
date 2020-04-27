@@ -14,6 +14,7 @@
 
 package org.eclipse.chronograph.internal.swt;
 
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -23,7 +24,7 @@ import org.eclipse.swt.widgets.Display;
  * Styler class dedicated to coloring main stage
  *
  */
-public class StageStyler {
+public class StageStyler implements Styler {
 	private final static Display DISPLAY = Display.getDefault();
 	private static int STAGE_HEADER_HEIGHT = 30;
 	public static Color STAGE_BG_COLOR;
@@ -34,14 +35,15 @@ public class StageStyler {
 		return STAGE_HEADER_HEIGHT;
 	}
 
-	public static void classicTheme() {
+	@Override
+	public void initClassicTheme() {
 		STAGE_BG_COLOR = new Color(DISPLAY, new RGB(235, 235, 235));
 		STAGE_TOP_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		STAGE_TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
-
 	}
 
-	public static void darkTheme() {
+	@Override
+	public void initDarkTheme() {
 		STAGE_BG_COLOR = new Color(DISPLAY, new RGB(39, 39, 39));
 		STAGE_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
 		STAGE_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));

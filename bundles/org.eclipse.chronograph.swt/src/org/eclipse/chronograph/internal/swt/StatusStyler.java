@@ -14,6 +14,7 @@
 
 package org.eclipse.chronograph.internal.swt;
 
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -23,17 +24,19 @@ import org.eclipse.swt.widgets.Display;
  * Styler class dedicated to coloring statuses on the stage
  *
  */
-public class StatusStyler {
+public class StatusStyler implements Styler {
 	private static final Display DISPLAY = Display.getDefault();
 	public static Color LICENSE_EXPIRED_COLOR;
 	public static Color LICENSE_ACTUAL_COLOR;
 
-	public static void classicTheme() {
+	@Override
+	public void initClassicTheme() {
 		LICENSE_EXPIRED_COLOR = new Color(DISPLAY, new RGB(165, 10, 10));
 		LICENSE_ACTUAL_COLOR = new Color(DISPLAY, new RGB(0, 102, 0));
 	}
 
-	public static void darkTheme() {
+	@Override
+	public void initDarkTheme() {
 		LICENSE_EXPIRED_COLOR = new Color(DISPLAY, new RGB(165, 10, 10));
 		LICENSE_ACTUAL_COLOR = new Color(DISPLAY, new RGB(0, 102, 0));
 	}

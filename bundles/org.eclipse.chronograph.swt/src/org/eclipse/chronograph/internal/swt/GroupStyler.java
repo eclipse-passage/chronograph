@@ -14,31 +14,35 @@
 
 package org.eclipse.chronograph.internal.swt;
 
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+
 /**
  * 
- * Styler class for coloring {@link Group} 
+ * Styler class for coloring {@link Group}
  *
  */
-public class GroupStyler {
+public class GroupStyler implements Styler {
 	public static final int GROUP_HEIGHT_DEFAULT = 100;
 	private static final Display DISPLAY = Display.getDefault();
 	public static Color GROUP_TOP_COLOR;
 	public static Color GROUP_BTM_COLOR;
-	public static Color TEXT_COLOR;
+	public static Color GROUP_TEXT_COLOR;
 
-	public static void darkTheme() {
-		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
-		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
-		TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));
-	}
-
-	public static void classicTheme() {
+	@Override
+	public void initClassicTheme() {
 		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(170, 170, 170));
-		TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
+		GROUP_TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
+	}
+
+	@Override
+	public void initDarkTheme() {
+		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
+		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
+		GROUP_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));
 	}
 }

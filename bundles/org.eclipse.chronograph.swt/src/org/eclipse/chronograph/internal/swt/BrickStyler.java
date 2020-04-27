@@ -14,6 +14,8 @@
 
 package org.eclipse.chronograph.internal.swt;
 
+import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -23,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
  * Styler class dedicated to coloring {@link Brick}
  *
  */
-public class BrickStyler {
+public class BrickStyler implements Styler {
 
 	private static final Display DISPLAY = Display.getDefault();
 	private static int BRICK_HEIGHT_DEFAULT;
@@ -37,7 +39,8 @@ public class BrickStyler {
 	private static Color ACTIVE_COLOR_TOP;
 	private static Color ACTIVE_COLOR_BOTTOM;
 
-	public static void classicTheme() {
+	@Override
+	public void initClassicTheme() {
 		COLOR_TOP = new Color(DISPLAY, new RGB(195, 245, 180));
 		COLOR_BOTTOM = new Color(DISPLAY, new RGB(100, 150, 90));
 		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(100, 200, 110));
@@ -50,7 +53,8 @@ public class BrickStyler {
 		BRICK_HEIGHT_DEFAULT = 26;
 	}
 
-	public void darkTheme() {
+	@Override
+	public void initDarkTheme() {
 		COLOR_TOP = new Color(DISPLAY, new RGB(136, 105, 184));
 		COLOR_BOTTOM = new Color(DISPLAY, new RGB(64, 36, 89));
 		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(136, 105, 184));
