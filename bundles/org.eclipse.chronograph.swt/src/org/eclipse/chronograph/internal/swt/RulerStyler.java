@@ -15,18 +15,13 @@
 package org.eclipse.chronograph.internal.swt;
 
 import org.eclipse.chronograph.internal.api.Styler;
-import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerDayRendererImpl;
-import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerMonthRendererImpl;
-import org.eclipse.chronograph.internal.swt.renderers.impl.base.RulerYearRendererImpl;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * 
- * Styler class dedicated to coloring rulers {@link RulerDayRendererImpl},
- * {@link RulerMonthRendererImpl} , {@link RulerYearRendererImpl}
- * 
+ * Styler class dedicated to coloring rulers
  * 
  *
  */
