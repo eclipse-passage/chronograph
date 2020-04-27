@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.eclipse.chronograph.swt
+Bundle-SymbolicName: org.eclipse.chronograph.swt;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Copyright: %Bundle-Copyright
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.jface,
+ org.eclipse.chronograph.api,
+ org.eclipse.chronograph.base
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.chronograph.internal.swt,
+ org.eclipse.chronograph.internal.swt.renderers.api,
+ org.eclipse.chronograph.internal.swt.renderers.impl,
+ org.eclipse.chronograph.internal.swt.stage
+
