@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  */
 public class ChronographStageUtil {
-
 	public static Rectangle areaToRectangle(Area area) {
 		return new Rectangle(area.x(), area.y(), area.width(), area.height());
 	}

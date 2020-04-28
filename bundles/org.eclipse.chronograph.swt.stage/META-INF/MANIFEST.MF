@@ -6,10 +6,9 @@ Bundle-Name: %Bundle-Name
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Copyright: %Bundle-Copyright
-Require-Bundle: org.eclipse.swt,
+Require-Bundle: org.eclipse.jface,
  org.eclipse.chronograph.api,
  org.eclipse.chronograph.base,
- org.eclipse.jface,
  org.eclipse.chronograph.swt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.chronograph.swt.internal.stage

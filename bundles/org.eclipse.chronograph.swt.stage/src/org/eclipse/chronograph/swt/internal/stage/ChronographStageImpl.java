@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.chronograph.internal.api.Brick;
@@ -34,7 +35,6 @@ import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
-import org.eclipse.chronograph.swt.stage.listeners.ChronographStageKeyListener;
 import org.eclipse.chronograph.swt.stage.listeners.ChronographStageMouseListener;
 import org.eclipse.chronograph.swt.stage.listeners.ChronographStageMouseWheelListener;
 import org.eclipse.chronograph.swt.stage.listeners.ChronographStagePaintListener;
@@ -95,7 +95,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		initScrollBarVertical();
 		initRegistry();
 		calculateObjectBounds();
-
 	}
 
 	private void initRegistry() {
@@ -137,12 +136,10 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 				this);
 		ChronographStageResizeListener<ChronographStage> resizeListener = new ChronographStageResizeListener<ChronographStage>(
 				this);
-
 		addPaintListener(new ChronographStagePaintListener(this));
 		addMouseListener(msListener);
 		addMouseMoveListener(msListener);
 		addMouseTrackListener(msListener);
-		addKeyListener(new ChronographStageKeyListener<ChronographStage>(this));
 		addListener(SWT.MouseWheel, msWheelListener);
 		addListener(SWT.Resize, resizeListener);
 	}
@@ -248,7 +245,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.getText(section), sectionRectangle, getDisplay(),
 					SectionStyler.getSectionWidth(), pYhint);
 		}
-		//
 		// status line
 		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.getBrickActual().size(),
 				registry.getBrickExpired().size(), pYhint);
@@ -265,7 +261,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 				}
 			}
 		}
-
 		return markedBricks;
 	}
 
@@ -395,18 +390,19 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		if (area == null) {
 			return;
 		}
-		for (Brick brick : bricks) {
-			calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-			Area brickArea = getDrawingArea(brick);
-			if (brickArea == null) {
-				continue;
-			}
-			Rectangle rectangleArea = ChronographStageUtil.areaToRectangle(brickArea);
-			INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
-			String label = labelProvider.getText(brick);
-			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);
-			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
-		}
+		bricks.stream().forEach(new  Consumer<Brick>() {
+			public void accept(Brick brick) {
+				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+				Area brickArea = getDrawingArea(brick);
+				if (brickArea != null) {
+					Rectangle rectangleArea = ChronographStageUtil.areaToRectangle(brickArea);
+					INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
+					String label = labelProvider.getText(brick);
+					INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);
+					INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+				}
+			};
+		});
 	}
 
 	private void drawSelectedObjects(final GC gc, Area area, final Collection<? extends Brick> bricks) {
@@ -574,5 +570,4 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		this.calculateObjectBounds();
 		this.redraw();
 	}
-
 }

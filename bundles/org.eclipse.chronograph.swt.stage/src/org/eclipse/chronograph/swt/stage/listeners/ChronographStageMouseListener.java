@@ -25,7 +25,6 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ToolTip;
 import org.eclipse.swt.widgets.Tracker;
 
 /**
@@ -44,7 +43,6 @@ public class ChronographStageMouseListener<T extends ChronographStage>
 	private Tracker tracker;
 	private boolean isMouseDown;
 	private int xPosition = 0;
-	private ToolTip tt;
 
 	public ChronographStageMouseListener(T stage) {
 		this.stage = stage;
@@ -103,12 +101,6 @@ public class ChronographStageMouseListener<T extends ChronographStage>
 	@Override
 	public void mouseDoubleClick(final MouseEvent me) {
 		isMouseDown = false;
-		for (Brick brick : stage.getDrawingObjects()) {
-			Point point = new Point(me.x, me.y);
-			Area brickArea = stage.getBrickArea(brick);
-			if (checkPositionUnderRectangle(point.x, point.y, brickArea)) {
-			}
-		}
 	}
 
 	@Override
@@ -117,13 +109,7 @@ public class ChronographStageMouseListener<T extends ChronographStage>
 		if (me.button == 1) {
 			isMouseDown = true;
 			xPosition = stage.getPositionByX();
-			if (tt != null) {
-				if (!tt.isDisposed()) {
-					tt.setVisible(false);
-				}
-			}
 		}
-
 		for (Brick brick : stage.getDrawingObjects()) {
 			Area brickArea = stage.getBrickArea(brick);
 			if (checkPositionUnderRectangle(me.x, me.y, brickArea)) {
