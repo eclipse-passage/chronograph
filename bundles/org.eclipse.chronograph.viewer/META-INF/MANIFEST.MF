@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Version: 0.1.0.qualifier
+Automatic-Module-Name: org.eclipse.chronograph.viewer
+Bundle-SymbolicName: org.eclipse.chronograph.viewer;singleton:=true
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Copyright: %Bundle-Copyright
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.eclipse.chronograph.internal.api.providers
+Export-Package: org.eclipse.chronograph.viewer
+Require-Bundle: org.eclipse.swt,
+ org.eclipse.chronograph.swt.stage,
+ org.eclipse.chronograph.base,
+ org.eclipse.chronograph.swt,
+ org.eclipse.chronograph.api

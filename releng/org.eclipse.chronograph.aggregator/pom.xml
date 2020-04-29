@@ -33,6 +33,7 @@
 		<module>../../bundles/org.eclipse.chronograph.base</module>
 		<module>../../bundles/org.eclipse.chronograph.swt</module>
 		<module>../../bundles/org.eclipse.chronograph.swt.stage</module>
+		<module>../../bundles/org.eclipse.chronograph.viewer</module>
 		<!-- features -->	                                                                     	
 		<module>../../features/org.eclipse.chronograph.feature</module>
 		<!-- tests -->
