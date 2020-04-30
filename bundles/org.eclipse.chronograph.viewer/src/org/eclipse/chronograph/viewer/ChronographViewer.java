@@ -25,6 +25,7 @@ import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
+import org.eclipse.chronograph.internal.swt.StatusStyler;
 import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
 import org.eclipse.chronograph.swt.internal.stage.ChronographStageImpl;
 import org.eclipse.swt.SWT;
@@ -45,11 +46,18 @@ public class ChronographViewer {
 		stylers.add(new GroupStyler());
 		stylers.add(new SectionStyler());
 		stylers.add(new RulerStyler());
+		stylers.add(new StatusStyler());
 		initClassicStyle();
 	}
 
-	private void initClassicStyle() {
+	public void initClassicStyle() {
 		stylers.stream().forEach(Styler::initClassicTheme);
+		this.stage.redraw();
+	}
+
+	public void initDarkStyle() {
+		stylers.stream().forEach(Styler::initDarkTheme);
+		this.stage.redraw();
 	}
 
 	public void setProvider(ContainerProvider provider) {

@@ -14,7 +14,6 @@
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import org.eclipse.chronograph.internal.api.Section;
-import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographSectionRenderer;
 import org.eclipse.swt.graphics.GC;
@@ -43,7 +42,7 @@ public class SectionRendererImpl implements ChronographSectionRenderer<Section> 
 		tr.translate(0, -hintY);
 		tr.rotate(-90);
 		gc.setTransform(tr);
-		gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
+		gc.setForeground(SectionStyler.SECTION_TEXT_COLOR);
 		gc.drawString(label, -bounds.y - bounds.height + (bounds.height - lblPoint.x) / 2, 10, true);
 		tr.dispose();
 		gc.setTransform(null);
