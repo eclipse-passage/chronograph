@@ -41,12 +41,12 @@ public class RulerStyler implements Styler {
 
 	@Override
 	public void initClassicTheme() {
-		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(106, 155, 164));
-		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(55, 99, 124));
+		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(200, 200, 200));
+		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_BRD_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
-		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
-		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(82, 148, 226));
-		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(64, 69, 82));
+		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(50, 80, 130));
+		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(240, 120, 80));
+		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(220, 220, 220));
 	}
 
 	@Override
@@ -57,5 +57,6 @@ public class RulerStyler implements Styler {
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(82, 148, 226));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(64, 69, 82));
+		
 	}
 }

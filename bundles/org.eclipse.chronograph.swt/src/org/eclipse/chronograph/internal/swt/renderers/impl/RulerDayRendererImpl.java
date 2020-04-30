@@ -35,8 +35,8 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 
 	public void draw(GC gc, Rectangle bounds, int scale, int width, int tiksOffset, int xAxis) {
 		int xMaxPosition = bounds.width + bounds.x;
-		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT
-				- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT;
+		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
+				- RulerStyler.RULER_YEAR_HEIGHT;
 		int xPosition = 0;
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
@@ -47,8 +47,7 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		while (true) {
 			if (currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
 					&& currentDate.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
-				// gc.setForeground(DrawingColors.STAGE_BG_COLOR);
-				gc.setForeground(RulerStyler.RULER_TOP_COLOR);
+				gc.setForeground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
 				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_TOP);
 				gc.fillGradientRectangle(xPosition, bounds.y, width, bounds.height, false);
 			}
