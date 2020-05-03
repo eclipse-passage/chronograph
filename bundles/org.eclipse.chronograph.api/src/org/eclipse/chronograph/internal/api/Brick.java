@@ -14,7 +14,7 @@ package org.eclipse.chronograph.internal.api;
 
 /**
  * 
- * The Brick describes the drawing element on the stage 
+ * The Brick describes the drawing element on the stage
  *
  */
 public interface Brick {
@@ -33,7 +33,7 @@ public interface Brick {
 
 	/**
 	 * 
-	 * @return original Brick position 
+	 * @return original Brick position
 	 */
 	Position position();
 }

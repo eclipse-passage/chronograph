@@ -23,7 +23,7 @@ public interface BrickContainer {
 
 	/**
 	 * 
-	 * @return stored Brick elements in List data structure 
+	 * @return stored Brick elements in List data structure
 	 */
 	List<? extends Brick> bricks();
 }
