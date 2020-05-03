@@ -75,9 +75,9 @@ public class BrickProvidersTest {
 
 	@Test
 	public void getBricksForParametrizedInputPositiveTest() {
-		Section section = new SectionImpl("test.parent.id.1");
-		Group group = new GroupImpl("test.container.id.1", section);
-		Group subGroup = new GroupImpl("test.subcontainer.id.1", group);
+		Section section = new SectionImpl("test.parent.id.1"); //$NON-NLS-1$
+		Group group = new GroupImpl("test.container.id.1", section); //$NON-NLS-1$
+		Group subGroup = new GroupImpl("test.subcontainer.id.1", group); //$NON-NLS-1$
 
 		List<Brick> bricks = testBrickProvider.getBricksByGroup(input, subGroup);
 		assertNotNull(bricks);
@@ -88,9 +88,9 @@ public class BrickProvidersTest {
 
 	@Test
 	public void getBricksForParametrizedInputNegativeTest() {
-		Section section = new SectionImpl("test.parent.id.non");
-		Group group = new GroupImpl("test.container.id.non", section);
-		Group subGroup = new GroupImpl("test.subcontainer.id.non", group);
+		Section section = new SectionImpl("test.parent.id.non"); //$NON-NLS-1$
+		Group group = new GroupImpl("test.container.id.non", section); //$NON-NLS-1$
+		Group subGroup = new GroupImpl("test.subcontainer.id.non", group); //$NON-NLS-1$
 
 		List<Brick> bricks = testBrickProvider.getBricksByGroup(input, subGroup);
 		assertTrue(bricks.isEmpty());
