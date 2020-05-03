@@ -390,7 +390,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		if (area == null) {
 			return;
 		}
-		bricks.stream().forEach(new  Consumer<Brick>() {
+		bricks.stream().forEach(new Consumer<Brick>() {
 			public void accept(Brick brick) {
 				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 				Area brickArea = getDrawingArea(brick);
