@@ -23,7 +23,7 @@ package org.eclipse.chronograph.api.test;
 
 /**
  * 
- * Test input object implementation  
+ * Test input object implementation
  *
  */
 public class TestInputObject {
@@ -37,8 +37,8 @@ public class TestInputObject {
 	public int start;
 	public int end;
 
-	public TestInputObject(String id, String containerId, String subContainerId, String rootContainerId, String name, String description, int start,
-			int end) {
+	public TestInputObject(String id, String containerId, String subContainerId, String rootContainerId, String name,
+			String description, int start, int end) {
 		super();
 		this.id = id;
 		this.containerId = containerId;
