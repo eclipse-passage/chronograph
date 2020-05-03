@@ -29,6 +29,7 @@ public class BrickImpl implements Brick {
 		this.position = new PositionImpl(start, end);
 	}
 
+	@Override
 	public String id() {
 		return this.id;
 	}
