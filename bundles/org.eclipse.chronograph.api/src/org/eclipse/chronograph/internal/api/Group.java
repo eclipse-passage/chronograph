@@ -14,17 +14,17 @@ package org.eclipse.chronograph.internal.api;
 
 /**
  * 
- * The Group describes typed container with sequence Brick items  
+ * The Group describes typed container with sequence Brick items
  *
  */
-public interface Group extends BrickContainer,GroupContainer {
+public interface Group extends BrickContainer, GroupContainer {
 
 	/**
 	 * 
 	 * @return String identifier of group
 	 */
 	String id();
-	
+
 	/**
 	 * 
 	 * @return GroupContainer as a parent element
