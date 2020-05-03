@@ -57,6 +57,6 @@ public class RulerStyler implements Styler {
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(82, 148, 226));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(64, 69, 82));
-		
+
 	}
 }

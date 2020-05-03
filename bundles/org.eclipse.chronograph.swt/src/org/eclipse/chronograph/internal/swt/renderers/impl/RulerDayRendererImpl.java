@@ -29,10 +29,11 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 
-	private final SimpleDateFormat sdf = new SimpleDateFormat("dd");
+	private final SimpleDateFormat sdf = new SimpleDateFormat("dd"); //$NON-NLS-1$
 	private final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 	private final Calendar currentDate = Calendar.getInstance(TimeZone.getDefault());
 
+	@Override
 	public void draw(GC gc, Rectangle bounds, int scale, int width, int tiksOffset, int xAxis) {
 		int xMaxPosition = bounds.width + bounds.x;
 		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
