@@ -6,7 +6,7 @@ Bundle-Name: %Bundle-Name
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Copyright: %Bundle-Copyright
-Require-Bundle: org.eclipse.jface,
+Require-Bundle: org.eclipse.swt,
  org.eclipse.chronograph.api,
  org.eclipse.chronograph.base,
  org.eclipse.chronograph.swt
