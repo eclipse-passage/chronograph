@@ -77,6 +77,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	private ScrollBar scrollBarHorizontal;
 	private StageLabelProvider labelProvider;
 	private ContainerProvider dataProvider;
+	private int zoom = 1;
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
@@ -330,7 +331,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 				}
 			}
 			int height = 10 + Math.max(lenghtOfGroups, strHeight);
-			Area sectionArea = new AreaImpl(area.x(), y, area.width(), height);
+			Area sectionArea = new AreaImpl(area.x(), y, area.width() * zoom, height * zoom);
 			groupsAreas.put(section.id(), sectionArea);
 			y += height + sectionSpace;
 		}
@@ -390,7 +391,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		if (area == null) {
 			return;
 		}
-		bricks.stream().forEach(new  Consumer<Brick>() {
+		bricks.stream().forEach(new Consumer<Brick>() {
 			public void accept(Brick brick) {
 				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 				Area brickArea = getDrawingArea(brick);
@@ -567,6 +568,21 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		this.labelProvider = provider.getLabelProvider();
 		this.registry = new ChronographObjectRegistry(dataProvider);
 		this.registry.createRegistry();
+		this.calculateObjectBounds();
+		this.redraw();
+	}
+
+	@Override
+	public void setZoomLevelDown() {
+		this.zoom++;
+		this.calculateObjectBounds();
+		this.redraw();
+
+	}
+
+	@Override
+	public void setZoomLevelUp() {
+		this.zoom--;
 		this.calculateObjectBounds();
 		this.redraw();
 	}

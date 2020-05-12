@@ -31,11 +31,10 @@ public class SectionRendererImpl implements ChronographSectionRenderer<Section> 
 
 	@Override
 	public void draw(GC gc, String label, Rectangle bounds, Display display, int width, int hintY) {
-		gc.setForeground(SectionStyler.SECTION_TOP_COLOR);
-		gc.setBackground(SectionStyler.SECTION_BTM_COLOR);
-		gc.fillGradientRectangle(1, bounds.y - hintY, width, bounds.height + 1, false);
 		gc.setForeground(SectionStyler.SECTION_BTM_COLOR);
-		gc.drawRectangle(0, bounds.y - hintY, bounds.width + width, bounds.height);
+		gc.setBackground(SectionStyler.SECTION_TOP_COLOR);
+		gc.fillRoundRectangle(0, bounds.y - hintY, width, bounds.height + 1, 30, 30);
+		gc.drawRoundRectangle(0, bounds.y - hintY, width, bounds.height + 1, 30, 30);
 		gc.setForeground(SectionStyler.SECTION_TOP_COLOR);
 		Point lblPoint = gc.stringExtent(label);
 		Transform tr = new Transform(display);

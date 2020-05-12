@@ -73,4 +73,8 @@ public interface ChronographStage extends Drawable {
 
 	public void setProvider(ContainerProvider provider);
 
+	public void setZoomLevelDown();
+
+	public void setZoomLevelUp();
+
 }

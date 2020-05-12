@@ -19,6 +19,7 @@ import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -35,15 +36,20 @@ public class ObjectContentRendererImpl implements ChronographObjectContentRender
 		LocalDate now = LocalDate.now();
 		LocalDate start = UnitConverter.unitsToLocalDate((int) object.position().start());
 		LocalDate end = UnitConverter.unitsToLocalDate((int) object.position().end());
+		gc.setAntialias(SWT.ON);
+		gc.setBackground(BrickStyler.getColorBottom());
+		
 		if (now.isAfter(start) && now.isBefore(end)) {
 			gc.setForeground(BrickStyler.getActiveColorTop());
-			gc.setBackground(BrickStyler.getActiveColorBottom());
+			gc.setBackground(BrickStyler.getActiveColorTop());
 		} else {
-			gc.setForeground(BrickStyler.getColorTop());
+			gc.setForeground(BrickStyler.getColorTop());	
 			gc.setBackground(BrickStyler.getColorBottom());
 		}
-		gc.fillGradientRectangle(bounds.x, bounds.y, bounds.width, bounds.height, true);
+		
+		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30,30);
 		gc.setForeground(BrickStyler.getColorBorder());
-		gc.drawRectangle(bounds);
+		gc.setBackground(BrickStyler.getColorBottom());
+		gc.fillOval(bounds.x-bounds.height/10, bounds.y, bounds.height, bounds.height);
 	}
 }
