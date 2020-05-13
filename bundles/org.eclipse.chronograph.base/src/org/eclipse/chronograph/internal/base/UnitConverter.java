@@ -26,10 +26,10 @@ public class UnitConverter {
 	public static int localDatetoUnits(LocalDate target) {
 		return (int) ChronoUnit.DAYS.between(HISTORICAL_TIME, target);
 	}
-	
+
 	public static int localDatetoUnits(Date target) {
 		Instant instant = Instant.ofEpochMilli(target.getTime());
-		LocalDateTime targetDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()); 
+		LocalDateTime targetDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 		LocalDate targetDate = targetDateTime.toLocalDate();
 		return (int) ChronoUnit.DAYS.between(HISTORICAL_TIME, targetDate);
 	}

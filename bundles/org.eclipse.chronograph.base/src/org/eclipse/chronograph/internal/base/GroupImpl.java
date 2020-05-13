@@ -49,6 +49,7 @@ public class GroupImpl implements Group {
 		this.bricks = bricks;
 	}
 
+	@Override
 	public String id() {
 		return id;
 	}

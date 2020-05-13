@@ -24,7 +24,7 @@ public interface GroupContainer {
 
 	/**
 	 * 
-	 * @return stored Group elements in List data structure 
+	 * @return stored Group elements in List data structure
 	 */
 	List<? extends Group> groups();
 }

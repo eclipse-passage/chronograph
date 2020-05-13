@@ -55,7 +55,7 @@ public class GroupProvidersTest {
 
 	@Test
 	public void groupProviderTest() {
-		Section section = new SectionImpl("test.parent.id.1");
+		Section section = new SectionImpl("test.parent.id.1"); //$NON-NLS-1$
 		List<Group> groupsBySection = groupProvider.getGroupsBySection(input, section);
 		assertNotNull(groupsBySection);
 		assertFalse(groupsBySection.isEmpty());
