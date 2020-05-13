@@ -45,6 +45,7 @@ public class SectionImpl implements Section {
 		return id;
 	}
 
+	@Override
 	public List<Group> groups() {
 		return groups;
 	}

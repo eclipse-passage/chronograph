@@ -29,8 +29,8 @@ import org.eclipse.chronograph.internal.api.Area;
  */
 public class AreaImpl implements Area {
 
-	private final int x ;
-	private final int y ;
+	private final int x;
+	private final int y;
 	private final int width;
 	private final int height;
 
