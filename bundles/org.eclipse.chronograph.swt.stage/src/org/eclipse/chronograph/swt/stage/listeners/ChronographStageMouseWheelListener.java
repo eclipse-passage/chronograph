@@ -28,11 +28,17 @@ public class ChronographStageMouseWheelListener<T extends ChronographStage> impl
 
 	@Override
 	public void handleEvent(Event event) {
-		if (event.stateMask == SWT.MOD1) {
+		if (event.stateMask == SWT.CTRL) {
 			if (event.count > 0) {
 				stage.scaleDown();
 			} else {
 				stage.scaleUp();
+			}
+		} else if (event.stateMask == SWT.ALT) {
+			if (event.count > 0) {
+				stage.setZoomLevelDown();
+			} else {
+				stage.setZoomLevelUp();
 			}
 		} else {
 			stage.verticalScroll(event);

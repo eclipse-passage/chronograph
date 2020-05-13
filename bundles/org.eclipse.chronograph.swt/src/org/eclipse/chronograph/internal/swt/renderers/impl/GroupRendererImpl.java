@@ -14,9 +14,9 @@
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -36,13 +36,18 @@ public class GroupRendererImpl<T extends Group> implements ChronographGroupRende
 
 		final Rectangle groupNameRectangle = new Rectangle(groupBound.x, groupBound.y - hintY, width,
 				groupBound.height);
-		gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
 		gc.setForeground(GroupStyler.GROUP_TOP_COLOR);
-		gc.fillGradientRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
-				groupNameRectangle.height, false);
-		gc.setForeground(BrickStyler.getColorBorder());
-		gc.drawRectangle(groupNameRectangle);
-		gc.drawRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height);
+		gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
+		gc.setAntialias(SWT.ON);
+		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
+		gc.setBackground(GroupStyler.GROUP_TOP_COLOR);
+		gc.fillRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
+				groupNameRectangle.height, 30, 30);
+		gc.drawRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
+				groupNameRectangle.height, 30, 30);
+		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
+		gc.drawRoundRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height,30,30);
+		
 		Point stringExtent = gc.stringExtent(label);
 		Transform tr = new Transform(display);
 		tr.translate(groupNameRectangle.x, groupNameRectangle.y);

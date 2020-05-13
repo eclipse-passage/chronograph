@@ -43,13 +43,13 @@ public class BrickStyler implements Styler {
 	public void initClassicTheme() {
 		COLOR_TOP = new Color(DISPLAY, new RGB(195, 245, 180));
 		COLOR_BOTTOM = new Color(DISPLAY, new RGB(100, 150, 90));
-		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(100, 200, 110));
-		SELECTED_COLOR_BOTTOM = new Color(DISPLAY, new RGB(100, 130, 152));
-		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(80, 250, 82));
+		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(110, 190, 82));
+		SELECTED_COLOR_BOTTOM = new Color(DISPLAY, new RGB(80, 140, 82));
+		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(110, 190, 82));
 		ACTIVE_COLOR_BOTTOM = new Color(DISPLAY, new RGB(80, 140, 82));
 		COLOR_BORDER = new Color(DISPLAY, new RGB(95, 95, 95));
 		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));
-		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(20, 20, 20));
+		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(100, 100, 100));
 		BRICK_HEIGHT_DEFAULT = 26;
 	}
 
@@ -59,7 +59,7 @@ public class BrickStyler implements Styler {
 		COLOR_BOTTOM = new Color(DISPLAY, new RGB(64, 36, 89));
 		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(136, 105, 184));
 		SELECTED_COLOR_BOTTOM = new Color(DISPLAY, new RGB(64, 36, 89));
-		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(236, 50, 184));
+		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(149, 140, 184));
 		ACTIVE_COLOR_BOTTOM = new Color(DISPLAY, new RGB(104, 136, 89));
 		COLOR_BORDER = new Color(DISPLAY, new RGB(190, 155, 184));
 		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));

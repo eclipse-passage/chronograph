@@ -19,6 +19,7 @@ import java.util.TimeZone;
 
 import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -39,6 +40,7 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
 				- RulerStyler.RULER_YEAR_HEIGHT;
 		int xPosition = 0;
+		gc.setAntialias(SWT.ON);
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
 		calendar.set(Calendar.MONTH, 0);
@@ -58,6 +60,11 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 			gc.setForeground(RulerStyler.RULER_BRD_COLOR);
 			gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT, xPosition, yBottomPosition);
 
+			if(scale > 4) {
+				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
+				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+			}
+			
 			// Keep here to show in ticks
 			// int currentTick = (xPosition / width) + (xAxis / (width * scale));
 			gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
