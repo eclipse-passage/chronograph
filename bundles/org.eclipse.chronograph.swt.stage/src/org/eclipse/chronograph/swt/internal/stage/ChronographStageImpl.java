@@ -333,7 +333,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 			int height = 10 + Math.max(lenghtOfGroups, strHeight);
 			Area sectionArea = new AreaImpl(area.x(), y, area.width() * zoom, height * zoom);
 			groupsAreas.put(section.id(), sectionArea);
-			y += height + sectionSpace;
+			y += height * zoom + sectionSpace;
 		}
 	}
 
@@ -583,6 +583,9 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	@Override
 	public void setZoomLevelUp() {
 		this.zoom--;
+		if (this.zoom < 1) {
+			this.zoom = 1;
+		}
 		this.calculateObjectBounds();
 		this.redraw();
 	}
