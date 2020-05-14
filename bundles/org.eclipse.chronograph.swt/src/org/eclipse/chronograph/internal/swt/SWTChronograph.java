@@ -11,31 +11,31 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.viewer;
+package org.eclipse.chronograph.internal.swt;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.chronograph.internal.api.Chronograph;
 import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.GroupStyler;
-import org.eclipse.chronograph.internal.swt.RulerStyler;
-import org.eclipse.chronograph.internal.swt.SectionStyler;
-import org.eclipse.chronograph.internal.swt.StageStyler;
-import org.eclipse.chronograph.internal.swt.StatusStyler;
 import org.eclipse.chronograph.internal.swt.stage.ChronographCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-public class ChronographViewer {
+/**
+ * 
+ * The main entry point to the SWT implementation of {@link Chronograph}
+ *
+ */
+public class SWTChronograph implements Chronograph {
 	private final ChronographCanvas stage;
 	private final List<Styler> stylers;
 
-	public ChronographViewer(Composite parent, ContainerProvider provider) {
+	public SWTChronograph(Composite parent, ContainerProvider provider) {
 		this.stage = new ChronographCanvas(parent, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
@@ -61,5 +61,11 @@ public class ChronographViewer {
 
 	public void setProvider(ContainerProvider provider) {
 		this.stage.setProvider(provider);
+	}
+
+	@Override
+	public void display(Object input) {
+		// TODO update input
+		this.stage.redraw();
 	}
 }

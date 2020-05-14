@@ -8,7 +8,6 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-Copyright: %Bundle-Copyright
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.eclipse.chronograph.internal.api.providers
-Export-Package: org.eclipse.chronograph.viewer
 Require-Bundle: org.eclipse.swt,
  org.eclipse.chronograph.base,
  org.eclipse.chronograph.swt,
