@@ -27,7 +27,7 @@ import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.StatusStyler;
 import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
-import org.eclipse.chronograph.swt.internal.stage.ChronographStageImpl;
+import org.eclipse.chronograph.internal.swt.stage.ChronographStageImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;

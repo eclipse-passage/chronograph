@@ -11,11 +11,10 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.internal.stage;
+package org.eclipse.chronograph.internal.swt.stage;
 
 import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
