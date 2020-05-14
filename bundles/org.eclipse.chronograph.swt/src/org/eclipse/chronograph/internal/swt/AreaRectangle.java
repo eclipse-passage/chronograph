@@ -11,23 +11,23 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
 
-import org.eclipse.chronograph.swt.internal.stage.ChronographStageImpl;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
+package org.eclipse.chronograph.internal.swt;
 
-public class ChronographStagePaintListener implements PaintListener {
+import java.util.function.Function;
 
-	private final ChronographStageImpl sceneComposer;
+import org.eclipse.chronograph.internal.api.Area;
+import org.eclipse.swt.graphics.Rectangle;
 
-	public ChronographStagePaintListener(ChronographStageImpl sceneComposer) {
-		this.sceneComposer = sceneComposer;
-	}
+/**
+ * 
+ * Сonverts {@link Area} to {@link Rectangle}
+ *
+ */
+public final class AreaRectangle implements Function<Area, Rectangle> {
 
 	@Override
-	public void paintControl(PaintEvent event) {
-		sceneComposer.repaint(event);
+	public Rectangle apply(Area area) {
+		return new Rectangle(area.x(), area.y(), area.width(), area.height());
 	}
-
 }

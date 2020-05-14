@@ -11,38 +11,37 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
+package org.eclipse.chronograph.internal.swt.stage;
 
-import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
-/**
- * 
- * Implementations of {@link KeyListener}
- *
- * @param <T>
- */
-public class ChronographStageKeyListener<T extends ChronographStage> implements KeyListener {
+final class StageWheel implements Listener {
 
-	private final T stage;
+	private final ChronographCanvas stage;
 
-	public ChronographStageKeyListener(T stage) {
+	public StageWheel(ChronographCanvas stage) {
 		this.stage = stage;
-
 	}
 
 	@Override
-	public void keyPressed(KeyEvent event) {
-		if (event.stateMask == SWT.ALT || event.keyCode == SWT.ALT) {
-
+	public void handleEvent(Event event) {
+		if (event.stateMask == SWT.CTRL) {
+			if (event.count > 0) {
+				stage.scaleDown();
+			} else {
+				stage.scaleUp();
+			}
+		} else if (event.stateMask == SWT.ALT) {
+			if (event.count > 0) {
+				stage.setZoomLevelDown();
+			} else {
+				stage.setZoomLevelUp();
+			}
+		} else {
+			stage.verticalScroll(event);
 		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
 	}
 
 }

@@ -11,38 +11,23 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
+package org.eclipse.chronograph.internal.swt.stage;
 
-import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-public class ChronographStageMouseWheelListener<T extends ChronographStage> implements Listener {
+final class StageResize implements Listener {
 
-	private final T stage;
+	private final ChronographCanvas stage;
 
-	public ChronographStageMouseWheelListener(T stage) {
+	public StageResize(ChronographCanvas stage) {
 		this.stage = stage;
 	}
 
 	@Override
 	public void handleEvent(Event event) {
-		if (event.stateMask == SWT.CTRL) {
-			if (event.count > 0) {
-				stage.scaleDown();
-			} else {
-				stage.scaleUp();
-			}
-		} else if (event.stateMask == SWT.ALT) {
-			if (event.count > 0) {
-				stage.setZoomLevelDown();
-			} else {
-				stage.setZoomLevelUp();
-			}
-		} else {
-			stage.verticalScroll(event);
-		}
+		stage.calculateObjectBounds();
+		stage.handleResize();
+		stage.updateScrollers();
 	}
-
 }

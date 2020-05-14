@@ -11,11 +11,10 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
+package org.eclipse.chronograph.internal.swt.stage;
 
 import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -33,10 +32,9 @@ import org.eclipse.swt.widgets.Tracker;
  *
  * @param <T>
  */
-public class ChronographStageMouseListener<T extends ChronographStage>
-		implements MouseListener, MouseMoveListener, MouseTrackListener {
+final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private T stage;
+	private ChronographCanvas stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private Point startPoint;
@@ -44,7 +42,7 @@ public class ChronographStageMouseListener<T extends ChronographStage>
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public ChronographStageMouseListener(T stage) {
+	public StageMouse(ChronographCanvas stage) {
 		this.stage = stage;
 	}
 
