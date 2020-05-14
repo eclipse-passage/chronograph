@@ -27,4 +27,11 @@ public interface Chronograph {
 	 */
 	void display(Object input);
 
+	/**
+	 * Applies the given style
+	 * 
+	 * @param style the style to use
+	 */
+	void style(Style style);
+
 }

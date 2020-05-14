@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.Chronograph;
+import org.eclipse.chronograph.internal.api.Style;
 import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.base.UnitConverter;
@@ -65,7 +66,11 @@ public class SWTChronograph implements Chronograph {
 
 	@Override
 	public void display(Object input) {
-		// TODO update input
-		this.stage.redraw();
+		stage.show(input);
+	}
+
+	@Override
+	public void style(Style style) {
+		style.apply(stage);
 	}
 }

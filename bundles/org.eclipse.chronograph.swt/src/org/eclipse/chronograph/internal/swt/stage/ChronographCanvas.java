@@ -562,4 +562,10 @@ public final class ChronographCanvas extends Canvas {
 		this.calculateObjectBounds();
 		this.redraw();
 	}
+
+	public void show(Object input) {
+		// FIXME: here we need to clear all caches and start showing new input
+		// TODO Auto-generated method stub
+		redraw();
+	}
 }

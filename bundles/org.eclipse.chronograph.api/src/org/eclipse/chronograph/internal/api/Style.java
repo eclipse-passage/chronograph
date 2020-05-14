@@ -8,21 +8,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
+ *     ArSysOp - initial API and implementation
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api;
 
 /**
  * 
- * Interface intended to specify common style.
- * 
- * @deprecated use {@link Style} interface
+ * Decorates given object with a specific style
+ *
  */
-@Deprecated
-public interface Styler {
+@FunctionalInterface
+public interface Style {
 
-	void initClassicTheme();
-
-	void initDarkTheme();
+	void apply(Object object);
 
 }
