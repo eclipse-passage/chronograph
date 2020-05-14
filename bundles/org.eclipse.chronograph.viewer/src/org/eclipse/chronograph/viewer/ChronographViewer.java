@@ -26,18 +26,17 @@ import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.StatusStyler;
-import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
-import org.eclipse.chronograph.internal.swt.stage.ChronographStageImpl;
+import org.eclipse.chronograph.internal.swt.stage.ChronographCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 public class ChronographViewer {
-	private final ChronographStage stage;
+	private final ChronographCanvas stage;
 	private final List<Styler> stylers;
 
 	public ChronographViewer(Composite parent, ContainerProvider provider) {
-		this.stage = new ChronographStageImpl(parent, provider);
+		this.stage = new ChronographCanvas(parent, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 		stylers = new ArrayList<>();

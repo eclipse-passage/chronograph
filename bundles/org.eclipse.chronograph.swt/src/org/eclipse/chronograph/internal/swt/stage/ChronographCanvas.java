@@ -42,14 +42,13 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class ChronographStageImpl extends Canvas implements ChronographStage {
+public final class ChronographCanvas extends Canvas {
 
 	private final AreaRectangle areaRectangle;
 
@@ -80,11 +79,11 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public ChronographStageImpl(Composite parent, ContainerProvider provider) {
+	public ChronographCanvas(Composite parent, ContainerProvider provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, provider);
 	}
 
-	public ChronographStageImpl(Composite parent, int style, ContainerProvider provider) {
+	public ChronographCanvas(Composite parent, int style, ContainerProvider provider) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
 		this.dataProvider = provider;
@@ -136,20 +135,16 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	}
 
 	private void initListeners() {
-		StageMouse<ChronographStage> msListener = new StageMouse<>(this);
-		StageMouseWheel<ChronographStage> msWheelListener = new StageMouseWheel<>(this);
-		StageResize<ChronographStage> resizeListener = new StageResize<>(this);
 		addPaintListener(new StagePaint(this));
-		addMouseListener(msListener);
-		addMouseMoveListener(msListener);
-		addMouseTrackListener(msListener);
-		addListener(SWT.MouseWheel, msWheelListener);
-		addListener(SWT.Resize, resizeListener);
+		StageMouse mouse = new StageMouse(this);
+		addMouseListener(mouse);
+		addMouseMoveListener(mouse);
+		addMouseTrackListener(mouse);
+		addListener(SWT.MouseWheel, new StageWheel(this));
+		addListener(SWT.Resize, new StageResize(this));
 	}
 
-	@Override
 	public void verticalScroll(Event event) {
-
 		if (event != null && event.detail == 0) {
 			return;
 		}
@@ -173,7 +168,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		redraw();
 	}
 
-	@Override
 	public void updateScrollers() {
 		if (bricks == null || bricks.isEmpty()) {
 			return;
@@ -183,7 +177,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		scrollBarHorizontal.setSelection(pXhint);
 	}
 
-	@Override
 	public void handleResize() {
 		Rectangle rect = getBounds();
 		Rectangle client = getClientArea();
@@ -308,7 +301,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		return new Rectangle(0, 0, super.getBounds().width, pY);
 	}
 
-	@Override
 	public Rectangle getMainBounds() {
 		return boundsGlobal;
 	}
@@ -340,7 +332,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		}
 	}
 
-	@Override
 	public void calculateObjectBounds() {
 		Rectangle clientArea = super.getClientArea();
 		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
@@ -428,7 +419,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		}
 	}
 
-	@Override
 	public void navigateToUnit(int hint) {
 		pX = hint * pxlHint * stageScale;
 		getHint();
@@ -457,12 +447,10 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		redraw();
 	}
 
-	@Override
 	public int getScale() {
 		return stageScale;
 	}
 
-	@Override
 	public List<? extends Brick> getDrawingObjects() {
 		return registry.getBricks();
 	}
@@ -483,7 +471,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		}
 	}
 
-	@Override
 	public void scaleUp() {
 		checkWidget();
 		stageScale--;
@@ -493,7 +480,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		navigateToUnit(pXhint);
 	}
 
-	@Override
 	public void scaleDown() {
 		checkWidget();
 		stageScale++;
@@ -507,12 +493,10 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		super.redraw();
 	}
 
-	@Override
 	public int getPositionByX() {
 		return pX;
 	}
 
-	@Override
 	public void setPositionByX(int x) {
 		this.pX = x;
 	}
@@ -522,22 +506,10 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		return super.getClientArea();
 	}
 
-	@Override
 	public void getHint() {
 		pXhint = pX / (pxlHint * stageScale);
 	}
 
-	@Override
-	public void setLayoutData(GridData gridData) {
-		super.setLayoutData(gridData);
-
-	}
-
-	@Override
-	public void setInput(List<?> objects) {
-	}
-
-	@Override
 	public Area getBrickArea(Brick brick) {
 		return getDrawingArea(brick);
 	}
@@ -550,7 +522,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		bricksSelected.remove(brick);
 	}
 
-	@Override
 	public void addRemoveSelected(Brick brick) {
 		List<Brick> markedBriks = new ArrayList<Brick>();
 		for (Brick selectedBrick : bricksSelected) {
@@ -567,7 +538,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		}
 	}
 
-	@Override
 	public void setProvider(ContainerProvider provider) {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
@@ -577,7 +547,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		this.redraw();
 	}
 
-	@Override
 	public void setZoomLevelDown() {
 		this.zoom++;
 		this.calculateObjectBounds();
@@ -585,7 +554,6 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	}
 
-	@Override
 	public void setZoomLevelUp() {
 		this.zoom--;
 		if (this.zoom < 1) {

@@ -17,11 +17,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-final class StageMouseWheel<T extends ChronographStage> implements Listener {
+final class StageWheel implements Listener {
 
-	private final T stage;
+	private final ChronographCanvas stage;
 
-	public StageMouseWheel(T stage) {
+	public StageWheel(ChronographCanvas stage) {
 		this.stage = stage;
 	}
 

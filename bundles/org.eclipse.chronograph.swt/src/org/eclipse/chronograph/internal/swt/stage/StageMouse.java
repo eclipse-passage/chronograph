@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Tracker;
  *
  * @param <T>
  */
-final class StageMouse<T extends ChronographStage> implements MouseListener, MouseMoveListener, MouseTrackListener {
+final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private T stage;
+	private ChronographCanvas stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private Point startPoint;
@@ -42,7 +42,7 @@ final class StageMouse<T extends ChronographStage> implements MouseListener, Mou
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public StageMouse(T stage) {
+	public StageMouse(ChronographCanvas stage) {
 		this.stage = stage;
 	}
 
