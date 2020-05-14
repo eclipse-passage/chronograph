@@ -28,6 +28,7 @@ import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.DataRegistry;
+import org.eclipse.chronograph.internal.swt.AreaRectangle;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.RulerStyler;
@@ -50,6 +51,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
 public final class ChronographStageImpl extends Canvas implements ChronographStage {
+
+	private final AreaRectangle areaRectangle;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
 	private static final int SCALE_DEFAULT = 5;
@@ -84,6 +87,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	public ChronographStageImpl(Composite parent, int style, ContainerProvider provider) {
 		super(parent, style);
+		this.areaRectangle = new AreaRectangle();
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
 		bricksSelected = new ArrayList<>();
@@ -134,8 +138,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	private void initListeners() {
 		StageMouse<ChronographStage> msListener = new StageMouse<>(this);
-		StageMouseWheel<ChronographStage> msWheelListener = new StageMouseWheel<>(
-				this);
+		StageMouseWheel<ChronographStage> msWheelListener = new StageMouseWheel<>(this);
 		StageResize<ChronographStage> resizeListener = new StageResize<>(this);
 		addPaintListener(new StagePaint(this));
 		addMouseListener(msListener);
@@ -204,7 +207,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	public void repaint(PaintEvent event) {
 		GC gc = event.gc;
 		// drawing
-		Rectangle stageRectangle = ChronographStageUtil.areaToRectangle(visiableArea);
+		Rectangle stageRectangle = areaRectangle.apply(visiableArea);
 		INSTANCE.getDrawingStagePainter().draw(gc, stageRectangle);
 		for (ChronographStageRulerRenderer painter : INSTANCE.getDrawingRulersPainter()) {
 			painter.draw(gc, stageRectangle, stageScale, pxlHint, pXhint, pX);
@@ -227,7 +230,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 							drawSelectedObjects(gc, area, markedBricks);
 						}
 					}
-					Rectangle groupRectangle = ChronographStageUtil.areaToRectangle(area);
+					Rectangle groupRectangle = areaRectangle.apply(area);
 					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(subgroup), groupRectangle,
 							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 				}
@@ -235,7 +238,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 				if (area == null) {
 					continue;
 				}
-				Rectangle groupRectangle = ChronographStageUtil.areaToRectangle(area);
+				Rectangle groupRectangle = areaRectangle.apply(area);
 				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(group), groupRectangle, getDisplay(),
 						SectionStyler.getSectionWidth(), pYhint);
 			}
@@ -243,7 +246,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 			if (area == null) {
 				continue;
 			}
-			Rectangle sectionRectangle = ChronographStageUtil.areaToRectangle(area);
+			Rectangle sectionRectangle = areaRectangle.apply(area);
 			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.getText(section), sectionRectangle, getDisplay(),
 					SectionStyler.getSectionWidth(), pYhint);
 		}
@@ -398,7 +401,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 				Area brickArea = getDrawingArea(brick);
 				if (brickArea != null) {
-					Rectangle rectangleArea = ChronographStageUtil.areaToRectangle(brickArea);
+					Rectangle rectangleArea = areaRectangle.apply(brickArea);
 					INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
 					String label = labelProvider.getText(brick);
 					INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);
@@ -418,7 +421,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 			if (brickArea == null) {
 				continue;
 			}
-			Rectangle rectangleArea = ChronographStageUtil.areaToRectangle(brickArea);
+			Rectangle rectangleArea = areaRectangle.apply(brickArea);
 			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
 			String label = labelProvider.getText(brick);
 			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);

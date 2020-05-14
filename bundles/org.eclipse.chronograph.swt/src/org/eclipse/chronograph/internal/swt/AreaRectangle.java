@@ -12,18 +12,22 @@
  *												initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.swt.internal.stage;
+package org.eclipse.chronograph.internal.swt;
+
+import java.util.function.Function;
 
 import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * 
- * Utility class intended to convert {@link Area} to {@link Rectangle}
+ * Сonverts {@link Area} to {@link Rectangle}
  *
  */
-public class ChronographStageUtil {
-	public static Rectangle areaToRectangle(Area area) {
+public final class AreaRectangle implements Function<Area, Rectangle> {
+
+	@Override
+	public Rectangle apply(Area area) {
 		return new Rectangle(area.x(), area.y(), area.width(), area.height());
 	}
 }
