@@ -81,8 +81,12 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
+	public ChronographStageImpl(Composite parent, ContainerProvider provider) {
+		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, provider);
+	}
+
 	public ChronographStageImpl(Composite parent, int style, ContainerProvider provider) {
-		super(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL);
+		super(parent, style);
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
 		bricksSelected = new ArrayList<>();
@@ -123,6 +127,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		scrollBarVertical.setVisible(true);
 		scrollBarVertical.setMaximum(0);
 		scrollBarVertical.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
 				verticalScroll(event);
 			}
@@ -181,6 +186,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		scrollBarHorizontal.setSelection(pXhint);
 	}
 
+	@Override
 	public void handleResize() {
 		Rectangle rect = getBounds();
 		Rectangle client = getClientArea();
@@ -392,6 +398,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 			return;
 		}
 		bricks.stream().forEach(new Consumer<Brick>() {
+			@Override
 			public void accept(Brick brick) {
 				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 				Area brickArea = getDrawingArea(brick);
@@ -513,13 +520,14 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 		this.pX = x;
 	}
 
+	@Override
 	public Rectangle getClientArea() {
 		return super.getClientArea();
 	}
 
 	@Override
 	public void getHint() {
-		pXhint = (int) (pX / (pxlHint * stageScale));
+		pXhint = pX / (pxlHint * stageScale);
 	}
 
 	@Override

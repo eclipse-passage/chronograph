@@ -37,7 +37,7 @@ public class ChronographViewer {
 	private final List<Styler> stylers;
 
 	public ChronographViewer(Composite parent, ContainerProvider provider) {
-		this.stage = new ChronographStageImpl(parent, SWT.BORDER, provider);
+		this.stage = new ChronographStageImpl(parent, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 		stylers = new ArrayList<>();
