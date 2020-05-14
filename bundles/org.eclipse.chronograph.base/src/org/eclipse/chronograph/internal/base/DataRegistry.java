@@ -12,7 +12,7 @@
  *												initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.swt.internal.stage;
+package org.eclipse.chronograph.internal.base;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,14 +29,13 @@ import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.GroupContentProvider;
 import org.eclipse.chronograph.internal.api.providers.SectionContentProvider;
 import org.eclipse.chronograph.internal.api.providers.SubGroupContentProvider;
-import org.eclipse.chronograph.internal.base.UnitConverter;
 
 /**
- * Class intended to aggregate providers
- * 
+ * Class intended to aggregate data
  *
  */
-public class ChronographObjectRegistry {
+//FIXME extract interface
+public class DataRegistry {
 
 	private final ContainerProvider provider;
 	private final Map<String, Section> sectionsById = new HashMap<>();
@@ -44,7 +43,7 @@ public class ChronographObjectRegistry {
 	private final Map<Group, List<Group>> subGroupsBygroup = new HashMap<>();
 	private final Map<Group, List<Brick>> bricksBySubgroup = new HashMap<>();
 
-	public ChronographObjectRegistry(ContainerProvider provider) {
+	public DataRegistry(ContainerProvider provider) {
 		this.provider = provider;
 	}
 

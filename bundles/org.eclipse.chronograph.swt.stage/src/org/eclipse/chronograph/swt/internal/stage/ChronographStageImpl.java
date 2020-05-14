@@ -27,6 +27,7 @@ import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
+import org.eclipse.chronograph.internal.base.DataRegistry;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.RulerStyler;
@@ -65,7 +66,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 
 	private Map<String, Area> groupsAreas;
 	private Map<String, Area> bricksAreas;
-	private ChronographObjectRegistry registry;
+	private DataRegistry registry;
 	private Rectangle boundsGlobal;
 	private Area visiableArea;
 	private final Point originalPosition = new Point(0, 0);
@@ -99,7 +100,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	}
 
 	private void initRegistry() {
-		registry = new ChronographObjectRegistry(dataProvider);
+		registry = new DataRegistry(dataProvider);
 		registry.createRegistry();
 	}
 
@@ -568,7 +569,7 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	public void setProvider(ContainerProvider provider) {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
-		this.registry = new ChronographObjectRegistry(dataProvider);
+		this.registry = new DataRegistry(dataProvider);
 		this.registry.createRegistry();
 		this.calculateObjectBounds();
 		this.redraw();
