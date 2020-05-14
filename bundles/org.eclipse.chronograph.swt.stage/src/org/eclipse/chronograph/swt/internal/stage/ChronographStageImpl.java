@@ -35,10 +35,6 @@ import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
-import org.eclipse.chronograph.swt.stage.listeners.ChronographStageMouseListener;
-import org.eclipse.chronograph.swt.stage.listeners.ChronographStageMouseWheelListener;
-import org.eclipse.chronograph.swt.stage.listeners.ChronographStagePaintListener;
-import org.eclipse.chronograph.swt.stage.listeners.ChronographStageResizeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.GC;
@@ -136,13 +132,11 @@ public final class ChronographStageImpl extends Canvas implements ChronographSta
 	}
 
 	private void initListeners() {
-		ChronographStageMouseListener<ChronographStage> msListener = new ChronographStageMouseListener<ChronographStage>(
+		StageMouse<ChronographStage> msListener = new StageMouse<>(this);
+		StageMouseWheel<ChronographStage> msWheelListener = new StageMouseWheel<>(
 				this);
-		ChronographStageMouseWheelListener<ChronographStage> msWheelListener = new ChronographStageMouseWheelListener<ChronographStage>(
-				this);
-		ChronographStageResizeListener<ChronographStage> resizeListener = new ChronographStageResizeListener<ChronographStage>(
-				this);
-		addPaintListener(new ChronographStagePaintListener(this));
+		StageResize<ChronographStage> resizeListener = new StageResize<>(this);
+		addPaintListener(new StagePaint(this));
 		addMouseListener(msListener);
 		addMouseMoveListener(msListener);
 		addMouseTrackListener(msListener);

@@ -11,17 +11,16 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
+package org.eclipse.chronograph.swt.internal.stage;
 
-import org.eclipse.chronograph.swt.internal.stage.ChronographStageImpl;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 
-public class ChronographStagePaintListener implements PaintListener {
+final class StagePaint implements PaintListener {
 
 	private final ChronographStageImpl sceneComposer;
 
-	public ChronographStagePaintListener(ChronographStageImpl sceneComposer) {
+	public StagePaint(ChronographStageImpl sceneComposer) {
 		this.sceneComposer = sceneComposer;
 	}
 

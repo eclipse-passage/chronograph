@@ -11,18 +11,18 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.swt.stage.listeners;
+package org.eclipse.chronograph.swt.internal.stage;
 
 import org.eclipse.chronograph.internal.swt.stage.ChronographStage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-public class ChronographStageMouseWheelListener<T extends ChronographStage> implements Listener {
+final class StageMouseWheel<T extends ChronographStage> implements Listener {
 
 	private final T stage;
 
-	public ChronographStageMouseWheelListener(T stage) {
+	public StageMouseWheel(T stage) {
 		this.stage = stage;
 	}
 
