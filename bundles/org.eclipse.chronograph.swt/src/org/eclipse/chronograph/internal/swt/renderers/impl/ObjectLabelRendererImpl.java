@@ -20,7 +20,9 @@ import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectLabelRenderer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
@@ -32,16 +34,18 @@ public class ObjectLabelRendererImpl implements ChronographObjectLabelRenderer<B
 
 	@Override
 	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset) {
+		FontMetrics fontMetrics = gc.getFontMetrics();
+		int height = fontMetrics.getHeight();
 		gc.setForeground(StageStyler.STAGE_TEXT_COLOR);
 		gc.setLineStyle(SWT.LINE_SOLID);
-		gc.drawString(label, objectBounds.x + 5, objectBounds.y - 15, true);
-
+		int mediana = objectBounds.height / 2 - height / 2;
+		gc.drawString(label, objectBounds.x + height / 2, objectBounds.y - height, true);
 		String msg = String.valueOf(UnitConverter.unitsToLocalDate((int) brickPosition.start()));
-		gc.drawString(msg, objectBounds.x + 30, objectBounds.y + objectBounds.height / 5, true);
-
+		gc.drawString(msg, objectBounds.x + BrickStyler.getHeight(), objectBounds.y + mediana, true);
 		msg = String.valueOf(UnitConverter.unitsToLocalDate((int) brickPosition.end()));
-		gc.drawString(msg, objectBounds.x + objectBounds.width - msg.length() - 55,
-				objectBounds.y + objectBounds.height / 6, true);
+		Point msgExtent = gc.textExtent(msg);
+		gc.drawString(msg, objectBounds.x + objectBounds.width - (msgExtent.x + msgExtent.y), objectBounds.y + mediana,
+				true);
 		gc.setLineStyle(SWT.LINE_SOLID);
 		gc.setForeground(StageStyler.STAGE_TOP_COLOR);
 		gc.drawLine(objectBounds.x, 0, objectBounds.x, 20);

@@ -17,6 +17,8 @@ package org.eclipse.chronograph.internal.swt;
 import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -28,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
 public class BrickStyler implements Styler {
 
 	private static final Display DISPLAY = Display.getDefault();
-	private static int BRICK_HEIGHT_DEFAULT;
+	// private static int BRICK_HEIGHT_DEFAULT;
 	private static Color COLOR_TOP;
 	private static Color COLOR_BOTTOM;
 	private static Color SELECTED_COLOR_TOP;
@@ -50,7 +52,6 @@ public class BrickStyler implements Styler {
 		COLOR_BORDER = new Color(DISPLAY, new RGB(95, 95, 95));
 		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));
 		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(100, 100, 100));
-		BRICK_HEIGHT_DEFAULT = 26;
 	}
 
 	@Override
@@ -64,11 +65,12 @@ public class BrickStyler implements Styler {
 		COLOR_BORDER = new Color(DISPLAY, new RGB(190, 155, 184));
 		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));
 		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(220, 220, 220));
-		BRICK_HEIGHT_DEFAULT = 26;
 	}
 
 	public static int getHeight() {
-		return BRICK_HEIGHT_DEFAULT;
+		GC gc = new GC(DISPLAY);
+		FontMetrics fontMetrics = gc.getFontMetrics();
+		return fontMetrics.getHeight() * 2;
 	}
 
 	public static Color getColorTop() {
