@@ -38,18 +38,23 @@ public class ObjectContentRendererImpl implements ChronographObjectContentRender
 		LocalDate end = UnitConverter.unitsToLocalDate((int) object.position().end());
 		gc.setAntialias(SWT.ON);
 		gc.setBackground(BrickStyler.getColorBottom());
-		
+
 		if (now.isAfter(start) && now.isBefore(end)) {
-			gc.setForeground(BrickStyler.getActiveColorTop());
+			gc.setForeground(BrickStyler.getColorBottom());
 			gc.setBackground(BrickStyler.getActiveColorTop());
 		} else {
-			gc.setForeground(BrickStyler.getColorTop());	
+			gc.setForeground(BrickStyler.getColorTop());
 			gc.setBackground(BrickStyler.getColorBottom());
 		}
-		
-		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30,30);
-		gc.setForeground(BrickStyler.getColorBorder());
-		gc.setBackground(BrickStyler.getColorBottom());
-		gc.fillOval(bounds.x-bounds.height/10, bounds.y, bounds.height, bounds.height);
+		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
+
+		if (now.isAfter(start) && now.isBefore(end)) {
+			gc.setForeground(BrickStyler.getColorBottom());
+			gc.setBackground(BrickStyler.getColorBottom());
+		} else {
+			gc.setForeground(BrickStyler.getActiveColorTop());
+			gc.setBackground(BrickStyler.getActiveColorTop());
+		}
+		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
 	}
 }

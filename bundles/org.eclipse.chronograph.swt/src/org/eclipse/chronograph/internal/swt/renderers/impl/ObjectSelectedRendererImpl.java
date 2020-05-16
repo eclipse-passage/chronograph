@@ -30,8 +30,8 @@ public class ObjectSelectedRendererImpl implements ChronographObjectContentRende
 	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
 		gc.setForeground(BrickStyler.getColorTopSelected());
 		gc.setBackground(BrickStyler.getColorBottomSelected());
-		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30,30);
+		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30, 30);
 		gc.setBackground(BrickStyler.getColorTopSelected());
-		gc.fillOval(bounds.x-bounds.height/10, bounds.y, bounds.height, bounds.height);
+		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
 	}
 }

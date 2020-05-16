@@ -33,7 +33,7 @@ public class GroupRendererImpl<T extends Group> implements ChronographGroupRende
 
 	@Override
 	public void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY) {
-
+		int fontHeight = gc.getFontMetrics().getHeight();
 		final Rectangle groupNameRectangle = new Rectangle(groupBound.x, groupBound.y - hintY, width,
 				groupBound.height);
 		gc.setForeground(GroupStyler.GROUP_TOP_COLOR);
@@ -42,19 +42,28 @@ public class GroupRendererImpl<T extends Group> implements ChronographGroupRende
 		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
 		gc.setBackground(GroupStyler.GROUP_TOP_COLOR);
 		gc.fillRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
-				groupNameRectangle.height, 30, 30);
+				groupNameRectangle.height, width, width);
 		gc.drawRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
-				groupNameRectangle.height, 30, 30);
+				groupNameRectangle.height, width, width);
 		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
-		gc.drawRoundRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height,30,30);
-		
+		gc.drawRoundRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height, width, width);
+
 		Point stringExtent = gc.stringExtent(label);
+		String msg = label; // $NON-NLS-1$
+		if (stringExtent.x > groupNameRectangle.height) {
+			msg = label.substring(0, 5) + "..."; //$NON-NLS-1$
+		}
+		stringExtent = gc.stringExtent(msg);
 		Transform tr = new Transform(display);
 		tr.translate(groupNameRectangle.x, groupNameRectangle.y);
 		tr.rotate(-90);
 		gc.setTransform(tr);
 		gc.setForeground(GroupStyler.GROUP_TEXT_COLOR);
-		gc.drawString(label, -groupNameRectangle.height + (groupNameRectangle.height - stringExtent.x) / 2, 10, true);
+		gc.drawString(msg, -groupNameRectangle.height + (groupNameRectangle.height - stringExtent.x) / 2,
+				fontHeight / 2, true);
+		// gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
+		// gc.fillOval(-groupNameRectangle.height, 0, width, width);
+
 		tr.dispose();
 		gc.setTransform(null);
 	}

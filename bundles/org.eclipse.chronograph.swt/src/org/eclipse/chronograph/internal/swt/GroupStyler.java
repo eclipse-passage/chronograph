@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Group;
  *
  */
 public class GroupStyler implements Styler {
-	public static final int GROUP_HEIGHT_DEFAULT = 100;
+	public static final int GROUP_HEIGHT_DEFAULT = 50;
 	private static final Display DISPLAY = Display.getDefault();
 	public static Color GROUP_TOP_COLOR;
 	public static Color GROUP_BTM_COLOR;

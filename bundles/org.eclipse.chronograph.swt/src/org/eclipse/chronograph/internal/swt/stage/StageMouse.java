@@ -13,7 +13,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
-import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -33,7 +32,7 @@ import org.eclipse.swt.widgets.Tracker;
  */
 final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private ChronographCanvas stage;
+	private Stage stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private Point startPoint;
@@ -41,7 +40,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public StageMouse(ChronographCanvas stage) {
+	public StageMouse(Stage stage) {
 		this.stage = stage;
 	}
 
@@ -124,15 +123,6 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 		startPoint = null;
 		stage.setCursor(CURSOR_NONE);
 
-	}
-
-	private boolean checkPositionUnderRectangle(final int x, final int y, Area brickArea) {
-		if (brickArea == null) {
-			return false;
-		}
-
-		return x >= brickArea.x() && y >= brickArea.y() && x <= brickArea.x() + brickArea.width()
-				&& y <= brickArea.y() + brickArea.height();
 	}
 
 }
