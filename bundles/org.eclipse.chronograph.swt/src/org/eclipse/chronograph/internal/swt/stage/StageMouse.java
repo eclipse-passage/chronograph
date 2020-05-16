@@ -13,8 +13,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
-import org.eclipse.chronograph.internal.api.Area;
-import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -34,7 +32,7 @@ import org.eclipse.swt.widgets.Tracker;
  */
 final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private ChronographCanvas stage;
+	private Stage<?> stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private Point startPoint;
@@ -42,7 +40,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public StageMouse(ChronographCanvas stage) {
+	public StageMouse(Stage<?> stage) {
 		this.stage = stage;
 	}
 
@@ -60,7 +58,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 					deltaXPosition = 0;
 				}
 				stage.setPositionByX(deltaXPosition);
-				stage.getHint();
+				stage.applyHint();
 				stage.redraw();
 				stage.updateScrollers();
 			}
@@ -79,20 +77,12 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 
 	@Override
 	public void mouseHover(MouseEvent me) {
-
 		if (me.stateMask != 0) {
 			return;
 		}
-
 		Rectangle mainBounds = stage.getMainBounds();
 		if (mainBounds == null || me.x >= mainBounds.x) {
-			for (Brick brick : stage.getDrawingObjects()) {
-				Area brickArea = stage.getBrickArea(brick);
-				if (checkPositionUnderRectangle(me.x, me.y, brickArea)) {
-					stage.setCursor(CURSOR_HAND);
-					return;
-				}
-			}
+			stage.brickAt(me.x, me.y).ifPresent(b -> stage.setCursor(CURSOR_HAND));
 		}
 	}
 
@@ -103,19 +93,11 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 
 	@Override
 	public void mouseDown(final MouseEvent me) {
-
 		if (me.button == 1) {
 			isMouseDown = true;
 			xPosition = stage.getPositionByX();
 		}
-		for (Brick brick : stage.getDrawingObjects()) {
-			Area brickArea = stage.getBrickArea(brick);
-			if (checkPositionUnderRectangle(me.x, me.y, brickArea)) {
-				stage.addRemoveSelected(brick);
-				stage.redraw();
-				return;
-			}
-		}
+		stage.brickAt(me.x, me.y).ifPresent(stage::select);
 	}
 
 	@Override
@@ -141,15 +123,6 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 		startPoint = null;
 		stage.setCursor(CURSOR_NONE);
 
-	}
-
-	private boolean checkPositionUnderRectangle(final int x, final int y, Area brickArea) {
-		if (brickArea == null) {
-			return false;
-		}
-
-		return x >= brickArea.x() && y >= brickArea.y() && x <= brickArea.x() + brickArea.width()
-				&& y <= brickArea.y() + brickArea.height();
 	}
 
 }

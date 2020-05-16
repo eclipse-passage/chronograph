@@ -16,9 +16,9 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectExtRenderer;

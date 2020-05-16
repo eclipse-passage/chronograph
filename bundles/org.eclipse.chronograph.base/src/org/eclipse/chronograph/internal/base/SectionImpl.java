@@ -16,9 +16,9 @@ package org.eclipse.chronograph.internal.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Section;
 
 /**
  * 

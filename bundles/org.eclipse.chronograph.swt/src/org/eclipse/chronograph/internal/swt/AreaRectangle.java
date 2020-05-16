@@ -16,7 +16,7 @@ package org.eclipse.chronograph.internal.swt;
 
 import java.util.function.Function;
 
-import org.eclipse.chronograph.internal.api.Area;
+import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**

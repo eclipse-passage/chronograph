@@ -10,37 +10,24 @@
  * Contributors:
  *     ArSysOp - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
+package org.eclipse.chronograph.internal.api.graphics;
 
 import java.util.List;
-
-import org.eclipse.chronograph.internal.api.representation.Style;
+import java.util.function.Predicate;
 
 /**
- * Main entry point to an API
  * 
- * @since 0.1
+ * Encapsulates the storage of objects to be displayed
  *
  */
-public interface Chronograph {
+public interface Storage {
 
 	/**
-	 * Structure data according to the given type sequence: from section to brick
 	 * 
-	 * @param types the types to group the input
+	 * @param predicate the predicate to filter the bricks
+	 * @return
 	 */
-	void structure(List<Class<?>> types);
-
-	/**
-	 * Applies the given style
-	 * 
-	 * @param style the style to use
-	 */
-	void style(Style style);
-
-	/**
-	 * Refreshes the data using current structure and style
-	 */
-	void refresh();
+	// FIXME: not sure that we should use interface from "graphics" here
+	List<Brick> query(Predicate<Brick> predicate);
 
 }

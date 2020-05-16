@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Listener;
 
 final class StageResize implements Listener {
 
-	private final ChronographCanvas stage;
+	private final Stage stage;
 
-	public StageResize(ChronographCanvas stage) {
+	public StageResize(Stage stage) {
 		this.stage = stage;
 	}
 
