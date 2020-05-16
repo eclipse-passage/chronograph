@@ -15,7 +15,7 @@ package org.eclipse.chronograph.api.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ButFinallyWeNeedTests {
+public class ButFinallyWeNeedATest {
 
 	@Test
 	public void test() {
