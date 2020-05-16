@@ -115,7 +115,6 @@ public final class Stage extends Canvas {
 
 	private void initRegistry() {
 		registry = new PlainData(dataProvider);
-		registry.createRegistry();
 	}
 
 	private void initScrollBarHorizontal() {
@@ -547,7 +546,6 @@ public final class Stage extends Canvas {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
 		this.registry = new PlainData(dataProvider);
-		this.registry.createRegistry();
 		this.calculateObjectBounds();
 		this.redraw();
 	}
@@ -570,7 +568,6 @@ public final class Stage extends Canvas {
 
 	public void show(Object input) {
 		// FIXME: here we need to clear all caches and start showing new input
-		// TODO Auto-generated method stub
 		redraw();
 	}
 }

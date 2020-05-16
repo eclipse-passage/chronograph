@@ -20,7 +20,7 @@ import java.util.function.Predicate;
  * Provides access to a remote storage with data objects
  *
  */
-public interface Storage {
+public interface Access {
 
 	/**
 	 * Provides function to retrieve domain objects of the given type with given

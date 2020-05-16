@@ -45,9 +45,11 @@ public class PlainData implements Storage {
 
 	public PlainData(ContainerProvider provider) {
 		this.provider = provider;
+		// FIXME: wrong place, data is not yet needed
+		createRegistry();
 	}
 
-	public void createRegistry() {
+	private void createRegistry() {
 		SectionContentProvider<?> sectionProvider = provider.getSectionContentProvider();
 		GroupContentProvider<?> groupProvider = provider.getGroupContentProvider();
 		SubGroupContentProvider<?> subgroupProvider = provider.getSubGroupContentProvider();
