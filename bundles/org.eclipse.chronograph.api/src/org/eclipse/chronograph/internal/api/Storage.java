@@ -20,13 +20,14 @@ import java.util.function.Predicate;
  * Encapsulates the storage of objects to be displayed
  *
  */
-public interface Data {
+public interface Storage {
 
 	/**
 	 * 
 	 * @param predicate the predicate to filter the bricks
 	 * @return
 	 */
+	// FIXME: not sure that we should use interface from "graphics" here
 	List<Brick> query(Predicate<Brick> predicate);
 
 }

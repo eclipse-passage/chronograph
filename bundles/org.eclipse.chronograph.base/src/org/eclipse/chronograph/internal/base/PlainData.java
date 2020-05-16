@@ -22,9 +22,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Data;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.Storage;
 import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.GroupContentProvider;
@@ -35,7 +35,7 @@ import org.eclipse.chronograph.internal.api.providers.SubGroupContentProvider;
  * Class intended to aggregate data
  *
  */
-public class PlainData implements Data {
+public class PlainData implements Storage {
 
 	private final ContainerProvider provider;
 	private final Map<String, Section> sectionsById = new HashMap<>();
