@@ -25,13 +25,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.chronograph.api.test.TestInputObject;
 import org.eclipse.chronograph.api.test.TestInputObjects;
 import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
-import org.eclipse.chronograph.internal.api.adapters.BrickAdapter;
 import org.eclipse.chronograph.internal.api.builders.BrickBuilder;
 import org.eclipse.chronograph.internal.base.GroupImpl;
 import org.eclipse.chronograph.internal.base.SectionImpl;
@@ -48,7 +48,7 @@ import org.junit.Test;
 public class BrickProvidersTest {
 	private List<TestInputObject> input = new ArrayList<>();
 	private BrickBuilder<List<TestInputObject>, TestInputObject> testBrickBuilder;
-	private BrickAdapter<TestInputObject, Brick> testBrickAdapter;
+	private Function<List<TestInputObject>, List<Brick>> testBrickAdapter;
 	private BrickContentProviderImpl<TestInputObject, TestInputObject> testBrickProvider;
 
 	@Before

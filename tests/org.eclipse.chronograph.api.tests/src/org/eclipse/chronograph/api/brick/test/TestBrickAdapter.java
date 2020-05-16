@@ -28,13 +28,12 @@ import java.util.stream.Collectors;
 
 import org.eclipse.chronograph.api.test.TestInputObject;
 import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.adapters.BrickAdapter;
 import org.eclipse.chronograph.internal.base.BrickImpl;
 
-public class TestBrickAdapter implements BrickAdapter<TestInputObject, Brick> {
+public class TestBrickAdapter implements Function<List<TestInputObject>, List<Brick>> {
 
 	@Override
-	public List<Brick> adapt(List<TestInputObject> inputObjects) {
+	public List<Brick> apply(List<TestInputObject> inputObjects) {
 		Map<TestInputObject, Brick> objectsToBricks = new HashMap<>();
 
 		List<Brick> bricks = inputObjects.stream()

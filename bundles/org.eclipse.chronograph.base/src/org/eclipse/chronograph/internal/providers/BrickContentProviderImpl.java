@@ -14,10 +14,10 @@
 package org.eclipse.chronograph.internal.providers;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.adapters.BrickAdapter;
 import org.eclipse.chronograph.internal.api.builders.BrickBuilder;
 import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
 
@@ -31,27 +31,27 @@ import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
 public class BrickContentProviderImpl<I, D> implements BrickContentProvider<I> {
 
 	private final BrickBuilder<List<I>, D> builder;
-	private final BrickAdapter<D, Brick> adapter;
+	private final Function<List<D>, List<Brick>> adapter;
 
-	public BrickContentProviderImpl(BrickBuilder<List<I>, D> brickBuilder, BrickAdapter<D, Brick> brickAdapter) {
-
+	public BrickContentProviderImpl(BrickBuilder<List<I>, D> brickBuilder,
+			Function<List<D>, List<Brick>> brickAdapter) {
 		this.builder = brickBuilder;
 		this.adapter = brickAdapter;
 	}
 
 	@Override
 	public List<Brick> getBricksByGroup(List<I> input, Group group) {
-		return adapter.adapt(builder.applyGroup(input, group.id()));
+		return adapter.apply(builder.applyGroup(input, group.id()));
 	}
 
 	@Override
 	public List<Brick> getBricksBySubGroup(List<I> input, String groupId, Group subGroup) {
-		return adapter.adapt(builder.applySubGroup(input, groupId, subGroup.id()));
+		return adapter.apply(builder.applySubGroup(input, groupId, subGroup.id()));
 	}
 
 	@Override
 	public List<Brick> getBricks(List<I> input) {
-		return adapter.adapt(builder.apply(input));
+		return adapter.apply(builder.apply(input));
 	}
 
 }
