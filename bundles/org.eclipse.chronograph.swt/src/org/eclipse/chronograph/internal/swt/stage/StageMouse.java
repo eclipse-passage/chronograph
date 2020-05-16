@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Tracker;
  */
 final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private Stage stage;
+	private Stage<?> stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private Point startPoint;
@@ -40,7 +40,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public StageMouse(Stage stage) {
+	public StageMouse(Stage<?> stage) {
 		this.stage = stage;
 	}
 

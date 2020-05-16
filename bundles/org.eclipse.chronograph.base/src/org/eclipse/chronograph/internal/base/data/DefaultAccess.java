@@ -13,36 +13,54 @@
 package org.eclipse.chronograph.internal.base.data;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.eclipse.chronograph.internal.api.data.Access;
 
-public abstract class DefaultAccess implements Access {
+public abstract class DefaultAccess<I> implements Access<I> {
+
+	private final Class<I> type;
+
+	public DefaultAccess(Class<I> type) {
+		this.type = type;
+	}
 
 	@Override
-	public <I> Function<Predicate<I>, Iterable<I>> data(Class<I> type) {
+	public Class<I> type() {
+		return type;
+	}
+
+	@Override
+	public Function<Predicate<I>, List<I>> input() {
 		return t -> Collections.emptyList();
 	}
 
 	@Override
-	public <D> Function<D, String> identification(Class<D> type) {
+	public <D> Function<D, String> identification(Class<D> domain) {
 		return t -> String.valueOf(Objects.hashCode(t));
 	}
 
 	@Override
-	public <P, C> Function<P, Iterable<C>> content(Class<P> parent, Class<C> child) {
-		return p -> Collections.emptyList();
+	public <G> Function<I, Optional<G>> map(Class<G> group) {
+		return p -> Optional.empty();
 	}
 
 	@Override
-	public <D> Function<D, Integer> start(Class<D> type) {
+	public <G> Function<I, String> grouping(Class<G> grouping) {
+		return t -> Objects.toString(grouping);
+	}
+
+	@Override
+	public Function<I, Integer> start() {
 		return t -> 0;
 	}
 
 	@Override
-	public <D> Function<D, Integer> end(Class<D> type) {
+	public Function<I, Integer> end() {
 		return t -> 0;
 	}
 

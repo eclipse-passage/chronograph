@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api.data;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -20,54 +22,59 @@ import java.util.function.Predicate;
  * Provides access to a remote storage with data objects
  *
  */
-public interface Access {
+public interface Access<I> {
+
+	Class<I> type();
 
 	/**
-	 * Provides function to retrieve domain objects of the given type with given
-	 * predicate from the remote storage
+	 * Provides function to retrieve input domain objects with given predicate from
+	 * the remote storage
 	 * 
-	 * @param <I>
-	 * @param type
-	 * @return
+	 * @return function to retrieve filtered input
 	 */
-	<I> Function<Predicate<I>, Iterable<I>> data(Class<I> type);
+	Function<Predicate<I>, List<I>> input();
 
 	/**
-	 * Identification function for the
+	 * Identification function for the domain object
 	 * 
-	 * @param <D>
-	 * @param type
+	 * @param <D>  the type of domain object
+	 * @param type the domain object type
 	 * @return
 	 */
 	<D> Function<D, String> identification(Class<D> type);
 
 	/**
-	 * "Content" function for the given input to use for grouping
+	 * "map" function for the given type to define groups
 	 * 
-	 * @param <P>
+	 * @param <G>
+	 * @param grouping
+	 * @return
+	 */
+	<G> Function<I, Optional<G>> map(Class<G> grouping);
+
+	/**
+	 * "grouping" function to collect by groups
+	 * 
 	 * @param <C>
-	 * @param parent
 	 * @param child
 	 * @return
 	 */
-	<P, C> Function<P, Iterable<C>> content(Class<P> parent, Class<C> child);
+	<G> Function<I, String> grouping(Class<G> grouping);
 
 	/**
 	 * Start pointer function to use for representation
 	 * 
-	 * @param <D>
-	 * @param type
-	 * @return
+	 * @return function to get start pointer
 	 */
-	<D> Function<D, Integer> start(Class<D> type);
+	Function<I, Integer> start();
 
 	/**
 	 * End pointer function to use for representation
 	 * 
 	 * @param <D>
 	 * @param type
-	 * @return
+	 * @return function to get end pointer
 	 */
-	<D> Function<D, Integer> end(Class<D> type);
+	Function<I, Integer> end();
 
 }

@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api;
 
+import java.util.List;
+
 /**
  * Main entry point to an API
  * 
@@ -21,11 +23,11 @@ package org.eclipse.chronograph.internal.api;
 public interface Chronograph {
 
 	/**
-	 * Displays the current object
+	 * Structure data according to the given type sequence: from section to brick
 	 * 
-	 * @param input the object to display
+	 * @param types the types to group the input
 	 */
-	void display(Object input);
+	void structure(List<Class<?>> types);
 
 	/**
 	 * Applies the given style

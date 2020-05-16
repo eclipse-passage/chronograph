@@ -18,11 +18,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.eclipse.chronograph.internal.api.Area;
 import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.data.Access;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
@@ -45,8 +47,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class Stage extends Canvas {
+public final class Stage<I> extends Canvas {
 
+	private final Access<I> access;
 	private final AreaRectangle areaRectangle;
 	private final ActualBricks actualBricks;
 	private final ExpiredBricks expiredBricks;
@@ -63,25 +66,26 @@ public final class Stage extends Canvas {
 
 	private List<Brick> bricksSelected;
 
-	private PlainData registry;
+	private PlainData<I> registry;
 	private Rectangle boundsGlobal;
 	private Area visiableArea;
 	private final Point originalPosition = new Point(0, 0);
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
 	private StageLabelProvider labelProvider;
-	private ContainerProvider dataProvider;
+	private ContainerProvider<I> dataProvider;
 	private Calculator calculator;
 	private int zoom = 1;
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, ContainerProvider provider) {
-		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, provider);
+	public Stage(Composite parent, Access<I> access, ContainerProvider<I> provider) {
+		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
 	}
 
-	public Stage(Composite parent, int style, ContainerProvider provider) {
+	public Stage(Composite parent, int style, Access<I> access, ContainerProvider<I> provider) {
 		super(parent, style);
+		this.access = access;
 		this.areaRectangle = new AreaRectangle();
 		this.actualBricks = new ActualBricks();
 		this.expiredBricks = new ExpiredBricks();
@@ -100,7 +104,7 @@ public final class Stage extends Canvas {
 	}
 
 	private void initRegistry() {
-		registry = new PlainData(dataProvider);
+		registry = new PlainData<>(access, dataProvider);
 	}
 
 	private void initCalculator() {
@@ -253,7 +257,8 @@ public final class Stage extends Canvas {
 		List<Brick> markedBricks = new ArrayList<Brick>();
 		for (Brick selectedBrick : selectedBriks) {
 			for (Brick brick : bricks) {
-				if (brick.id().equals(selectedBrick.id()) && brick.position().start() == brick.position().start()) {
+				if (brick.id().equals(selectedBrick.id())
+						&& brick.position().start() == selectedBrick.position().start()) {
 					markedBricks.add(brick);
 				}
 			}
@@ -434,10 +439,11 @@ public final class Stage extends Canvas {
 		redraw();
 	}
 
-	public void setProvider(ContainerProvider provider) {
+	public void setProvider(ContainerProvider<I> provider) {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
-		this.registry = new PlainData(dataProvider);
+		this.registry = new PlainData<>(access, dataProvider);
+		this.calculator = new Calculator(registry);
 		this.calculateObjectBounds();
 		this.redraw();
 	}
@@ -458,19 +464,23 @@ public final class Stage extends Canvas {
 		this.redraw();
 	}
 
-	public void show(Object input) {
-		// FIXME: here we need to clear all caches and start showing new input
-		redraw();
-	}
-
 	private int getMaxBrickPosition() {
 		long max = 0;
 		// FIXME: this may take very long
-		for (Brick brick : registry.query(b -> true)) {
+		Predicate<Brick> all = b -> true;
+		for (Brick brick : registry.query(all)) {
 			if (brick.position().end() > max) {
 				max = brick.position().end();
 			}
 		}
 		return (int) max;
+	}
+
+	public void structure(List<Class<?>> types) {
+		registry = new PlainData<>(access, dataProvider);
+		calculator = new Calculator(registry);
+		registry.structure(types);
+		calculateObjectBounds();
+		redraw();
 	}
 }

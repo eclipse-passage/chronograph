@@ -18,9 +18,9 @@ import org.eclipse.swt.events.PaintListener;
 
 final class StagePaint implements PaintListener {
 
-	private final Stage sceneComposer;
+	private final Stage<?> sceneComposer;
 
-	public StagePaint(Stage sceneComposer) {
+	public StagePaint(Stage<?> sceneComposer) {
 		this.sceneComposer = sceneComposer;
 	}
 

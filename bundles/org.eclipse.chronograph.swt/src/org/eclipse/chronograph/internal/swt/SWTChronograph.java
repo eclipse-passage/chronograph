@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.chronograph.internal.api.Chronograph;
 import org.eclipse.chronograph.internal.api.Style;
 import org.eclipse.chronograph.internal.api.Styler;
+import org.eclipse.chronograph.internal.api.data.Access;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.stage.Stage;
@@ -32,12 +33,13 @@ import org.eclipse.swt.widgets.Composite;
  * The main entry point to the SWT implementation of {@link Chronograph}
  *
  */
-public class SWTChronograph implements Chronograph {
-	private final Stage stage;
+//FIXME: it looks like this type is not really needed
+public class SWTChronograph<I> implements Chronograph {
+	private final Stage<I> stage;
 	private final List<Styler> stylers;
 
-	public SWTChronograph(Composite parent, ContainerProvider provider) {
-		this.stage = new Stage(parent, provider);
+	public SWTChronograph(Composite parent, Access<I> access, ContainerProvider<I> provider) {
+		this.stage = new Stage<>(parent, access, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 		stylers = new ArrayList<>();
@@ -60,17 +62,17 @@ public class SWTChronograph implements Chronograph {
 		this.stage.redraw();
 	}
 
-	public void setProvider(ContainerProvider provider) {
+	public void setProvider(ContainerProvider<I> provider) {
 		this.stage.setProvider(provider);
-	}
-
-	@Override
-	public void display(Object input) {
-		stage.show(input);
 	}
 
 	@Override
 	public void style(Style style) {
 		style.apply(stage);
+	}
+
+	@Override
+	public void structure(List<Class<?>> types) {
+		stage.structure(types);
 	}
 }
