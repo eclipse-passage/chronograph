@@ -25,7 +25,7 @@ import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.data.Access;
-import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
+import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.base.query.ActualBricks;

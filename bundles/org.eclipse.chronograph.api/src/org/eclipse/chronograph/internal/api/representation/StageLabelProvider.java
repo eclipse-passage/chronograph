@@ -11,7 +11,7 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api.providers;
+package org.eclipse.chronograph.internal.api.representation;
 
 /**
  * The label provider designed to provide specific data for input objects
