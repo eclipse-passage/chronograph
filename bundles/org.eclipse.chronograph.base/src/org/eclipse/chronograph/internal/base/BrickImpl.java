@@ -14,29 +14,21 @@
 package org.eclipse.chronograph.internal.base;
 
 import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.BrickContainer;
 import org.eclipse.chronograph.internal.api.Position;
 
 public class BrickImpl implements Brick {
 
 	private final String id;
 	private final Position position;
-	private final BrickContainer parent;
 
-	public BrickImpl(BrickContainer parent, String id, int start, int end) {
+	public BrickImpl(String id, int start, int end) {
 		this.id = id;
-		this.parent = parent;
 		this.position = new PositionImpl(start, end);
 	}
 
 	@Override
 	public String id() {
 		return this.id;
-	}
-
-	@Override
-	public BrickContainer container() {
-		return parent;
 	}
 
 	@Override

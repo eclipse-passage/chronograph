@@ -28,6 +28,6 @@ import org.eclipse.chronograph.internal.api.Group;
  */
 public interface BrickAdapter<T, S> {
 
-	public List<S> adapt(List<T> inputObjects, Group container);
+	public List<S> adapt(List<T> inputObjects);
 
 }

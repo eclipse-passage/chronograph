@@ -41,17 +41,17 @@ public class BrickContentProviderImpl<I, D> implements BrickContentProvider<I> {
 
 	@Override
 	public List<Brick> getBricksByGroup(List<I> input, Group group) {
-		return adapter.adapt(builder.applyGroup(input, group.id()), group);
+		return adapter.adapt(builder.applyGroup(input, group.id()));
 	}
 
 	@Override
 	public List<Brick> getBricksBySubGroup(List<I> input, String groupId, Group subGroup) {
-		return adapter.adapt(builder.applySubGroup(input, groupId, subGroup.id()), subGroup);
+		return adapter.adapt(builder.applySubGroup(input, groupId, subGroup.id()));
 	}
 
 	@Override
 	public List<Brick> getBricks(List<I> input) {
-		return adapter.adapt(builder.apply(input), null);
+		return adapter.adapt(builder.apply(input));
 	}
 
 }

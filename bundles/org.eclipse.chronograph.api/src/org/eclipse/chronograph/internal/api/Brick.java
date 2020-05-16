@@ -27,12 +27,6 @@ public interface Brick {
 
 	/**
 	 * 
-	 * @return BrickContainer as a parent element
-	 */
-	BrickContainer container();
-
-	/**
-	 * 
 	 * @return original Brick position
 	 */
 	Position position();
