@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Listener;
 
 final class StageWheel implements Listener {
 
-	private final Stage stage;
+	private final ChronographCanvas stage;
 
-	public StageWheel(Stage stage) {
+	public StageWheel(ChronographCanvas stage) {
 		this.stage = stage;
 	}
 

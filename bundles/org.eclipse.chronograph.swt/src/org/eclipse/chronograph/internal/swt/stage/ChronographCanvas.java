@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class Stage extends Canvas {
+public final class ChronographCanvas extends Canvas {
 
 	private final AreaRectangle areaRectangle;
 	private final ActualBricks actualBricks;
@@ -86,11 +86,11 @@ public final class Stage extends Canvas {
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, ContainerProvider provider) {
+	public ChronographCanvas(Composite parent, ContainerProvider provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, provider);
 	}
 
-	public Stage(Composite parent, int style, ContainerProvider provider) {
+	public ChronographCanvas(Composite parent, int style, ContainerProvider provider) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
 		this.actualBricks = new ActualBricks();

@@ -22,7 +22,7 @@ import org.eclipse.chronograph.internal.api.Style;
 import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.swt.stage.Stage;
+import org.eclipse.chronograph.internal.swt.stage.ChronographCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 public class SWTChronograph implements Chronograph {
-	private final Stage stage;
+	private final ChronographCanvas stage;
 	private final List<Styler> stylers;
 
 	public SWTChronograph(Composite parent, ContainerProvider provider) {
-		this.stage = new Stage(parent, provider);
+		this.stage = new ChronographCanvas(parent, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 		stylers = new ArrayList<>();
