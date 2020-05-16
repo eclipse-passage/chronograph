@@ -114,7 +114,7 @@ public class PlainData<I> implements Storage {
 				.collect(Collectors.toList());
 	}
 
-	public void structure(List<Class<?>> types) {
+	public void restructure(List<Class<?>> types) {
 		clear();
 		if (types.size() < 3) {
 			// FIXME: we should be more flexible and the code below can really be
@@ -181,5 +181,9 @@ public class PlainData<I> implements Storage {
 		groupsBySection.clear();
 		sectionsById.clear();
 		subGroupsBygroup.clear();
+	}
+
+	public List<Class<?>> structure() {
+		return new ArrayList<Class<?>>(structure);
 	}
 }

@@ -479,8 +479,12 @@ public final class Stage<I> extends Canvas {
 	public void structure(List<Class<?>> types) {
 		registry = new PlainData<>(access, dataProvider);
 		calculator = new Calculator(registry);
-		registry.structure(types);
+		registry.restructure(types);
 		calculateObjectBounds();
 		redraw();
+	}
+
+	public void refresh() {
+		structure(registry.structure());
 	}
 }

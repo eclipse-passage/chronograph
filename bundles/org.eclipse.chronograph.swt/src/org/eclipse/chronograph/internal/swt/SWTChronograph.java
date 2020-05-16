@@ -75,4 +75,9 @@ public class SWTChronograph<I> implements Chronograph {
 	public void structure(List<Class<?>> types) {
 		stage.structure(types);
 	}
+
+	@Override
+	public void refresh() {
+		stage.refresh();
+	}
 }

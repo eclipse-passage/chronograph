@@ -36,4 +36,9 @@ public interface Chronograph {
 	 */
 	void style(Style style);
 
+	/**
+	 * Refreshes the data using current structure and style
+	 */
+	void refresh();
+
 }
