@@ -14,7 +14,6 @@
 
 package org.eclipse.chronograph.internal.base;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,37 +79,6 @@ public class PlainData implements Data {
 
 	public List<Group> getSubGroupByGroupSection(Group group) {
 		return subGroupsBygroup.get(group);
-	}
-
-	public List<Brick> getBrickExpired() {
-		List<Brick> result = new ArrayList<>();
-		for (List<Brick> bricks : bricksBySubgroup.values()) {
-			for (Brick brick : bricks) {
-				LocalDate now = LocalDate.now();
-				LocalDate start = UnitConverter.unitsToLocalDate((int) brick.position().start());
-				LocalDate end = UnitConverter.unitsToLocalDate((int) brick.position().end());
-				if (now.isAfter(end) && now.isBefore(start)) {
-					result.add(brick);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	public List<Brick> getBrickActual() {
-		List<Brick> result = new ArrayList<>();
-		for (List<Brick> bricks : bricksBySubgroup.values()) {
-			for (Brick brick : bricks) {
-				LocalDate now = LocalDate.now();
-				LocalDate start = UnitConverter.unitsToLocalDate((int) brick.position().start());
-				LocalDate end = UnitConverter.unitsToLocalDate((int) brick.position().end());
-				if (now.isAfter(start) && now.isBefore(end)) {
-					result.add(brick);
-				}
-			}
-		}
-		return result;
 	}
 
 	public List<Brick> getBrickBySubgroup(String subgroupId, String groupId, String sectionId) {

@@ -27,7 +27,9 @@ import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
-import org.eclipse.chronograph.internal.base.DataRegistry;
+import org.eclipse.chronograph.internal.base.PlainData;
+import org.eclipse.chronograph.internal.base.query.ActualBricks;
+import org.eclipse.chronograph.internal.base.query.ExpiredBricks;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
@@ -51,6 +53,8 @@ import org.eclipse.swt.widgets.ScrollBar;
 public final class ChronographCanvas extends Canvas {
 
 	private final AreaRectangle areaRectangle;
+	private final ActualBricks actualBricks;
+	private final ExpiredBricks expiredBricks;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
 	private static final int SCALE_DEFAULT = 5;
@@ -67,7 +71,7 @@ public final class ChronographCanvas extends Canvas {
 
 	private Map<String, Area> groupsAreas;
 	private Map<String, Area> bricksAreas;
-	private DataRegistry registry;
+	private PlainData registry;
 	private Rectangle boundsGlobal;
 	private Area visiableArea;
 	private final Point originalPosition = new Point(0, 0);
@@ -86,6 +90,9 @@ public final class ChronographCanvas extends Canvas {
 	public ChronographCanvas(Composite parent, int style, ContainerProvider provider) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
+		this.actualBricks = new ActualBricks();
+		this.expiredBricks = new ExpiredBricks();
+
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
 		bricksSelected = new ArrayList<>();
@@ -102,7 +109,7 @@ public final class ChronographCanvas extends Canvas {
 	}
 
 	private void initRegistry() {
-		registry = new DataRegistry(dataProvider);
+		registry = new PlainData(dataProvider);
 		registry.createRegistry();
 	}
 
@@ -243,8 +250,8 @@ public final class ChronographCanvas extends Canvas {
 					SectionStyler.getSectionWidth(), pYhint);
 		}
 		// status line
-		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.getBrickActual().size(),
-				registry.getBrickExpired().size(), pYhint);
+		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
+				registry.query(expiredBricks).size(), pYhint);
 
 	}
 
@@ -541,7 +548,7 @@ public final class ChronographCanvas extends Canvas {
 	public void setProvider(ContainerProvider provider) {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
-		this.registry = new DataRegistry(dataProvider);
+		this.registry = new PlainData(dataProvider);
 		this.registry.createRegistry();
 		this.calculateObjectBounds();
 		this.redraw();
