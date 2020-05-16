@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("MMMM"); //$NON-NLS-1$
+	private final SimpleDateFormat sdfNum = new SimpleDateFormat("MM"); //$NON-NLS-1$
 	private final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 
 	@Override
@@ -37,6 +38,7 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 		int xMaxPosition = bounds.width + bounds.x;
 		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_MOUNTH_HEIGHT
 				- RulerStyler.RULER_YEAR_HEIGHT;
+		int yTopPosition = bounds.y + bounds.height - RulerStyler.RULER_YEAR_HEIGHT;
 		int xPosition = 0;
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
@@ -50,11 +52,16 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 		while (true) {
 
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-				gc.setForeground(RulerStyler.RULER_BRD_COLOR);
-				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
+				// grid line
+				gc.drawLine(xPosition, bounds.y, xPosition, yTopPosition);
 				String msg = sdf.format(calendar.getTime());
+				if (width < 2) {
+					msg = sdfNum.format(calendar.getTime());
+				}
 				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);
+
 			}
 			xPosition += width;
 			if (xPosition > xMaxPosition) {
