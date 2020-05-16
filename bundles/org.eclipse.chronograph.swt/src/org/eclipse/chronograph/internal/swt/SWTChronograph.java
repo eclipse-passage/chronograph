@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.Chronograph;
-import org.eclipse.chronograph.internal.api.Style;
-import org.eclipse.chronograph.internal.api.Styler;
 import org.eclipse.chronograph.internal.api.data.Access;
 import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
+import org.eclipse.chronograph.internal.api.representation.Style;
+import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.stage.Stage;
 import org.eclipse.swt.SWT;

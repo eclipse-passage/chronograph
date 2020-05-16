@@ -14,6 +14,8 @@ package org.eclipse.chronograph.internal.api;
 
 import java.util.List;
 
+import org.eclipse.chronograph.internal.api.representation.Style;
+
 /**
  * Main entry point to an API
  * 
