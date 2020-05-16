@@ -97,12 +97,6 @@ public class PlainData implements Data {
 		return new ArrayList<>();
 	}
 
-	public List<Brick> getBricks() {
-		return bricksBySubgroup.values().stream() //
-				.flatMap(List::stream) //
-				.collect(Collectors.toList());
-	}
-
 	@Override
 	public List<Brick> query(Predicate<Brick> predicate) {
 		return bricksBySubgroup.values().stream() //

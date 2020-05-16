@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.eclipse.chronograph.internal.api.Area;
@@ -56,6 +57,8 @@ public final class ChronographCanvas extends Canvas {
 	private final ActualBricks actualBricks;
 	private final ExpiredBricks expiredBricks;
 
+	private final Map<Area, Brick> areaBricks;
+
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
 	private static final int SCALE_DEFAULT = 5;
 	private int pX;
@@ -92,6 +95,8 @@ public final class ChronographCanvas extends Canvas {
 		this.areaRectangle = new AreaRectangle();
 		this.actualBricks = new ActualBricks();
 		this.expiredBricks = new ExpiredBricks();
+
+		this.areaBricks = new HashMap<Area, Brick>();
 
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
@@ -294,6 +299,7 @@ public final class ChronographCanvas extends Canvas {
 
 	private void addDrawingArea(Brick brick, Area area) {
 		bricksAreas.put(brick.id(), area);
+		areaBricks.put(area, brick);
 	}
 
 	private Area getDrawingArea(Brick brick) {
@@ -458,10 +464,6 @@ public final class ChronographCanvas extends Canvas {
 		return stageScale;
 	}
 
-	public List<? extends Brick> getDrawingObjects() {
-		return registry.getBricks();
-	}
-
 	private void updateStageScale() {
 		if (stageScale <= 0) {
 			stageScale = 1;
@@ -517,19 +519,14 @@ public final class ChronographCanvas extends Canvas {
 		pXhint = pX / (pxlHint * stageScale);
 	}
 
-	public Area getBrickArea(Brick brick) {
-		return getDrawingArea(brick);
+	public Optional<Brick> brickAt(int x, int y) {
+		return areaBricks.keySet().stream()//
+				.filter(a -> x >= a.x() && y >= a.y() && x <= a.x() + a.width() && y <= a.y() + a.height())//
+				.findFirst()//
+				.map(areaBricks::get);
 	}
 
-	public void addSelected(Brick brick) {
-		bricksSelected.add(brick);
-	}
-
-	public void removeSelected(Brick brick) {
-		bricksSelected.remove(brick);
-	}
-
-	public void addRemoveSelected(Brick brick) {
+	public void select(Brick brick) {
 		List<Brick> markedBriks = new ArrayList<Brick>();
 		for (Brick selectedBrick : bricksSelected) {
 			if (selectedBrick.id().equals(brick.id())) {
@@ -543,6 +540,7 @@ public final class ChronographCanvas extends Canvas {
 		} else {
 			bricksSelected.add(brick);
 		}
+		redraw();
 	}
 
 	public void setProvider(ContainerProvider provider) {

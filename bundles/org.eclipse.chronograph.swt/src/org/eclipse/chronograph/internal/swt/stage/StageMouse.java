@@ -14,7 +14,6 @@
 package org.eclipse.chronograph.internal.swt.stage;
 
 import org.eclipse.chronograph.internal.api.Area;
-import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -79,20 +78,12 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 
 	@Override
 	public void mouseHover(MouseEvent me) {
-
 		if (me.stateMask != 0) {
 			return;
 		}
-
 		Rectangle mainBounds = stage.getMainBounds();
 		if (mainBounds == null || me.x >= mainBounds.x) {
-			for (Brick brick : stage.getDrawingObjects()) {
-				Area brickArea = stage.getBrickArea(brick);
-				if (checkPositionUnderRectangle(me.x, me.y, brickArea)) {
-					stage.setCursor(CURSOR_HAND);
-					return;
-				}
-			}
+			stage.brickAt(me.x, me.y).ifPresent(b -> stage.setCursor(CURSOR_HAND));
 		}
 	}
 
@@ -103,19 +94,11 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 
 	@Override
 	public void mouseDown(final MouseEvent me) {
-
 		if (me.button == 1) {
 			isMouseDown = true;
 			xPosition = stage.getPositionByX();
 		}
-		for (Brick brick : stage.getDrawingObjects()) {
-			Area brickArea = stage.getBrickArea(brick);
-			if (checkPositionUnderRectangle(me.x, me.y, brickArea)) {
-				stage.addRemoveSelected(brick);
-				stage.redraw();
-				return;
-			}
-		}
+		stage.brickAt(me.x, me.y).ifPresent(stage::select);
 	}
 
 	@Override
