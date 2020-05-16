@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.Data;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
@@ -34,8 +36,7 @@ import org.eclipse.chronograph.internal.api.providers.SubGroupContentProvider;
  * Class intended to aggregate data
  *
  */
-//FIXME extract interface
-public class DataRegistry {
+public class PlainData implements Data {
 
 	private final ContainerProvider provider;
 	private final Map<String, Section> sectionsById = new HashMap<>();
@@ -43,7 +44,7 @@ public class DataRegistry {
 	private final Map<Group, List<Group>> subGroupsBygroup = new HashMap<>();
 	private final Map<Group, List<Brick>> bricksBySubgroup = new HashMap<>();
 
-	public DataRegistry(ContainerProvider provider) {
+	public PlainData(ContainerProvider provider) {
 		this.provider = provider;
 	}
 
@@ -131,6 +132,14 @@ public class DataRegistry {
 	public List<Brick> getBricks() {
 		return bricksBySubgroup.values().stream() //
 				.flatMap(List::stream) //
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Brick> query(Predicate<Brick> predicate) {
+		return bricksBySubgroup.values().stream() //
+				.flatMap(List::stream) //
+				.filter(predicate) //
 				.collect(Collectors.toList());
 	}
 }
