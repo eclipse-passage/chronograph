@@ -8,26 +8,21 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     ArSysOp - initial API and implementation
+ *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
 
-import java.util.List;
-import java.util.function.Predicate;
+package org.eclipse.chronograph.internal.api.graphics;
 
 /**
  * 
- * Encapsulates the storage of objects to be displayed
+ * The Section describes typed container with sequence of Group and Brick items
  *
  */
-public interface Storage {
+public interface Section extends GroupContainer, BrickContainer {
 
 	/**
 	 * 
-	 * @param predicate the predicate to filter the bricks
-	 * @return
+	 * @return the String identifier of Section element
 	 */
-	// FIXME: not sure that we should use interface from "graphics" here
-	List<Brick> query(Predicate<Brick> predicate);
-
+	String id();
 }

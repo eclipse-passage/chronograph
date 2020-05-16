@@ -20,11 +20,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.eclipse.chronograph.internal.api.Area;
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.graphics.Area;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;

@@ -10,21 +10,20 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-
-package org.eclipse.chronograph.internal.api;
+package org.eclipse.chronograph.internal.api.graphics;
 
 import java.util.List;
 
 /**
  * 
- * Container for Group typed elements
+ * Container for Brick typed elements
  *
  */
-public interface GroupContainer {
+public interface BrickContainer {
 
 	/**
 	 * 
-	 * @return stored Group elements in List data structure
+	 * @return stored Brick elements in List data structure
 	 */
-	List<? extends Group> groups();
+	List<? extends Brick> bricks();
 }

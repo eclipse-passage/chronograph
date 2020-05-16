@@ -10,25 +10,32 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
+
+package org.eclipse.chronograph.internal.api.graphics;
 
 /**
  * 
- * The Group describes typed container with sequence Brick items
+ * Described the object positioning in internal interpretation.
  *
  */
-public interface Group extends BrickContainer, GroupContainer {
+public interface Position {
 
 	/**
 	 * 
-	 * @return String identifier of group
+	 * @return start value of position
 	 */
-	String id();
+	long start();
 
 	/**
 	 * 
-	 * @return GroupContainer as a parent element
+	 * @return end value of position
 	 */
-	GroupContainer container();
+	long end();
+
+	/**
+	 * 
+	 * @return duration value
+	 */
+	long duration();
 
 }

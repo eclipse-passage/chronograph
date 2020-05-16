@@ -15,7 +15,7 @@ package org.eclipse.chronograph.internal.base.query;
 import java.time.LocalDate;
 import java.util.function.Predicate;
 
-import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 
 /**

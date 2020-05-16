@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.BrickImpl;
 
 public class TestBrickAdapter implements Function<List<TestInputObject>, List<Brick>> {

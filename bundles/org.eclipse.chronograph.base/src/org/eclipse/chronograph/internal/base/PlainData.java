@@ -23,11 +23,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.Section;
-import org.eclipse.chronograph.internal.api.Storage;
 import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Section;
+import org.eclipse.chronograph.internal.api.graphics.Storage;
 
 /**
  * Class intended to aggregate data

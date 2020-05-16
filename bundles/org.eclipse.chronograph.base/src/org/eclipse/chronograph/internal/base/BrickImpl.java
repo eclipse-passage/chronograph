@@ -13,8 +13,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Position;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Position;
 
 public class BrickImpl implements Brick {
 

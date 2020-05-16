@@ -10,37 +10,25 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
+package org.eclipse.chronograph.internal.api.graphics;
 
 /**
  * 
- * The Area describes the drawing region from left top point, width and height.
+ * The Group describes typed container with sequence Brick items
  *
  */
-public interface Area {
-	/**
-	 * 
-	 * @return value by X axis, by default considered the left top point
-	 */
-	int x();
+public interface Group extends BrickContainer, GroupContainer {
 
 	/**
 	 * 
-	 * @return value by Y axis, by default considered the left top point
+	 * @return String identifier of group
 	 */
-
-	int y();
-
-	/**
-	 * 
-	 * @return width value
-	 */
-	int width();
+	String id();
 
 	/**
 	 * 
-	 * @return height value
+	 * @return GroupContainer as a parent element
 	 */
-	int height();
+	GroupContainer container();
 
 }

@@ -15,7 +15,7 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import java.time.LocalDate;
 
-import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;

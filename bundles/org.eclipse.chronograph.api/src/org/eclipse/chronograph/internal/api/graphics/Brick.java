@@ -10,7 +10,7 @@
  * Contributors:
  *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
+package org.eclipse.chronograph.internal.api.graphics;
 
 /**
  * 

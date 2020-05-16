@@ -8,22 +8,26 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
+ *     ArSysOp - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api;
+package org.eclipse.chronograph.internal.api.graphics;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * 
- * Container for Brick typed elements
+ * Encapsulates the storage of objects to be displayed
  *
  */
-public interface BrickContainer {
+public interface Storage {
 
 	/**
 	 * 
-	 * @return stored Brick elements in List data structure
+	 * @param predicate the predicate to filter the bricks
+	 * @return
 	 */
-	List<? extends Brick> bricks();
+	// FIXME: not sure that we should use interface from "graphics" here
+	List<Brick> query(Predicate<Brick> predicate);
+
 }

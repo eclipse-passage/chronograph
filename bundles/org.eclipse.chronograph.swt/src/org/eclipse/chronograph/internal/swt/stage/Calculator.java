@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.eclipse.chronograph.internal.api.Area;
-import org.eclipse.chronograph.internal.api.Brick;
-import org.eclipse.chronograph.internal.api.Group;
-import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.graphics.Area;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
