@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class ChronographCanvas extends Canvas {
+public final class Stage extends Canvas {
 
 	private final AreaRectangle areaRectangle;
 	private final ActualBricks actualBricks;
@@ -86,11 +86,11 @@ public final class ChronographCanvas extends Canvas {
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public ChronographCanvas(Composite parent, ContainerProvider provider) {
+	public Stage(Composite parent, ContainerProvider provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, provider);
 	}
 
-	public ChronographCanvas(Composite parent, int style, ContainerProvider provider) {
+	public Stage(Composite parent, int style, ContainerProvider provider) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
 		this.actualBricks = new ActualBricks();
@@ -176,7 +176,7 @@ public final class ChronographCanvas extends Canvas {
 			return;
 		}
 		setPositionByX(scrollBarHorizontal.getSelection() * pxlHint * stageScale);
-		getHint();
+		applyHint();
 		redraw();
 	}
 
@@ -434,7 +434,7 @@ public final class ChronographCanvas extends Canvas {
 
 	public void navigateToUnit(int hint) {
 		pX = hint * pxlHint * stageScale;
-		getHint();
+		applyHint();
 		redraw();
 	}
 
@@ -502,11 +502,11 @@ public final class ChronographCanvas extends Canvas {
 		super.redraw();
 	}
 
-	public int getPositionByX() {
+	int getPositionByX() {
 		return pX;
 	}
 
-	public void setPositionByX(int x) {
+	void setPositionByX(int x) {
 		this.pX = x;
 	}
 
@@ -515,7 +515,7 @@ public final class ChronographCanvas extends Canvas {
 		return super.getClientArea();
 	}
 
-	public void getHint() {
+	void applyHint() {
 		pXhint = pX / (pxlHint * stageScale);
 	}
 
