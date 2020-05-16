@@ -15,9 +15,7 @@ package org.eclipse.chronograph.internal.swt.stage;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import org.eclipse.chronograph.internal.api.Area;
@@ -29,11 +27,7 @@ import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.DataRegistry;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.GroupStyler;
-import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
-import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.swt.SWT;
@@ -61,12 +55,8 @@ public final class ChronographCanvas extends Canvas {
 	private int pXhint;
 	private int pYhint;
 	private int stageScale = 5;
-
-	private List<Brick> bricks;
 	private List<Brick> bricksSelected;
 
-	private Map<String, Area> groupsAreas;
-	private Map<String, Area> bricksAreas;
 	private DataRegistry registry;
 	private Rectangle boundsGlobal;
 	private Area visiableArea;
@@ -75,6 +65,7 @@ public final class ChronographCanvas extends Canvas {
 	private ScrollBar scrollBarHorizontal;
 	private StageLabelProvider labelProvider;
 	private ContainerProvider dataProvider;
+	private ChronographCalculator calculator;
 	private int zoom = 1;
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
@@ -89,21 +80,23 @@ public final class ChronographCanvas extends Canvas {
 		this.dataProvider = provider;
 		this.labelProvider = provider.getLabelProvider();
 		bricksSelected = new ArrayList<>();
-		bricks = new ArrayList<>();
-		groupsAreas = new HashMap<String, Area>();
-		bricksAreas = new HashMap<String, Area>();
 		setLayout(new FillLayout());
 		updateStageScale();
 		initListeners();
 		initScrollBarHorizontal();
 		initScrollBarVertical();
 		initRegistry();
+		initCalculator();
 		calculateObjectBounds();
 	}
 
 	private void initRegistry() {
 		registry = new DataRegistry(dataProvider);
 		registry.createRegistry();
+	}
+
+	private void initCalculator() {
+		calculator = new ChronographCalculator(registry);
 	}
 
 	private void initScrollBarHorizontal() {
@@ -169,11 +162,8 @@ public final class ChronographCanvas extends Canvas {
 	}
 
 	public void updateScrollers() {
-		if (bricks == null || bricks.isEmpty()) {
-			return;
-		}
-		Brick brick = bricks.get(bricks.size() - 1);
-		scrollBarHorizontal.setMaximum((int) brick.position().end());
+		int maxPosition = getMaxBrickPosition();
+		scrollBarHorizontal.setMaximum(maxPosition);
 		scrollBarHorizontal.setSelection(pXhint);
 	}
 
@@ -199,6 +189,8 @@ public final class ChronographCanvas extends Canvas {
 	public void repaint(PaintEvent event) {
 		GC gc = event.gc;
 		// drawing
+		Rectangle clientArea = super.getClientArea();
+		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
 		Rectangle stageRectangle = areaRectangle.apply(visiableArea);
 		INSTANCE.getDrawingStagePainter().draw(gc, stageRectangle);
 		for (ChronographStageRulerRenderer painter : INSTANCE.getDrawingRulersPainter()) {
@@ -234,7 +226,7 @@ public final class ChronographCanvas extends Canvas {
 				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(group), groupRectangle, getDisplay(),
 						SectionStyler.getSectionWidth(), pYhint);
 			}
-			Area area = groupsAreas.get(section.id());
+			Area area = calculator.getGroupAreaBySectionId(section.id());// groupsAreas.get(section.id());
 			if (area == null) {
 				continue;
 			}
@@ -265,32 +257,12 @@ public final class ChronographCanvas extends Canvas {
 		return bricksSelected;
 	}
 
-	private void addDrawingArea(Group group, Area area) {
-		groupsAreas.put(transformKey(group), area);
-	}
-
-	private String transformKey(Group group) {
-		String key = group.id();
-		if (group.container() instanceof Section) {
-			Section section = (Section) group.container();
-			key = section.id() + group.id();
-		} else if (group.container() instanceof Group) {
-			Group parent = (Group) group.container();
-			key = parent.id() + group.id();
-		}
-		return key;
-	}
-
 	private Area getDrawingArea(Group group) {
-		return groupsAreas.get(transformKey(group));
-	}
-
-	private void addDrawingArea(Brick brick, Area area) {
-		bricksAreas.put(brick.id(), area);
+		return calculator.getGroupAreaByGroup(group);// groupsAreas.get(transformKey(group));
 	}
 
 	private Area getDrawingArea(Brick brick) {
-		return bricksAreas.get(brick.id());
+		return calculator.getBrickAreaById(brick.id());
 	}
 
 	@Override
@@ -305,80 +277,9 @@ public final class ChronographCanvas extends Canvas {
 		return boundsGlobal;
 	}
 
-	private void calculateSectionBounds(Area area, Collection<Section> sections, int sectionSpace, int hintY) {
-		int y = area.y();
-		for (Section section : sections) {
-			int textLength = section.id().length() * 6;
-			int strHeight = textLength + sectionSpace;
-			int lenghtOfGroups = 0;
-			List<Group> groups = registry.getGroupBySection(section);
-			for (Group group : groups) {
-				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
-				if (subGroups.isEmpty()) {
-					String groupLabel = labelProvider.getText(group);
-					int textByX = groupLabel.length() * 6;
-					if (textByX < GroupStyler.GROUP_HEIGHT_DEFAULT) {
-						textByX = GroupStyler.GROUP_HEIGHT_DEFAULT;
-					}
-					lenghtOfGroups += textByX;
-				} else {
-					lenghtOfGroups += subGroups.size() * GroupStyler.GROUP_HEIGHT_DEFAULT;
-				}
-			}
-			int height = 10 + Math.max(lenghtOfGroups, strHeight);
-			Area sectionArea = new AreaImpl(area.x(), y, area.width() * zoom, height * zoom);
-			groupsAreas.put(section.id(), sectionArea);
-			y += height * zoom + sectionSpace;
-		}
-	}
-
 	public void calculateObjectBounds() {
-		Rectangle clientArea = super.getClientArea();
-		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
-		Area frameArea = new AreaImpl(visiableArea.x(), visiableArea.y() + StageStyler.getStageHeaderHeight() - pYhint,
-				visiableArea.width() - 10,
-				visiableArea.height() - StageStyler.getStageHeaderHeight() - RulerStyler.RULER_DAY_HEIGHT
-						- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT);
-		List<Section> sections = registry.getSections();
-		calculateSectionBounds(frameArea, sections, SectionStyler.getSectionSeparatorHeight(), pYhint);
-		for (Section section : sections) {
-			List<Group> groupsBySection = registry.getGroupBySection(section);
-			calculateGroupBound(groupsBySection, groupsAreas.get(section.id()), section);
-		}
 
-	}
-
-	private void calculateGroupBound(List<? extends Group> groups, Area area, Section section) {
-		if (area == null) {
-			return;
-		}
-		int heightDelta = area.height() / groups.size();
-		for (Group group : groups) {
-			int groupIndex = groups.indexOf(group);
-			Area areaGroup = new AreaImpl(area.x() + 30, area.y() + (groupIndex * heightDelta), area.width() + 30,
-					heightDelta);
-			addDrawingArea(group, areaGroup);
-			List<Group> subGroups = registry.getSubGroupByGroupSection(group);
-			for (Group subgroup : subGroups) {
-				int subGroupIndex = subGroups.indexOf(subgroup);
-				Area areaSubGroup = new AreaImpl(areaGroup.x() + 30,
-						areaGroup.y() + (subGroupIndex * areaGroup.height() / subGroups.size()), areaGroup.width() + 30,
-						areaGroup.height() / subGroups.size());
-				addDrawingArea(subgroup, areaSubGroup);
-			}
-		}
-	}
-
-	private Brick calculateObjectPosition(Brick brick, Area area, int hintX, int hintY, int hintWidth) {
-		if (area == null) {
-			return brick;
-		}
-		int pixelWitdh = (int) brick.position().duration() * hintWidth;
-		int pointX = (int) brick.position().start() * hintWidth - (hintX * hintWidth);
-		int pointY = area.y() + BrickStyler.getHeight() - hintY;
-		Area brickArea = new AreaImpl(pointX, pointY, pixelWitdh, BrickStyler.getHeight());
-		addDrawingArea(brick, brickArea);
-		return brick;
+		calculator.calculateObjectBounds(super.getBounds(), pYhint, zoom);
 	}
 
 	private void drawSceneObjects(final GC gc, Area area, final Collection<? extends Brick> bricks) {
@@ -388,7 +289,7 @@ public final class ChronographCanvas extends Canvas {
 		bricks.stream().forEach(new Consumer<Brick>() {
 			@Override
 			public void accept(Brick brick) {
-				calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+				calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 				Area brickArea = getDrawingArea(brick);
 				if (brickArea != null) {
 					Rectangle rectangleArea = areaRectangle.apply(brickArea);
@@ -406,7 +307,7 @@ public final class ChronographCanvas extends Canvas {
 			return;
 		}
 		for (Brick brick : bricks) {
-			calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
 			Area brickArea = getDrawingArea(brick);
 			if (brickArea == null) {
 				continue;
@@ -427,7 +328,6 @@ public final class ChronographCanvas extends Canvas {
 
 	public void clearSceneObjects() {
 		checkWidget();
-		bricks.clear();
 		pYhint = 0;
 		scrollBarVertical.setSelection(0);
 		redraw();
@@ -567,5 +467,15 @@ public final class ChronographCanvas extends Canvas {
 		// FIXME: here we need to clear all caches and start showing new input
 		// TODO Auto-generated method stub
 		redraw();
+	}
+
+	private int getMaxBrickPosition() {
+		long max = 0;
+		for (Brick brick : registry.getBricks()) {
+			if (brick.position().end() > max) {
+				max = brick.position().end();
+			}
+		}
+		return (int) max;
 	}
 }
