@@ -25,7 +25,6 @@ import org.eclipse.chronograph.internal.api.Brick;
 import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.data.Access;
-import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
 import org.eclipse.chronograph.internal.api.providers.StageLabelProvider;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
@@ -73,25 +72,23 @@ public final class Stage<I> extends Canvas {
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
 	private StageLabelProvider labelProvider;
-	private ContainerProvider<I> dataProvider;
 	private Calculator calculator;
 	private int zoom = 1;
 
 	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, Access<I> access, ContainerProvider<I> provider) {
+	public Stage(Composite parent, Access<I> access, StageLabelProvider provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
 	}
 
-	public Stage(Composite parent, int style, Access<I> access, ContainerProvider<I> provider) {
+	public Stage(Composite parent, int style, Access<I> access, StageLabelProvider provider) {
 		super(parent, style);
 		this.access = access;
 		this.areaRectangle = new AreaRectangle();
 		this.actualBricks = new ActualBricks();
 		this.expiredBricks = new ExpiredBricks();
 
-		this.dataProvider = provider;
-		this.labelProvider = provider.getLabelProvider();
+		this.labelProvider = provider;
 		bricksSelected = new ArrayList<>();
 		setLayout(new FillLayout());
 		updateStageScale();
@@ -104,7 +101,7 @@ public final class Stage<I> extends Canvas {
 	}
 
 	private void initRegistry() {
-		registry = new PlainData<>(access, dataProvider);
+		registry = new PlainData<>(access);
 	}
 
 	private void initCalculator() {
@@ -439,15 +436,6 @@ public final class Stage<I> extends Canvas {
 		redraw();
 	}
 
-	public void setProvider(ContainerProvider<I> provider) {
-		this.dataProvider = provider;
-		this.labelProvider = provider.getLabelProvider();
-		this.registry = new PlainData<>(access, dataProvider);
-		this.calculator = new Calculator(registry);
-		this.calculateObjectBounds();
-		this.redraw();
-	}
-
 	public void setZoomLevelDown() {
 		this.zoom++;
 		this.calculateObjectBounds();
@@ -477,7 +465,7 @@ public final class Stage<I> extends Canvas {
 	}
 
 	public void structure(List<Class<?>> types) {
-		registry = new PlainData<>(access, dataProvider);
+		registry = new PlainData<>(access);
 		calculator = new Calculator(registry);
 		registry.restructure(types);
 		calculateObjectBounds();

@@ -28,11 +28,6 @@ import org.eclipse.chronograph.internal.api.Group;
 import org.eclipse.chronograph.internal.api.Section;
 import org.eclipse.chronograph.internal.api.Storage;
 import org.eclipse.chronograph.internal.api.data.Access;
-import org.eclipse.chronograph.internal.api.providers.BrickContentProvider;
-import org.eclipse.chronograph.internal.api.providers.ContainerProvider;
-import org.eclipse.chronograph.internal.api.providers.GroupContentProvider;
-import org.eclipse.chronograph.internal.api.providers.SectionContentProvider;
-import org.eclipse.chronograph.internal.api.providers.SubGroupContentProvider;
 
 /**
  * Class intended to aggregate data
@@ -42,40 +37,14 @@ public class PlainData<I> implements Storage {
 
 	private final Access<I> access;
 	private final List<Class<?>> structure;
-	private final ContainerProvider<I> provider;
 	private final Map<String, Section> sectionsById = new HashMap<>();
 	private final Map<String, List<Group>> groupsBySection = new HashMap<>();
 	private final Map<Group, List<Group>> subGroupsBygroup = new HashMap<>();
 	private final Map<Group, List<Brick>> bricksBySubgroup = new HashMap<>();
 
-	public PlainData(Access<I> access, ContainerProvider<I> provider) {
+	public PlainData(Access<I> access) {
 		this.access = access;
 		this.structure = new ArrayList<>();
-		this.provider = provider;
-		// FIXME: wrong place, data is not yet needed
-		createRegistry();
-	}
-
-	private void createRegistry() {
-		SectionContentProvider<I> sectionProvider = provider.getSectionContentProvider();
-		GroupContentProvider<I> groupProvider = provider.getGroupContentProvider();
-		SubGroupContentProvider<I> subgroupProvider = provider.getSubGroupContentProvider();
-		BrickContentProvider<I> brickProvider = provider.getBrickContentProvider();
-		List<I> input = provider.getInput();
-		List<Section> sections = sectionProvider.getSections(input);
-		for (Section section : sections) {
-			sectionsById.put(section.id(), section);
-			List<Group> groups = groupProvider.getGroupsBySection(input, section);
-			groupsBySection.put(section.id(), groups);
-			for (Group group : groups) {
-				List<Group> subGroups = subgroupProvider.getGroupsBySectionGroup(input, section, group);
-				subGroupsBygroup.put(group, subGroups);
-				for (Group subGroup : subGroups) {
-					List<Brick> bricks = brickProvider.getBricksBySubGroup(input, group.id(), subGroup);
-					bricksBySubgroup.put(subGroup, bricks);
-				}
-			}
-		}
 	}
 
 	public List<Section> getSections() {
