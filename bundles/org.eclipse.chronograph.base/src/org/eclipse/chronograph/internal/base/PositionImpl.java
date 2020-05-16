@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import org.eclipse.chronograph.internal.api.Position;
+import org.eclipse.chronograph.internal.api.graphics.Position;
 
 /**
  * 

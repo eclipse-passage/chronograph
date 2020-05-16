@@ -14,7 +14,7 @@
 
 package org.eclipse.chronograph.internal.swt;
 
-import org.eclipse.chronograph.internal.api.Styler;
+import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;

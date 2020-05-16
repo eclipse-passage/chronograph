@@ -11,22 +11,29 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.swt.stage;
+package org.eclipse.chronograph.internal.api.representation;
 
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
+/**
+ * The label provider designed to provide specific data for input objects
+ * presented on user interface
+ * 
+ *
+ */
+public interface StageLabelProvider {
 
-final class StagePaint implements PaintListener {
+	/**
+	 * Image for input object
+	 * 
+	 * @param element - input object
+	 * @return {@link Image}
+	 */
+	Object getImage(Object element);
 
-	private final Stage<?> sceneComposer;
-
-	public StagePaint(Stage<?> sceneComposer) {
-		this.sceneComposer = sceneComposer;
-	}
-
-	@Override
-	public void paintControl(PaintEvent event) {
-		sceneComposer.repaint(event);
-	}
-
+	/**
+	 * Label for input object
+	 * 
+	 * @param element - input object
+	 * @return
+	 */
+	String getText(Object element);
 }

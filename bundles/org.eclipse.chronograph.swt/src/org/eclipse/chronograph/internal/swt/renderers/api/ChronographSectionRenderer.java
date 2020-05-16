@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.api;
 
-import org.eclipse.chronograph.internal.api.Section;
+import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;

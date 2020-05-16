@@ -20,7 +20,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import org.eclipse.chronograph.internal.api.Area;
+import org.eclipse.chronograph.internal.api.graphics.Area;
 
 /**
  * 

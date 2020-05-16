@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import org.eclipse.chronograph.internal.api.Group;
+import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
 import org.eclipse.swt.SWT;

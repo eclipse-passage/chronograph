@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import org.eclipse.chronograph.internal.api.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectExtRenderer;
 import org.eclipse.swt.graphics.GC;
 
