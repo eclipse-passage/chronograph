@@ -45,7 +45,7 @@ public abstract class DefaultAccess<I> implements Access<I> {
 	}
 
 	@Override
-	public <G> Function<I, Optional<G>> map(Class<G> group) {
+	public <G> Function<I, Optional<G>> adapt(Class<G> group) {
 		return p -> Optional.empty();
 	}
 

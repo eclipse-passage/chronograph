@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Display;
  * Render implementation for {@link Section} object
  *
  */
-public class SectionRendererImpl implements ChronographSectionRenderer<Section> {
+public class SectionRendererImpl<D> implements ChronographSectionRenderer<Section<D>> {
 
 	@Override
 	public void draw(GC gc, String label, Rectangle bounds, Display display, int width, int hintY) {

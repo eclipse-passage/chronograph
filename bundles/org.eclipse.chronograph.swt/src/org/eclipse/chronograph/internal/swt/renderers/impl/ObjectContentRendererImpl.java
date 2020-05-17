@@ -27,12 +27,12 @@ import org.eclipse.swt.graphics.Rectangle;
  * 
  * Render implementation of {@link Brick} object
  *
- * @param <T> - type of object
+ * @param <D> - type of data object
  */
-public class ObjectContentRendererImpl implements ChronographObjectContentRenderer<Brick> {
+public class ObjectContentRendererImpl<D> implements ChronographObjectContentRenderer<D> {
 
 	@Override
-	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
+	public void draw(Brick<D> object, GC gc, Rectangle bounds, int vOffset) {
 		LocalDate now = LocalDate.now();
 		LocalDate start = UnitConverter.unitsToLocalDate((int) object.position().start());
 		LocalDate end = UnitConverter.unitsToLocalDate((int) object.position().end());

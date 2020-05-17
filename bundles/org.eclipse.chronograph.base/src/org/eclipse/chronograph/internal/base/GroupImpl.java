@@ -25,25 +25,25 @@ import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
  * Implementation of {@link Group} interface
  *
  */
-public class GroupImpl implements Group {
+public class GroupImpl<D> implements Group<D> {
 
 	private final String id;
-	private final GroupContainer parent;
-	private final List<Brick> bricks;
+	private final GroupContainer<D> parent;
+	private final List<Brick<D>> bricks;
 
-	public GroupImpl(String id, GroupContainer parent) {
+	public GroupImpl(String id, GroupContainer<D> parent) {
 		this.id = id;
 		this.parent = parent;
-		this.bricks = new ArrayList<Brick>();
+		this.bricks = new ArrayList<>();
 	}
 
-	public GroupImpl(String id, List<Brick> bricks) {
+	public GroupImpl(String id, List<Brick<D>> bricks) {
 		this.id = id;
 		this.parent = null;
 		this.bricks = bricks;
 	}
 
-	public GroupImpl(String id, GroupContainer parent, List<Brick> bricks) {
+	public GroupImpl(String id, GroupContainer<D> parent, List<Brick<D>> bricks) {
 		this.id = id;
 		this.parent = parent;
 		this.bricks = bricks;
@@ -55,17 +55,17 @@ public class GroupImpl implements Group {
 	}
 
 	@Override
-	public List<? extends Brick> bricks() {
+	public List<? extends Brick<D>> bricks() {
 		return bricks;
 	}
 
 	@Override
-	public GroupContainer container() {
+	public GroupContainer<D> container() {
 		return parent;
 	}
 
 	@Override
-	public List<? extends Group> groups() {
+	public List<Group<D>> groups() {
 		return parent.groups();
 	}
 

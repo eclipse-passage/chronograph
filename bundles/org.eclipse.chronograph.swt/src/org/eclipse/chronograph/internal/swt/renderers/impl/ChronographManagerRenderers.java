@@ -33,51 +33,51 @@ import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStatusRende
  * Class intended to aggregate the renders
  *
  */
-public class ChronographManagerRenderers {
+public class ChronographManagerRenderers<D> {
 
 	public static ChronographManagerRenderers INSTANCE = null;
-	private final ChronographObjectExtRenderer<Brick> objectExtensionRenderer;
-	private final ChronographObjectLabelRenderer<Brick> objectLabelRenderer;
-	private final ChronographObjectContentRenderer<Brick> objectContentRenderer;
-	private final ChronographObjectContentRenderer<Brick> objectSelectedRenderer;
-	private final ChronographGroupRenderer<Group> chronographGroupRenderer;
+	private final ChronographObjectExtRenderer<Brick<D>> objectExtensionRenderer;
+	private final ChronographObjectLabelRenderer<Brick<D>> objectLabelRenderer;
+	private final ChronographObjectContentRenderer<Brick<D>> objectContentRenderer;
+	private final ChronographObjectContentRenderer<Brick<D>> objectSelectedRenderer;
+	private final ChronographGroupRenderer<Group<D>> chronographGroupRenderer;
 	private final List<ChronographStageRulerRenderer> chronographStageRulerRenderers;
 	private final ChronographStageRenderer chronographStageRenderer;
 	private final ChronographStatusRenderer chronographStatusRenderer;
-	private final ChronographSectionRenderer<Section> sectionPinter;
+	private final ChronographSectionRenderer<Section<D>> sectionPinter;
 
 	private ChronographManagerRenderers() {
-		this.objectContentRenderer = new ObjectContentRendererImpl();
-		this.objectLabelRenderer = new ObjectLabelRendererImpl();
-		this.objectExtensionRenderer = new ObjectExtensionRendererImpl();
-		this.objectSelectedRenderer = new ObjectSelectedRendererImpl();
+		this.objectContentRenderer = new ObjectContentRendererImpl<>();
+		this.objectLabelRenderer = new ObjectLabelRendererImpl<>();
+		this.objectExtensionRenderer = new ObjectExtensionRendererImpl<>();
+		this.objectSelectedRenderer = new ObjectSelectedRendererImpl<>();
 		this.chronographStageRulerRenderers = new ArrayList<>();
 		this.chronographStageRulerRenderers.add(new RulerDayRendererImpl());
 		this.chronographStageRulerRenderers.add(new RulerMonthRendererImpl());
 		this.chronographStageRulerRenderers.add(new RulerYearRendererImpl());
 		this.chronographStageRenderer = new StageRendererImpl();
 		this.chronographStatusRenderer = new StatusRendererImpl();
-		this.chronographGroupRenderer = new GroupRendererImpl<Group>();
-		this.sectionPinter = new SectionRendererImpl();
+		this.chronographGroupRenderer = new GroupRendererImpl<>();
+		this.sectionPinter = new SectionRendererImpl<>();
 
 	}
 
-	public static synchronized ChronographManagerRenderers getInstance() {
+	public static synchronized <D> ChronographManagerRenderers<D> getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new ChronographManagerRenderers();
+			INSTANCE = new ChronographManagerRenderers<>();
 		}
 		return INSTANCE;
 	}
 
-	public ChronographObjectContentRenderer<Brick> getContentPainter() {
+	public ChronographObjectContentRenderer<Brick<D>> getContentPainter() {
 		return this.objectContentRenderer;
 	}
 
-	public <V extends ChronographObjectExtRenderer> ChronographObjectExtRenderer<Brick> getDurationPainter() {
+	public <V extends ChronographObjectExtRenderer<D>> ChronographObjectExtRenderer<Brick<D>> getDurationPainter() {
 		return this.objectExtensionRenderer;
 	}
 
-	public <V extends ChronographObjectLabelRenderer> ChronographObjectLabelRenderer<Brick> getLabelPainter() {
+	public <V extends ChronographObjectLabelRenderer<D>> ChronographObjectLabelRenderer<Brick<D>> getLabelPainter() {
 		return this.objectLabelRenderer;
 	}
 
@@ -93,15 +93,15 @@ public class ChronographManagerRenderers {
 		return chronographStatusRenderer;
 	}
 
-	public ChronographGroupRenderer<Group> getDrawingGroupPainter() {
+	public ChronographGroupRenderer<Group<D>> getDrawingGroupPainter() {
 		return chronographGroupRenderer;
 	}
 
-	public ChronographSectionRenderer<Section> getDrawingSectionPainter() {
+	public ChronographSectionRenderer<Section<D>> getDrawingSectionPainter() {
 		return sectionPinter;
 	}
 
-	public ChronographObjectContentRenderer<Brick> getSelectedContentPainter() {
+	public ChronographObjectContentRenderer<Brick<D>> getSelectedContentPainter() {
 		return objectSelectedRenderer;
 	}
 

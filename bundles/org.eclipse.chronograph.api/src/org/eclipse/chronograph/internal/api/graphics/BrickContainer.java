@@ -19,11 +19,11 @@ import java.util.List;
  * Container for Brick typed elements
  *
  */
-public interface BrickContainer {
+public interface BrickContainer<D> {
 
 	/**
 	 * 
 	 * @return stored Brick elements in List data structure
 	 */
-	List<? extends Brick> bricks();
+	List<? extends Brick<D>> bricks();
 }

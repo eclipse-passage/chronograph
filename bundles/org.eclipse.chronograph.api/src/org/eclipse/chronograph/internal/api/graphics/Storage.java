@@ -20,7 +20,7 @@ import java.util.function.Predicate;
  * Encapsulates the storage of objects to be displayed
  *
  */
-public interface Storage {
+public interface Storage<D> {
 
 	/**
 	 * 
@@ -28,6 +28,6 @@ public interface Storage {
 	 * @return
 	 */
 	// FIXME: not sure that we should use interface from "graphics" here
-	List<Brick> query(Predicate<Brick> predicate);
+	List<Brick<D>> query(Predicate<Brick<D>> predicate);
 
 }

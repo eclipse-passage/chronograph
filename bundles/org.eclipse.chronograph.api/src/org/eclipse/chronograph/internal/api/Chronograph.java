@@ -25,7 +25,7 @@ import org.eclipse.chronograph.internal.api.representation.Style;
 public interface Chronograph {
 
 	/**
-	 * Structure data according to the given type sequence: from section to brick
+	 * Structure data according to the given type sequence
 	 * 
 	 * @param types the types to group the input
 	 */

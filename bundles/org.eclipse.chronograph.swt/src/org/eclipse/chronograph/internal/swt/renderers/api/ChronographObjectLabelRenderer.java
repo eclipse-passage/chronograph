@@ -22,9 +22,9 @@ import org.eclipse.swt.graphics.Rectangle;
  * 
  * Interface intended to render labels for {@link Brick}
  *
- * @param <T> - type of object
+ * @param <D> - type of data object
  */
-public interface ChronographObjectLabelRenderer<T extends Brick> {
+public interface ChronographObjectLabelRenderer<D> {
 
 	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset, int scale);
 

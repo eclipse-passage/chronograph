@@ -21,17 +21,16 @@ import java.util.stream.Collectors;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.BrickImpl;
 
-public class TestBrickAdapter implements Function<List<TestInputObject>, List<Brick>> {
+public class TestBrickAdapter implements Function<List<TestInputObject>, List<Brick<TestInputObject>>> {
 
 	@Override
-	public List<Brick> apply(List<TestInputObject> inputObjects) {
-		Map<TestInputObject, Brick> objectsToBricks = new HashMap<>();
-
-		List<Brick> bricks = inputObjects.stream()
-				.map(p -> objectsToBricks.computeIfAbsent(p, new Function<TestInputObject, Brick>() {
+	public List<Brick<TestInputObject>> apply(List<TestInputObject> inputObjects) {
+		Map<TestInputObject, Brick<TestInputObject>> objectsToBricks = new HashMap<>();
+		List<Brick<TestInputObject>> bricks = inputObjects.stream()
+				.map(p -> objectsToBricks.computeIfAbsent(p, new Function<TestInputObject, Brick<TestInputObject>>() {
 					@Override
-					public Brick apply(TestInputObject t) {
-						Brick brick = new BrickImpl(t.id, t.start, t.end);
+					public Brick<TestInputObject> apply(TestInputObject t) {
+						Brick<TestInputObject> brick = new BrickImpl<>(t.id, t.start, t.end, t);
 						return brick;
 					}
 				})).collect(Collectors.toList());

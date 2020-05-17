@@ -23,7 +23,7 @@ import org.eclipse.chronograph.internal.base.UnitConverter;
  * Accepts bricks that are expired for the given data
  *
  */
-public class ActualBricks implements Predicate<Brick> {
+public class ActualBricks<D> implements Predicate<Brick<D>> {
 
 	private final LocalDate local;
 
@@ -32,7 +32,7 @@ public class ActualBricks implements Predicate<Brick> {
 	}
 
 	@Override
-	public boolean test(Brick brick) {
+	public boolean test(Brick<D> brick) {
 		LocalDate start = UnitConverter.unitsToLocalDate((int) brick.position().start());
 		LocalDate end = UnitConverter.unitsToLocalDate((int) brick.position().end());
 		return local.isAfter(start) && local.isBefore(end);

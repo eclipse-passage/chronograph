@@ -17,7 +17,7 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Brick describes the drawing element on the stage
  *
  */
-public interface Brick {
+public interface Brick<D> {
 
 	/**
 	 * 
@@ -30,4 +30,11 @@ public interface Brick {
 	 * @return original Brick position
 	 */
 	Position position();
+
+	/**
+	 * Associated domain object
+	 * 
+	 * @return domain object
+	 */
+	D data();
 }

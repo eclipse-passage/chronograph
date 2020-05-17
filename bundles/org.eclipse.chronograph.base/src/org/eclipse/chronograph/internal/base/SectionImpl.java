@@ -25,17 +25,17 @@ import org.eclipse.chronograph.internal.api.graphics.Section;
  * Implementation of {@link Section}
  *
  */
-public class SectionImpl implements Section {
+public class SectionImpl<D> implements Section<D> {
 
 	private final String id;
-	private final List<Group> groups;
+	private final List<Group<D>> groups;
 
 	public SectionImpl(String id) {
 		this.id = id;
 		this.groups = new ArrayList<>();
 	}
 
-	public SectionImpl(String id, List<Group> groups) {
+	public SectionImpl(String id, List<Group<D>> groups) {
 		this.id = id;
 		this.groups = groups;
 	}
@@ -46,14 +46,14 @@ public class SectionImpl implements Section {
 	}
 
 	@Override
-	public List<Group> groups() {
+	public List<Group<D>> groups() {
 		return groups;
 	}
 
 	@Override
-	public List<Brick> bricks() {
-		List<Brick> bricks = new ArrayList<>();
-		for (Group gr : groups) {
+	public List<Brick<D>> bricks() {
+		List<Brick<D>> bricks = new ArrayList<>();
+		for (Group<D> gr : groups) {
 			bricks.addAll(gr.bricks());
 		}
 		return bricks;

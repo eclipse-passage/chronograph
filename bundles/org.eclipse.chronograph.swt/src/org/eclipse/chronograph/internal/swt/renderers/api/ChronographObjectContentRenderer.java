@@ -21,9 +21,9 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * Interface intended to render {@link Brick}
  *
- * @param <T> - type of object
+ * @param <D> - type of data object
  */
-public interface ChronographObjectContentRenderer<T extends Brick> {
+public interface ChronographObjectContentRenderer<D> {
 
-	public void draw(T obj, GC gc, Rectangle bounds, int vOffset);
+	public void draw(Brick<D> obj, GC gc, Rectangle bounds, int vOffset);
 }
