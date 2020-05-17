@@ -13,10 +13,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
 
@@ -29,34 +27,15 @@ public class GroupImpl<D> implements Group<D> {
 
 	private final String id;
 	private final GroupContainer<D> parent;
-	private final List<Brick<D>> bricks;
 
 	public GroupImpl(String id, GroupContainer<D> parent) {
 		this.id = id;
 		this.parent = parent;
-		this.bricks = new ArrayList<>();
-	}
-
-	public GroupImpl(String id, List<Brick<D>> bricks) {
-		this.id = id;
-		this.parent = null;
-		this.bricks = bricks;
-	}
-
-	public GroupImpl(String id, GroupContainer<D> parent, List<Brick<D>> bricks) {
-		this.id = id;
-		this.parent = parent;
-		this.bricks = bricks;
 	}
 
 	@Override
 	public String id() {
 		return id;
-	}
-
-	@Override
-	public List<? extends Brick<D>> bricks() {
-		return bricks;
 	}
 
 	@Override

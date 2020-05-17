@@ -16,7 +16,6 @@ package org.eclipse.chronograph.internal.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Section;
 
@@ -50,12 +49,4 @@ public class SectionImpl<D> implements Section<D> {
 		return groups;
 	}
 
-	@Override
-	public List<Brick<D>> bricks() {
-		List<Brick<D>> bricks = new ArrayList<>();
-		for (Group<D> gr : groups) {
-			bricks.addAll(gr.bricks());
-		}
-		return bricks;
-	}
 }

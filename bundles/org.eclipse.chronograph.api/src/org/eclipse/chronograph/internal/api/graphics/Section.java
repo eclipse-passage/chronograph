@@ -18,7 +18,7 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Section describes typed container with sequence of Group and Brick items
  *
  */
-public interface Section<D> extends GroupContainer<D>, BrickContainer<D> {
+public interface Section<D> extends GroupContainer<D> {
 
 	/**
 	 * 
