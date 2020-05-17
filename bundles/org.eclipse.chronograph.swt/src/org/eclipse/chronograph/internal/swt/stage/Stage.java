@@ -24,7 +24,7 @@ import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Section;
-import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
+import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.base.query.ActualBricks;
@@ -36,6 +36,7 @@ import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRen
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -70,17 +71,17 @@ public final class Stage<D> extends Canvas {
 	private final Point originalPosition = new Point(0, 0);
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
-	private StageLabelProvider labelProvider;
+	private Decoration<D, Image> labelProvider;
 	private Calculator<D> calculator;
 	private int zoom = 1;
 
 	private final ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, Access<D> access, StageLabelProvider provider) {
+	public Stage(Composite parent, Access<D> access, Decoration<D, Image> provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
 	}
 
-	public Stage(Composite parent, int style, Access<D> access, StageLabelProvider provider) {
+	public Stage(Composite parent, int style, Access<D> access, Decoration<D, Image> provider) {
 		super(parent, style);
 		this.access = access;
 		this.areaRectangle = new AreaRectangle();
@@ -224,7 +225,7 @@ public final class Stage<D> extends Canvas {
 						}
 					}
 					Rectangle groupRectangle = areaRectangle.apply(area);
-					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(subgroup), groupRectangle,
+					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
 							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 				}
 				Area area = getDrawingArea(group);
@@ -232,7 +233,7 @@ public final class Stage<D> extends Canvas {
 					continue;
 				}
 				Rectangle groupRectangle = areaRectangle.apply(area);
-				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(group), groupRectangle, getDisplay(),
+				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle, getDisplay(),
 						SectionStyler.getSectionWidth(), pYhint);
 			}
 			Area area = calculator.getGroupAreaBySectionId(section.id());// groupsAreas.get(section.id());
@@ -240,8 +241,8 @@ public final class Stage<D> extends Canvas {
 				continue;
 			}
 			Rectangle sectionRectangle = areaRectangle.apply(area);
-			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.getText(section), sectionRectangle, getDisplay(),
-					SectionStyler.getSectionWidth(), pYhint);
+			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.sectionText(section), sectionRectangle,
+					getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 		}
 		// status line
 		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
@@ -301,7 +302,7 @@ public final class Stage<D> extends Canvas {
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
 				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
-				String label = labelProvider.getText(brick);
+				String label = labelProvider.brickText(brick);
 				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
 				INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 			}
@@ -320,7 +321,7 @@ public final class Stage<D> extends Canvas {
 			}
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
 			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
-			String label = labelProvider.getText(brick);
+			String label = labelProvider.brickText(brick);
 			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
 			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 		}
