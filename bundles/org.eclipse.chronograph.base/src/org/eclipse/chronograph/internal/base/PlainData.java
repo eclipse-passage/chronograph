@@ -26,13 +26,12 @@ import java.util.stream.Collectors;
 import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Storage;
 
 /**
  * Class intended to aggregate data
  *
  */
-public class PlainData<D> implements Storage<D> {
+public class PlainData<D> {
 
 	private final Resolution<D> access;
 	private final List<Class<?>> structure;
@@ -74,7 +73,6 @@ public class PlainData<D> implements Storage<D> {
 		return new ArrayList<>();
 	}
 
-	@Override
 	public List<Brick<D>> query(Predicate<Brick<D>> predicate) {
 		return bricksBySubgroup.values().stream() //
 				.flatMap(List::stream) //
@@ -108,37 +106,37 @@ public class PlainData<D> implements Storage<D> {
 				.map(access.identification(type0))//
 				.map(id -> new GroupImpl(id, 0))//
 				.collect(Collectors.toList());
-		for (Group section : sections) {
-			String id0 = section.id();
-			List<D> g0 = grouping0.getOrDefault(section.id(), Collections.emptyList());
-			sectionsById.put(id0, section);
-			List<Group> groups = input.stream().map(access.adapt(type1))//
+		for (Group group0 : sections) {
+			String id0 = group0.id();
+			List<D> g0 = grouping0.getOrDefault(group0.id(), Collections.emptyList());
+			sectionsById.put(id0, group0);
+			List<Group> groups1 = input.stream().map(access.adapt(type1))//
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.distinct()//
 					.map(access.identification(type1))//
 					.map(id -> new GroupImpl(id, 1))//
 					.collect(Collectors.toList());
-			groupsBySection.put(section.id(), groups);
-			for (Group group : groups) {
-				String id1 = group.id();
+			groupsBySection.put(group0.id(), groups1);
+			for (Group group1 : groups1) {
+				String id1 = group1.id();
 				List<D> g1 = grouping1.getOrDefault(id1, Collections.emptyList());
-				List<Group> subGroups = input.stream().map(access.adapt(type2))//
+				List<Group> groups2 = input.stream().map(access.adapt(type2))//
 						.filter(Optional::isPresent)//
 						.map(Optional::get)//
 						.distinct()//
 						.map(access.identification(type2))//
 						.map(id -> new GroupImpl(id, 2))//
 						.collect(Collectors.toList());
-				subGroupsBygroup.put(group, subGroups);
-				for (Group subGroup : subGroups) {
-					List<Brick<D>> bricks = grouping2.getOrDefault(subGroup.id(), Collections.emptyList()).stream()//
+				subGroupsBygroup.put(group1, groups2);
+				for (Group group : groups2) {
+					List<Brick<D>> bricks = grouping2.getOrDefault(group.id(), Collections.emptyList()).stream()//
 							.filter(g0::contains)//
 							.filter(g1::contains)//
 							.map(i -> new BrickImpl<>(access.identification(access.type()).apply(i),
 									access.start().apply(i), access.end().apply(i), i))//
 							.collect(Collectors.toList());
-					bricksBySubgroup.put(subGroup, bricks);
+					bricksBySubgroup.put(group, bricks);
 				}
 			}
 		}
