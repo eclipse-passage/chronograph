@@ -210,7 +210,7 @@ public final class Stage<D> extends Canvas {
 			for (Group group : groupsBySection) {
 				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 				for (Group subgroup : subGroups) {
-					Area area = getDrawingArea(subgroup);
+					Area area = calculator.getGroupAreaByGroup(subgroup);
 					if (area == null) {
 						continue;
 					}
@@ -227,7 +227,7 @@ public final class Stage<D> extends Canvas {
 					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
 							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 				}
-				Area area = getDrawingArea(group);
+				Area area = calculator.getGroupAreaByGroup(group);
 				if (area == null) {
 					continue;
 				}
@@ -235,7 +235,7 @@ public final class Stage<D> extends Canvas {
 				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle, getDisplay(),
 						SectionStyler.getSectionWidth(), pYhint);
 			}
-			Area area = calculator.getGroupAreaBySectionId(section.id());// groupsAreas.get(section.id());
+			Area area = calculator.getGroupAreaByGroup(section);
 			if (area == null) {
 				continue;
 			}
@@ -267,14 +267,6 @@ public final class Stage<D> extends Canvas {
 		return bricksSelected;
 	}
 
-	private Area getDrawingArea(Group group) {
-		return calculator.getGroupAreaByGroup(group);// groupsAreas.get(transformKey(group));
-	}
-
-	private Area getDrawingArea(Brick<D> brick) {
-		return calculator.getBrickAreaById(brick.id());
-	}
-
 	@Override
 	public Rectangle getBounds() {
 		if (boundsGlobal == null) {
@@ -297,7 +289,7 @@ public final class Stage<D> extends Canvas {
 		}
 		bricks.stream().forEach(brick -> {
 			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-			Area brickArea = getDrawingArea(brick);
+			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
 				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
@@ -314,7 +306,7 @@ public final class Stage<D> extends Canvas {
 		}
 		for (Brick<D> brick : bricks) {
 			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-			Area brickArea = getDrawingArea(brick);
+			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea == null) {
 				continue;
 			}

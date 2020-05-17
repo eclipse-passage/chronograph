@@ -54,7 +54,7 @@ public class Calculator<D> {
 		calculateSectionBounds(frameArea, sections, SectionStyler.getSectionSeparatorHeight(), zoom);
 		for (Group section : sections) {
 			List<Group> groupsBySection = registry.subGroups(section);
-			calculateGroupBounds(groupsBySection, groupsAreas.get(section.id()));
+			calculateGroupBounds(groupsBySection, getGroupAreaByGroup(section));
 		}
 
 	}
@@ -74,7 +74,7 @@ public class Calculator<D> {
 				}
 			}
 			Area sectionArea = new AreaImpl(area.x(), y, area.width() * zoom, lenghtOfGroups * zoom);
-			groupsAreas.put(section.id(), sectionArea);
+			addDrawingArea(section, sectionArea);
 			y += lenghtOfGroups * zoom + sectionSpace;
 		}
 	}
@@ -88,7 +88,7 @@ public class Calculator<D> {
 			int groupIndex = groups.indexOf(group);
 			Area areaGroup = new AreaImpl(area.x() + 30, area.y() + (groupIndex * heightDelta), area.width() + 30,
 					heightDelta);
-			groupsAreas.put(transformKey(group), areaGroup);
+			addDrawingArea(group, areaGroup);
 			List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 			for (Group subgroup : subGroups) {
 				int subGroupIndex = subGroups.indexOf(subgroup);
@@ -114,15 +114,7 @@ public class Calculator<D> {
 	}
 
 	private void addDrawingArea(Group group, Area area) {
-		groupsAreas.put(transformKey(group), area);
-	}
-
-	private String transformKey(Group group) {
-		return group.id() + group.level();
-	}
-
-	public Area getGroupAreaBySectionId(String id) {
-		return groupsAreas.get(id);
+		groupsAreas.put(group.fqid(), area);
 	}
 
 	public Area getBrickAreaById(String id) {
@@ -130,7 +122,7 @@ public class Calculator<D> {
 	}
 
 	public Area getGroupAreaByGroup(Group group) {
-		return groupsAreas.get(transformKey(group));
+		return groupsAreas.get(group.fqid());
 	}
 
 	public Optional<Brick<D>> brickAt(int x, int y) {

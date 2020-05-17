@@ -57,6 +57,7 @@ public class PlainData<D> {
 		return subGroupsBygroup.getOrDefault(group, Collections.emptyList());
 	}
 
+	// FIXME: most probably does not work as expected
 	public List<Brick<D>> getBrickBySubgroup(String subgroupId, String groupId, String sectionId) {
 		if (!sectionId.isEmpty()) {
 			Group section = sectionsById.get(sectionId);
@@ -99,11 +100,12 @@ public class PlainData<D> {
 		Map<String, List<D>> grouping0 = input.stream().collect(Collectors.groupingBy(access.grouping(type0)));
 		Map<String, List<D>> grouping1 = input.stream().collect(Collectors.groupingBy(access.grouping(type1)));
 		Map<String, List<D>> grouping2 = input.stream().collect(Collectors.groupingBy(access.grouping(type2)));
+		String id00 = ""; //$NON-NLS-1$
 		List<Group> sections = input.stream().map(access.adapt(type0))//
 				.filter(Optional::isPresent)//
 				.map(Optional::get)//
 				.distinct()//
-				.map(d -> new GroupImpl(access.identification(type0).apply(d), 0, d))//
+				.map(d -> new GroupImpl(access.identification(type0).apply(d), id00, 0, d))//
 				.collect(Collectors.toList());
 		for (Group group0 : sections) {
 			String id0 = group0.id();
@@ -113,7 +115,7 @@ public class PlainData<D> {
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.distinct()//
-					.map(d -> new GroupImpl(access.identification(type1).apply(d), 1, d))//
+					.map(d -> new GroupImpl(access.identification(type1).apply(d), id0, 1, d))//
 					.collect(Collectors.toList());
 			groupsBySection.put(group0.id(), groups1);
 			for (Group group1 : groups1) {
@@ -123,17 +125,17 @@ public class PlainData<D> {
 						.filter(Optional::isPresent)//
 						.map(Optional::get)//
 						.distinct()//
-						.map(d -> new GroupImpl(access.identification(type2).apply(d), 2, d))//
+						.map(d -> new GroupImpl(access.identification(type2).apply(d), id1, 2, d))//
 						.collect(Collectors.toList());
 				subGroupsBygroup.put(group1, groups2);
-				for (Group group : groups2) {
-					List<Brick<D>> bricks = grouping2.getOrDefault(group.id(), Collections.emptyList()).stream()//
+				for (Group group2 : groups2) {
+					List<Brick<D>> bricks = grouping2.getOrDefault(group2.id(), Collections.emptyList()).stream()//
 							.filter(g0::contains)//
 							.filter(g1::contains)//
 							.map(i -> new BrickImpl<>(access.identification(access.type()).apply(i),
 									access.start().apply(i), access.end().apply(i), i))//
 							.collect(Collectors.toList());
-					bricksBySubgroup.put(group, bricks);
+					bricksBySubgroup.put(group2, bricks);
 				}
 			}
 		}

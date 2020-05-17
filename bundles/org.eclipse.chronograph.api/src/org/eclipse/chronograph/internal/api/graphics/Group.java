@@ -33,6 +33,12 @@ public interface Group {
 
 	/**
 	 * 
+	 * @return Full qualified identifier of the group
+	 */
+	String fqid();
+
+	/**
+	 * 
 	 * @return object used for grouping
 	 */
 	Object data();
