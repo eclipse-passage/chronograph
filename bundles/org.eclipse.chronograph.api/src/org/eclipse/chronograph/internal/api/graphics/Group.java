@@ -31,4 +31,9 @@ public interface Group {
 	 */
 	int level();
 
+	/**
+	 * 
+	 * @return object used for grouping
+	 */
+	Object data();
 }

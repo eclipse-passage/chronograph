@@ -103,8 +103,7 @@ public class PlainData<D> {
 				.filter(Optional::isPresent)//
 				.map(Optional::get)//
 				.distinct()//
-				.map(access.identification(type0))//
-				.map(id -> new GroupImpl(id, 0))//
+				.map(d -> new GroupImpl(access.identification(type0).apply(d), 0, d))//
 				.collect(Collectors.toList());
 		for (Group group0 : sections) {
 			String id0 = group0.id();
@@ -114,8 +113,7 @@ public class PlainData<D> {
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.distinct()//
-					.map(access.identification(type1))//
-					.map(id -> new GroupImpl(id, 1))//
+					.map(d -> new GroupImpl(access.identification(type1).apply(d), 1, d))//
 					.collect(Collectors.toList());
 			groupsBySection.put(group0.id(), groups1);
 			for (Group group1 : groups1) {
@@ -125,8 +123,7 @@ public class PlainData<D> {
 						.filter(Optional::isPresent)//
 						.map(Optional::get)//
 						.distinct()//
-						.map(access.identification(type2))//
-						.map(id -> new GroupImpl(id, 2))//
+						.map(d -> new GroupImpl(access.identification(type2).apply(d), 2, d))//
 						.collect(Collectors.toList());
 				subGroupsBygroup.put(group1, groups2);
 				for (Group group : groups2) {

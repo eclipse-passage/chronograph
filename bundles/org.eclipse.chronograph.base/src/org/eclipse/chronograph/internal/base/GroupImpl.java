@@ -24,10 +24,12 @@ public class GroupImpl implements Group {
 
 	private final String id;
 	private final int level;
+	private final Object data;
 
-	public GroupImpl(String id, int level) {
+	public GroupImpl(String id, int level, Object data) {
 		this.id = id;
 		this.level = level;
+		this.data = data;
 	}
 
 	@Override
@@ -38,6 +40,11 @@ public class GroupImpl implements Group {
 	@Override
 	public int level() {
 		return level;
+	}
+
+	@Override
+	public Object data() {
+		return data;
 	}
 
 }
