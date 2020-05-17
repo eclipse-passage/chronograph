@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.Chronograph;
-import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.api.representation.Style;
 import org.eclipse.chronograph.internal.api.representation.Styler;
@@ -39,7 +39,7 @@ public class SWTChronograph<D> implements Chronograph {
 	private final Stage<D> stage;
 	private final List<Styler> stylers;
 
-	public SWTChronograph(Composite parent, Access<D> access, Decoration<D, Image> provider) {
+	public SWTChronograph(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
 		this.stage = new Stage<>(parent, access, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));

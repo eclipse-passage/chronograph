@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Storage;
@@ -34,14 +34,14 @@ import org.eclipse.chronograph.internal.api.graphics.Storage;
  */
 public class PlainData<D> implements Storage<D> {
 
-	private final Access<D> access;
+	private final Resolution<D> access;
 	private final List<Class<?>> structure;
 	private final Map<String, Group> sectionsById = new HashMap<>();
 	private final Map<String, List<Group>> groupsBySection = new HashMap<>();
 	private final Map<Group, List<Group>> subGroupsBygroup = new HashMap<>();
 	private final Map<Group, List<Brick<D>>> bricksBySubgroup = new HashMap<>();
 
-	public PlainData(Access<D> access) {
+	public PlainData(Resolution<D> access) {
 		this.access = access;
 		this.structure = new ArrayList<>();
 	}

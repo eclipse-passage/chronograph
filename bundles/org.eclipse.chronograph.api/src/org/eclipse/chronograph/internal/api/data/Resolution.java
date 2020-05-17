@@ -19,10 +19,12 @@ import java.util.function.Predicate;
 
 /**
  * 
- * Provides access to a remote storage with data objects
+ * Resolves domain objects to be represented
+ * 
+ * @since 0.1
  *
  */
-public interface Access<I> {
+public interface Resolution<I> {
 
 	Class<I> type();
 

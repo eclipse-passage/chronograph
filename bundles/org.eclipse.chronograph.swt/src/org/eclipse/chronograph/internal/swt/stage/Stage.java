@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.ScrollBar;
 
 public final class Stage<D> extends Canvas {
 
-	private final Access<D> access;
+	private final Resolution<D> access;
 	private final AreaRectangle areaRectangle;
 	private final ActualBricks<D> actualBricks;
 	private final ExpiredBricks<D> expiredBricks;
@@ -76,11 +76,11 @@ public final class Stage<D> extends Canvas {
 
 	private final ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, Access<D> access, Decoration<D, Image> provider) {
+	public Stage(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
 	}
 
-	public Stage(Composite parent, int style, Access<D> access, Decoration<D, Image> provider) {
+	public Stage(Composite parent, int style, Resolution<D> access, Decoration<D, Image> provider) {
 		super(parent, style);
 		this.access = access;
 		this.areaRectangle = new AreaRectangle();

@@ -19,9 +19,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.data.Resolution;
 
-public abstract class DefaultAccess<I> implements Access<I> {
+public abstract class DefaultAccess<I> implements Resolution<I> {
 
 	private final Class<I> type;
 
