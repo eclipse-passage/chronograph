@@ -13,10 +13,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Section;
 
 /**
@@ -27,26 +23,14 @@ import org.eclipse.chronograph.internal.api.graphics.Section;
 public class SectionImpl implements Section {
 
 	private final String id;
-	private final List<Group> groups;
 
 	public SectionImpl(String id) {
 		this.id = id;
-		this.groups = new ArrayList<>();
-	}
-
-	public SectionImpl(String id, List<Group> groups) {
-		this.id = id;
-		this.groups = groups;
 	}
 
 	@Override
 	public String id() {
 		return id;
-	}
-
-	@Override
-	public List<Group> groups() {
-		return groups;
 	}
 
 }

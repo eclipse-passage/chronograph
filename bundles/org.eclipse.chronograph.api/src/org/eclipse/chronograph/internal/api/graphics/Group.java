@@ -17,7 +17,7 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Group describes typed container with sequence Brick items
  *
  */
-public interface Group extends GroupContainer {
+public interface Group {
 
 	/**
 	 * 
@@ -27,8 +27,8 @@ public interface Group extends GroupContainer {
 
 	/**
 	 * 
-	 * @return GroupContainer as a parent element
+	 * @return full qualified identifier of group
 	 */
-	GroupContainer container();
+	String fqid();
 
 }

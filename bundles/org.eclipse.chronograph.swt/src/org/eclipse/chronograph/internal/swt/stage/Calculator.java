@@ -119,15 +119,7 @@ public class Calculator<D> {
 	}
 
 	private String transformKey(Group group) {
-		String key = group.id();
-		if (group.container() instanceof Section) {
-			Section section = (Section) group.container();
-			key = section.id() + group.id();
-		} else if (group.container() instanceof Group) {
-			Group parent = (Group) group.container();
-			key = parent.id() + group.id();
-		}
-		return key;
+		return group.fqid();
 	}
 
 	public Area getGroupAreaBySectionId(String id) {

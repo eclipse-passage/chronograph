@@ -13,10 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import java.util.List;
-
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
 
 /**
  * 
@@ -26,11 +23,11 @@ import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
 public class GroupImpl implements Group {
 
 	private final String id;
-	private final GroupContainer parent;
+	private final String fqid;
 
-	public GroupImpl(String id, GroupContainer parent) {
+	public GroupImpl(String id, String parentId) {
 		this.id = id;
-		this.parent = parent;
+		this.fqid = parentId + id;
 	}
 
 	@Override
@@ -39,13 +36,8 @@ public class GroupImpl implements Group {
 	}
 
 	@Override
-	public GroupContainer container() {
-		return parent;
-	}
-
-	@Override
-	public List<Group> groups() {
-		return parent.groups();
+	public String fqid() {
+		return fqid;
 	}
 
 }

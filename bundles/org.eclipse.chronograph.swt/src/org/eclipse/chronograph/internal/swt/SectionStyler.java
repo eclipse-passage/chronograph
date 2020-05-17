@@ -14,8 +14,6 @@
 
 package org.eclipse.chronograph.internal.swt;
 
-import static org.eclipse.chronograph.internal.swt.GroupStyler.GROUP_HEIGHT_DEFAULT;
-
 import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.swt.graphics.Color;
@@ -29,20 +27,12 @@ import org.eclipse.swt.widgets.Display;
  */
 public class SectionStyler implements Styler {
 	private static final Display DISPLAY = Display.getDefault();
-	private static final int SECTION_HEIGHT = 100;
 	private static final int SECTION_WIDTH = 30;
 	private static final int SECTION_SEPARATOR_HEIGTH = 5;
 
 	public static Color SECTION_TOP_COLOR;
 	public static Color SECTION_BTM_COLOR;
 	public static Color SECTION_TEXT_COLOR;
-
-	public static int getSectionHeight(Section section) {
-		if (section.groups() != null && section.groups().isEmpty()) {
-			return section.groups().size() * GROUP_HEIGHT_DEFAULT;
-		}
-		return SECTION_HEIGHT;
-	}
 
 	public static int getSectionSeparatorHeight() {
 		return SECTION_SEPARATOR_HEIGTH;

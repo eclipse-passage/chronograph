@@ -110,14 +110,15 @@ public class PlainData<D> implements Storage<D> {
 				.map(id -> new SectionImpl(id))//
 				.collect(Collectors.toList());
 		for (Section section : sections) {
+			String id0 = section.id();
 			List<D> g0 = grouping0.getOrDefault(section.id(), Collections.emptyList());
-			sectionsById.put(section.id(), section);
+			sectionsById.put(id0, section);
 			List<Group> groups = input.stream().map(access.adapt(type1))//
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.distinct()//
 					.map(access.identification(type1))//
-					.map(id -> new GroupImpl(id, section))//
+					.map(id -> new GroupImpl(id, id0))//
 					.collect(Collectors.toList());
 			groupsBySection.put(section.id(), groups);
 			for (Group group : groups) {
@@ -128,7 +129,7 @@ public class PlainData<D> implements Storage<D> {
 						.map(Optional::get)//
 						.distinct()//
 						.map(access.identification(type2))//
-						.map(id -> new GroupImpl(id, group))//
+						.map(id -> new GroupImpl(id, id1))//
 						.collect(Collectors.toList());
 				subGroupsBygroup.put(group, subGroups);
 				for (Group subGroup : subGroups) {
