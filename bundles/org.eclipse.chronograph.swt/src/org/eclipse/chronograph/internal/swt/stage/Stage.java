@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.eclipse.chronograph.internal.api.data.Access;
@@ -295,19 +294,16 @@ public final class Stage<I> extends Canvas {
 		if (area == null) {
 			return;
 		}
-		bricks.stream().forEach(new Consumer<Brick>() {
-			@Override
-			public void accept(Brick brick) {
-				calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-				Area brickArea = getDrawingArea(brick);
-				if (brickArea != null) {
-					Rectangle rectangleArea = areaRectangle.apply(brickArea);
-					INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
-					String label = labelProvider.getText(brick);
-					INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);
-					INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
-				}
-			};
+		bricks.stream().forEach(brick -> {
+			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+			Area brickArea = getDrawingArea(brick);
+			if (brickArea != null) {
+				Rectangle rectangleArea = areaRectangle.apply(brickArea);
+				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
+				String label = labelProvider.getText(brick);
+				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
+				INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+			}
 		});
 	}
 
@@ -324,7 +320,7 @@ public final class Stage<I> extends Canvas {
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
 			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
 			String label = labelProvider.getText(brick);
-			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint);
+			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
 			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 		}
 	}
@@ -363,17 +359,18 @@ public final class Stage<I> extends Canvas {
 	private void updateStageScale() {
 		if (stageScale <= 0) {
 			stageScale = 1;
-			pxlHint = stageScale * 2;
+
 		}
-		if (stageScale == 2 || stageScale == 3) {
-			pxlHint = stageScale * 2;
-		}
-		if (stageScale == 4) {
-			pxlHint = stageScale * 3;
-		}
-		if (stageScale > 4) {
-			pxlHint = stageScale * SCALE_DEFAULT;
-		}
+		pxlHint = stageScale;
+//		if (stageScale == 2 || stageScale == 3) {
+//			pxlHint = stageScale * 1;
+//		}
+//		if (stageScale == 4) {
+//			pxlHint = stageScale * 2;
+//		}
+//		if (stageScale > 4) {
+//			pxlHint = stageScale * SCALE_DEFAULT;
+//		}
 	}
 
 	public void scaleUp() {
