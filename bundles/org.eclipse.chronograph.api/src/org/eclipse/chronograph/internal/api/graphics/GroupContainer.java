@@ -20,11 +20,11 @@ import java.util.List;
  * Container for Group typed elements
  *
  */
-public interface GroupContainer<D> {
+public interface GroupContainer {
 
 	/**
 	 * 
 	 * @return stored Group elements in List data structure
 	 */
-	List<Group<D>> groups();
+	List<Group> groups();
 }

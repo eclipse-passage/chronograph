@@ -37,7 +37,7 @@ public class SectionStyler implements Styler {
 	public static Color SECTION_BTM_COLOR;
 	public static Color SECTION_TEXT_COLOR;
 
-	public static int getSectionHeight(Section<?> section) {
+	public static int getSectionHeight(Section section) {
 		if (section.groups() != null && section.groups().isEmpty()) {
 			return section.groups().size() * GROUP_HEIGHT_DEFAULT;
 		}

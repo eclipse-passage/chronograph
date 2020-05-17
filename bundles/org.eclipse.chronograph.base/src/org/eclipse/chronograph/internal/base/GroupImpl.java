@@ -23,12 +23,12 @@ import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
  * Implementation of {@link Group} interface
  *
  */
-public class GroupImpl<D> implements Group<D> {
+public class GroupImpl implements Group {
 
 	private final String id;
-	private final GroupContainer<D> parent;
+	private final GroupContainer parent;
 
-	public GroupImpl(String id, GroupContainer<D> parent) {
+	public GroupImpl(String id, GroupContainer parent) {
 		this.id = id;
 		this.parent = parent;
 	}
@@ -39,12 +39,12 @@ public class GroupImpl<D> implements Group<D> {
 	}
 
 	@Override
-	public GroupContainer<D> container() {
+	public GroupContainer container() {
 		return parent;
 	}
 
 	@Override
-	public List<Group<D>> groups() {
+	public List<Group> groups() {
 		return parent.groups();
 	}
 

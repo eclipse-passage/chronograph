@@ -49,7 +49,7 @@ public interface Decoration<D, I> {
 	 * @param element - input object
 	 * @return
 	 */
-	String groupText(Group<D> element);
+	String groupText(Group element);
 
 	/**
 	 * Label for input object
@@ -57,6 +57,6 @@ public interface Decoration<D, I> {
 	 * @param element - input object
 	 * @return
 	 */
-	String sectionText(Section<D> element);
+	String sectionText(Section element);
 
 }

@@ -22,9 +22,8 @@ import org.eclipse.swt.widgets.Display;
  * 
  * Interface intended to render {@link Section}
  *
- * @param <T> - type of object
  */
-public interface ChronographSectionRenderer<T extends Section> {
+public interface ChronographSectionRenderer {
 
 	public void draw(GC gc, String label, Rectangle bounds, Display display, int width, int hintY);
 

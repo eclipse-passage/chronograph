@@ -27,9 +27,8 @@ import org.eclipse.swt.widgets.Display;
  * 
  * Render implementation of {@link Group} object
  *
- * @param <D> - type of data object
  */
-public class GroupRendererImpl<D> implements ChronographGroupRenderer<D> {
+public class GroupRendererImpl implements ChronographGroupRenderer {
 
 	@Override
 	public void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY) {

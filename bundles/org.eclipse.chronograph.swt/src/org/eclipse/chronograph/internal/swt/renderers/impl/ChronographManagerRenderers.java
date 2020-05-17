@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.graphics.Brick;
-import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectExtRenderer;
@@ -40,11 +38,11 @@ public class ChronographManagerRenderers<D> {
 	private final ChronographObjectLabelRenderer<Brick<D>> objectLabelRenderer;
 	private final ChronographObjectContentRenderer<Brick<D>> objectContentRenderer;
 	private final ChronographObjectContentRenderer<Brick<D>> objectSelectedRenderer;
-	private final ChronographGroupRenderer<Group<D>> chronographGroupRenderer;
+	private final ChronographGroupRenderer chronographGroupRenderer;
 	private final List<ChronographStageRulerRenderer> chronographStageRulerRenderers;
 	private final ChronographStageRenderer chronographStageRenderer;
 	private final ChronographStatusRenderer chronographStatusRenderer;
-	private final ChronographSectionRenderer<Section<D>> sectionPinter;
+	private final ChronographSectionRenderer sectionPinter;
 
 	private ChronographManagerRenderers() {
 		this.objectContentRenderer = new ObjectContentRendererImpl<>();
@@ -57,8 +55,8 @@ public class ChronographManagerRenderers<D> {
 		this.chronographStageRulerRenderers.add(new RulerYearRendererImpl());
 		this.chronographStageRenderer = new StageRendererImpl();
 		this.chronographStatusRenderer = new StatusRendererImpl();
-		this.chronographGroupRenderer = new GroupRendererImpl<>();
-		this.sectionPinter = new SectionRendererImpl<>();
+		this.chronographGroupRenderer = new GroupRendererImpl();
+		this.sectionPinter = new SectionRendererImpl();
 
 	}
 
@@ -93,11 +91,11 @@ public class ChronographManagerRenderers<D> {
 		return chronographStatusRenderer;
 	}
 
-	public ChronographGroupRenderer<Group<D>> getDrawingGroupPainter() {
+	public ChronographGroupRenderer getDrawingGroupPainter() {
 		return chronographGroupRenderer;
 	}
 
-	public ChronographSectionRenderer<Section<D>> getDrawingSectionPainter() {
+	public ChronographSectionRenderer getDrawingSectionPainter() {
 		return sectionPinter;
 	}
 

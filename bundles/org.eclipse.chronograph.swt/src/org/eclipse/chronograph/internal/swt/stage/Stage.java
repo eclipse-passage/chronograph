@@ -206,11 +206,11 @@ public final class Stage<D> extends Canvas {
 		for (ChronographStageRulerRenderer painter : list) {
 			painter.draw(gc, stageRectangle, stageScale, pxlHint, pXhint, pX);
 		}
-		for (Section<D> section : registry.getSections()) {
-			List<Group<D>> groupsBySection = registry.getGroupBySection(section);
-			for (Group<D> group : groupsBySection) {
-				List<Group<D>> subGroups = registry.getSubGroupByGroupSection(group);
-				for (Group<D> subgroup : subGroups) {
+		for (Section section : registry.getSections()) {
+			List<Group> groupsBySection = registry.getGroupBySection(section);
+			for (Group group : groupsBySection) {
+				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
+				for (Group subgroup : subGroups) {
 					Area area = getDrawingArea(subgroup);
 					if (area == null) {
 						continue;
@@ -268,7 +268,7 @@ public final class Stage<D> extends Canvas {
 		return bricksSelected;
 	}
 
-	private Area getDrawingArea(Group<D> group) {
+	private Area getDrawingArea(Group group) {
 		return calculator.getGroupAreaByGroup(group);// groupsAreas.get(transformKey(group));
 	}
 
