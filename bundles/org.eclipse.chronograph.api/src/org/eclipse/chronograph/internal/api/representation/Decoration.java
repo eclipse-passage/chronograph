@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 
 /**
  * The label provider designed to provide specific data for input objects
@@ -50,13 +49,5 @@ public interface Decoration<D, I> {
 	 * @return
 	 */
 	String groupText(Group element);
-
-	/**
-	 * Label for input object
-	 * 
-	 * @param element - input object
-	 * @return
-	 */
-	String sectionText(Section element);
 
 }

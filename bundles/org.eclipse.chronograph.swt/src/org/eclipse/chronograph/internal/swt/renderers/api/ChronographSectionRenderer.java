@@ -13,14 +13,14 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.api;
 
-import org.eclipse.chronograph.internal.api.graphics.Section;
+import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * 
- * Interface intended to render {@link Section}
+ * Interface intended to render root {@link Group}
  *
  */
 public interface ChronographSectionRenderer {

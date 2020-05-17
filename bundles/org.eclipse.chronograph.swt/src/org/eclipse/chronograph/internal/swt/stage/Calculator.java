@@ -22,7 +22,6 @@ import java.util.Optional;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
@@ -51,20 +50,20 @@ public class Calculator<D> {
 				visiableArea.width() - 10,
 				visiableArea.height() - StageStyler.getStageHeaderHeight() - RulerStyler.RULER_DAY_HEIGHT
 						- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT);
-		List<Section> sections = registry.getSections();
+		List<Group> sections = registry.groups();
 		calculateSectionBounds(frameArea, sections, SectionStyler.getSectionSeparatorHeight(), zoom);
-		for (Section section : sections) {
-			List<Group> groupsBySection = registry.getGroupBySection(section);
+		for (Group section : sections) {
+			List<Group> groupsBySection = registry.subGroups(section);
 			calculateGroupBounds(groupsBySection, groupsAreas.get(section.id()));
 		}
 
 	}
 
-	private void calculateSectionBounds(Area area, Collection<Section> sections, int sectionSpace, int zoom) {
+	private void calculateSectionBounds(Area area, Collection<Group> sections, int sectionSpace, int zoom) {
 		int y = area.y();
-		for (Section section : sections) {
+		for (Group section : sections) {
 			int lenghtOfGroups = 0;
-			List<Group> groups = registry.getGroupBySection(section);
+			List<Group> groups = registry.subGroups(section);
 			for (Group group : groups) {
 				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 				if (subGroups.isEmpty()) {
@@ -119,7 +118,7 @@ public class Calculator<D> {
 	}
 
 	private String transformKey(Group group) {
-		return group.fqid();
+		return group.id() + group.level();
 	}
 
 	public Area getGroupAreaBySectionId(String id) {

@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 import org.eclipse.chronograph.internal.api.data.Access;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.api.graphics.Storage;
 
 /**
@@ -37,7 +36,7 @@ public class PlainData<D> implements Storage<D> {
 
 	private final Access<D> access;
 	private final List<Class<?>> structure;
-	private final Map<String, Section> sectionsById = new HashMap<>();
+	private final Map<String, Group> sectionsById = new HashMap<>();
 	private final Map<String, List<Group>> groupsBySection = new HashMap<>();
 	private final Map<Group, List<Group>> subGroupsBygroup = new HashMap<>();
 	private final Map<Group, List<Brick<D>>> bricksBySubgroup = new HashMap<>();
@@ -47,11 +46,11 @@ public class PlainData<D> implements Storage<D> {
 		this.structure = new ArrayList<>();
 	}
 
-	public List<Section> getSections() {
+	public List<Group> groups() {
 		return new ArrayList<>(sectionsById.values());
 	}
 
-	public List<Group> getGroupBySection(Section section) {
+	public List<Group> subGroups(Group section) {
 		return groupsBySection.getOrDefault(section.id(), Collections.emptyList());
 	}
 
@@ -61,7 +60,7 @@ public class PlainData<D> implements Storage<D> {
 
 	public List<Brick<D>> getBrickBySubgroup(String subgroupId, String groupId, String sectionId) {
 		if (!sectionId.isEmpty()) {
-			Section section = sectionsById.get(sectionId);
+			Group section = sectionsById.get(sectionId);
 			List<Group> groups = groupsBySection.get(section.id());
 			for (Group group : groups) {
 				if (group.id().equals(groupId)) {
@@ -102,14 +101,14 @@ public class PlainData<D> implements Storage<D> {
 		Map<String, List<D>> grouping0 = input.stream().collect(Collectors.groupingBy(access.grouping(type0)));
 		Map<String, List<D>> grouping1 = input.stream().collect(Collectors.groupingBy(access.grouping(type1)));
 		Map<String, List<D>> grouping2 = input.stream().collect(Collectors.groupingBy(access.grouping(type2)));
-		List<Section> sections = input.stream().map(access.adapt(type0))//
+		List<Group> sections = input.stream().map(access.adapt(type0))//
 				.filter(Optional::isPresent)//
 				.map(Optional::get)//
 				.distinct()//
 				.map(access.identification(type0))//
-				.map(id -> new SectionImpl(id))//
+				.map(id -> new GroupImpl(id, 0))//
 				.collect(Collectors.toList());
-		for (Section section : sections) {
+		for (Group section : sections) {
 			String id0 = section.id();
 			List<D> g0 = grouping0.getOrDefault(section.id(), Collections.emptyList());
 			sectionsById.put(id0, section);
@@ -118,7 +117,7 @@ public class PlainData<D> implements Storage<D> {
 					.map(Optional::get)//
 					.distinct()//
 					.map(access.identification(type1))//
-					.map(id -> new GroupImpl(id, id0))//
+					.map(id -> new GroupImpl(id, 1))//
 					.collect(Collectors.toList());
 			groupsBySection.put(section.id(), groups);
 			for (Group group : groups) {
@@ -129,7 +128,7 @@ public class PlainData<D> implements Storage<D> {
 						.map(Optional::get)//
 						.distinct()//
 						.map(access.identification(type2))//
-						.map(id -> new GroupImpl(id, id1))//
+						.map(id -> new GroupImpl(id, 2))//
 						.collect(Collectors.toList());
 				subGroupsBygroup.put(group, subGroups);
 				for (Group subGroup : subGroups) {

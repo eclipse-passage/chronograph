@@ -23,7 +23,6 @@ import org.eclipse.chronograph.internal.api.data.Access;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
@@ -206,8 +205,8 @@ public final class Stage<D> extends Canvas {
 		for (ChronographStageRulerRenderer painter : list) {
 			painter.draw(gc, stageRectangle, stageScale, pxlHint, pXhint, pX);
 		}
-		for (Section section : registry.getSections()) {
-			List<Group> groupsBySection = registry.getGroupBySection(section);
+		for (Group section : registry.groups()) {
+			List<Group> groupsBySection = registry.subGroups(section);
 			for (Group group : groupsBySection) {
 				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 				for (Group subgroup : subGroups) {
@@ -241,7 +240,7 @@ public final class Stage<D> extends Canvas {
 				continue;
 			}
 			Rectangle sectionRectangle = areaRectangle.apply(area);
-			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.sectionText(section), sectionRectangle,
+			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
 					getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 		}
 		// status line

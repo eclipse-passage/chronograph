@@ -27,8 +27,8 @@ public interface Group {
 
 	/**
 	 * 
-	 * @return full qualified identifier of group
+	 * @return level of the group
 	 */
-	String fqid();
+	int level();
 
 }

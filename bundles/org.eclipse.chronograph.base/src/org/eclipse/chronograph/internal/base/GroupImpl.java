@@ -23,11 +23,11 @@ import org.eclipse.chronograph.internal.api.graphics.Group;
 public class GroupImpl implements Group {
 
 	private final String id;
-	private final String fqid;
+	private final int level;
 
-	public GroupImpl(String id, String parentId) {
+	public GroupImpl(String id, int level) {
 		this.id = id;
-		this.fqid = parentId + id;
+		this.level = level;
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class GroupImpl implements Group {
 	}
 
 	@Override
-	public String fqid() {
-		return fqid;
+	public int level() {
+		return level;
 	}
 
 }

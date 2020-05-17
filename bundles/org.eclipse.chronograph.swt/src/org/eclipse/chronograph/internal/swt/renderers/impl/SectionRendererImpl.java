@@ -13,7 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import org.eclipse.chronograph.internal.api.graphics.Section;
+import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographSectionRenderer;
 import org.eclipse.swt.SWT;
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * 
- * Render implementation for {@link Section} object
+ * Render implementation for root {@link Group} object
  *
  */
 public class SectionRendererImpl implements ChronographSectionRenderer {
