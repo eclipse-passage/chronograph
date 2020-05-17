@@ -22,8 +22,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * Interface intended to render {@link Group}
  *
- * @param <T> - type
  */
-public interface ChronographGroupRenderer<T> {
+public interface ChronographGroupRenderer {
 	void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY);
 }

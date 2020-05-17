@@ -18,13 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.Chronograph;
-import org.eclipse.chronograph.internal.api.data.Access;
-import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
+import org.eclipse.chronograph.internal.api.data.Resolution;
+import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.api.representation.Style;
 import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.stage.Stage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
@@ -34,11 +35,11 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 //FIXME: it looks like this type is not really needed
-public class SWTChronograph<I> implements Chronograph {
-	private final Stage<I> stage;
+public class SWTChronograph<D> implements Chronograph {
+	private final Stage<D> stage;
 	private final List<Styler> stylers;
 
-	public SWTChronograph(Composite parent, Access<I> access, StageLabelProvider provider) {
+	public SWTChronograph(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
 		this.stage = new Stage<>(parent, access, provider);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));

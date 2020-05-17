@@ -24,10 +24,10 @@ import org.eclipse.swt.graphics.Rectangle;
  * Render implementation for selected {@link Brick} object
  *
  */
-public class ObjectSelectedRendererImpl implements ChronographObjectContentRenderer<Brick> {
+public class ObjectSelectedRendererImpl<D> implements ChronographObjectContentRenderer<D> {
 
 	@Override
-	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
+	public void draw(Brick<D> object, GC gc, Rectangle bounds, int vOffset) {
 		gc.setForeground(BrickStyler.getColorTopSelected());
 		gc.setBackground(BrickStyler.getColorBottomSelected());
 		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30, 30);

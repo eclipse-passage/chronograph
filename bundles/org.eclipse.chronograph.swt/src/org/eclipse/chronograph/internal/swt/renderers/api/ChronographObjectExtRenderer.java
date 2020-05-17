@@ -20,10 +20,10 @@ import org.eclipse.swt.graphics.GC;
  * 
  * Interface intended to render extended parts of {@link Brick}
  *
- * @param <T> - type of object
+ * @param <D> - type of data object
  */
-public interface ChronographObjectExtRenderer<T extends Brick> {
+public interface ChronographObjectExtRenderer<D> {
 
-	public void drawObjectDuration(T to, GC gc, int vOffset);
+	public void drawObjectDuration(Brick<D> to, GC gc, int vOffset);
 
 }

@@ -22,7 +22,6 @@ import java.util.Optional;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
@@ -32,17 +31,17 @@ import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.swt.graphics.Rectangle;
 
-public class Calculator {
-	private final PlainData registry;
+public class Calculator<D> {
+	private final PlainData<D> registry;
 	private final Map<String, Area> groupsAreas;
 	private final Map<String, Area> bricksAreas;
-	private final Map<Area, Brick> areaBricks;
+	private final Map<Area, Brick<D>> areaBricks;
 
-	public Calculator(PlainData registry) {
+	public Calculator(PlainData<D> registry) {
 		this.registry = registry;
 		this.groupsAreas = new HashMap<>();
 		this.bricksAreas = new HashMap<>();
-		this.areaBricks = new HashMap<Area, Brick>();
+		this.areaBricks = new HashMap<>();
 	}
 
 	public void calculateObjectBounds(Rectangle clientArea, int pYhint, int zoom) {
@@ -51,20 +50,20 @@ public class Calculator {
 				visiableArea.width() - 10,
 				visiableArea.height() - StageStyler.getStageHeaderHeight() - RulerStyler.RULER_DAY_HEIGHT
 						- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT);
-		List<Section> sections = registry.getSections();
+		List<Group> sections = registry.groups();
 		calculateSectionBounds(frameArea, sections, SectionStyler.getSectionSeparatorHeight(), zoom);
-		for (Section section : sections) {
-			List<Group> groupsBySection = registry.getGroupBySection(section);
-			calculateGroupBounds(groupsBySection, groupsAreas.get(section.id()));
+		for (Group section : sections) {
+			List<Group> groupsBySection = registry.subGroups(section);
+			calculateGroupBounds(groupsBySection, getGroupAreaByGroup(section));
 		}
 
 	}
 
-	private void calculateSectionBounds(Area area, Collection<Section> sections, int sectionSpace, int zoom) {
+	private void calculateSectionBounds(Area area, Collection<Group> sections, int sectionSpace, int zoom) {
 		int y = area.y();
-		for (Section section : sections) {
+		for (Group section : sections) {
 			int lenghtOfGroups = 0;
-			List<Group> groups = registry.getGroupBySection(section);
+			List<Group> groups = registry.subGroups(section);
 			for (Group group : groups) {
 				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 				if (subGroups.isEmpty()) {
@@ -75,12 +74,12 @@ public class Calculator {
 				}
 			}
 			Area sectionArea = new AreaImpl(area.x(), y, area.width() * zoom, lenghtOfGroups * zoom);
-			groupsAreas.put(section.id(), sectionArea);
+			addDrawingArea(section, sectionArea);
 			y += lenghtOfGroups * zoom + sectionSpace;
 		}
 	}
 
-	private void calculateGroupBounds(List<? extends Group> groups, Area area) {
+	private void calculateGroupBounds(List<Group> groups, Area area) {
 		if (area == null) {
 			return;
 		}
@@ -89,7 +88,7 @@ public class Calculator {
 			int groupIndex = groups.indexOf(group);
 			Area areaGroup = new AreaImpl(area.x() + 30, area.y() + (groupIndex * heightDelta), area.width() + 30,
 					heightDelta);
-			groupsAreas.put(transformKey(group), areaGroup);
+			addDrawingArea(group, areaGroup);
 			List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 			for (Group subgroup : subGroups) {
 				int subGroupIndex = subGroups.indexOf(subgroup);
@@ -101,7 +100,7 @@ public class Calculator {
 		}
 	}
 
-	public Brick calculateObjectPosition(Brick brick, Area area, int hintX, int hintY, int hintWidth) {
+	public Brick<D> calculateObjectPosition(Brick<D> brick, Area area, int hintX, int hintY, int hintWidth) {
 		if (area == null) {
 			return brick;
 		}
@@ -115,23 +114,7 @@ public class Calculator {
 	}
 
 	private void addDrawingArea(Group group, Area area) {
-		groupsAreas.put(transformKey(group), area);
-	}
-
-	private String transformKey(Group group) {
-		String key = group.id();
-		if (group.container() instanceof Section) {
-			Section section = (Section) group.container();
-			key = section.id() + group.id();
-		} else if (group.container() instanceof Group) {
-			Group parent = (Group) group.container();
-			key = parent.id() + group.id();
-		}
-		return key;
-	}
-
-	public Area getGroupAreaBySectionId(String id) {
-		return groupsAreas.get(id);
+		groupsAreas.put(group.fqid(), area);
 	}
 
 	public Area getBrickAreaById(String id) {
@@ -139,10 +122,10 @@ public class Calculator {
 	}
 
 	public Area getGroupAreaByGroup(Group group) {
-		return groupsAreas.get(transformKey(group));
+		return groupsAreas.get(group.fqid());
 	}
 
-	public Optional<Brick> brickAt(int x, int y) {
+	public Optional<Brick<D>> brickAt(int x, int y) {
 		return areaBricks.keySet().stream()//
 				.filter(a -> x >= a.x() && y >= a.y() && x <= a.x() + a.width() && y <= a.y() + a.height())//
 				.findFirst()//

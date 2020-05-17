@@ -13,12 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
 
 /**
  * 
@@ -28,25 +23,15 @@ import org.eclipse.chronograph.internal.api.graphics.GroupContainer;
 public class GroupImpl implements Group {
 
 	private final String id;
-	private final GroupContainer parent;
-	private final List<Brick> bricks;
+	private final String fqid;
+	private final int level;
+	private final Object data;
 
-	public GroupImpl(String id, GroupContainer parent) {
+	public GroupImpl(String id, String parent, int level, Object data) {
 		this.id = id;
-		this.parent = parent;
-		this.bricks = new ArrayList<Brick>();
-	}
-
-	public GroupImpl(String id, List<Brick> bricks) {
-		this.id = id;
-		this.parent = null;
-		this.bricks = bricks;
-	}
-
-	public GroupImpl(String id, GroupContainer parent, List<Brick> bricks) {
-		this.id = id;
-		this.parent = parent;
-		this.bricks = bricks;
+		this.fqid = parent + "::" + id; //$NON-NLS-1$
+		this.level = level;
+		this.data = data;
 	}
 
 	@Override
@@ -55,18 +40,23 @@ public class GroupImpl implements Group {
 	}
 
 	@Override
-	public List<? extends Brick> bricks() {
-		return bricks;
+	public int level() {
+		return level;
 	}
 
 	@Override
-	public GroupContainer container() {
-		return parent;
+	public String fqid() {
+		return fqid;
 	}
 
 	@Override
-	public List<? extends Group> groups() {
-		return parent.groups();
+	public Object data() {
+		return data;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 
 }

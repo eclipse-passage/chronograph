@@ -16,11 +16,11 @@ package org.eclipse.chronograph.internal.swt.stage;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-final class StageResize implements Listener {
+final class StageResize<D> implements Listener {
 
-	private final Stage stage;
+	private final Stage<D> stage;
 
-	public StageResize(Stage stage) {
+	public StageResize(Stage<D> stage) {
 		this.stage = stage;
 	}
 

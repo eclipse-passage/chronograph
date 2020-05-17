@@ -19,10 +19,12 @@ import java.util.function.Predicate;
 
 /**
  * 
- * Provides access to a remote storage with data objects
+ * Resolves domain objects to be represented
+ * 
+ * @since 0.1
  *
  */
-public interface Access<I> {
+public interface Resolution<I> {
 
 	Class<I> type();
 
@@ -44,13 +46,13 @@ public interface Access<I> {
 	<D> Function<D, String> identification(Class<D> type);
 
 	/**
-	 * "map" function for the given type to define groups
+	 * "adapt" function for the given type to define groups
 	 * 
 	 * @param <G>
 	 * @param grouping
 	 * @return
 	 */
-	<G> Function<I, Optional<G>> map(Class<G> grouping);
+	<G> Function<I, Optional<G>> adapt(Class<G> grouping);
 
 	/**
 	 * "grouping" function to collect by groups

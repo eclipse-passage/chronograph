@@ -8,10 +8,15 @@
  *	SPDX-License-Identifier: EPL-2.0
  *
  *	Contributors:
- *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
- *												initial API and implementation
+ *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
+ *     Alexander Fedorov <alexander.fedorov@arsysop.ru> - API improvements
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api.representation;
+
+import java.util.Optional;
+
+import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Group;
 
 /**
  * The label provider designed to provide specific data for input objects
@@ -19,15 +24,15 @@ package org.eclipse.chronograph.internal.api.representation;
  * 
  *
  */
-public interface StageLabelProvider {
+public interface Decoration<D, I> {
 
 	/**
 	 * Image for input object
 	 * 
 	 * @param element - input object
-	 * @return {@link Image}
+	 * @return image
 	 */
-	Object getImage(Object element);
+	Optional<I> brickImage(Brick<D> element);
 
 	/**
 	 * Label for input object
@@ -35,5 +40,14 @@ public interface StageLabelProvider {
 	 * @param element - input object
 	 * @return
 	 */
-	String getText(Object element);
+	String brickText(Brick<D> element);
+
+	/**
+	 * Label for input object
+	 * 
+	 * @param element - input object
+	 * @return
+	 */
+	String groupText(Group element);
+
 }

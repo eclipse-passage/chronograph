@@ -19,12 +19,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.eclipse.chronograph.internal.api.data.Access;
+import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.api.graphics.Section;
-import org.eclipse.chronograph.internal.api.representation.StageLabelProvider;
+import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.base.query.ActualBricks;
@@ -36,6 +35,7 @@ import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRen
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -45,12 +45,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class Stage<I> extends Canvas {
+public final class Stage<D> extends Canvas {
 
-	private final Access<I> access;
+	private final Resolution<D> access;
 	private final AreaRectangle areaRectangle;
-	private final ActualBricks actualBricks;
-	private final ExpiredBricks expiredBricks;
+	private final ActualBricks<D> actualBricks;
+	private final ExpiredBricks<D> expiredBricks;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
 	private static final int SCALE_DEFAULT = 5;
@@ -62,30 +62,30 @@ public final class Stage<I> extends Canvas {
 	private int pYhint;
 	private int stageScale = 5;
 
-	private List<Brick> bricksSelected;
+	private List<Brick<D>> bricksSelected;
 
-	private PlainData<I> registry;
+	private PlainData<D> registry;
 	private Rectangle boundsGlobal;
 	private Area visiableArea;
 	private final Point originalPosition = new Point(0, 0);
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
-	private StageLabelProvider labelProvider;
-	private Calculator calculator;
+	private Decoration<D, Image> labelProvider;
+	private Calculator<D> calculator;
 	private int zoom = 1;
 
-	private static ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
+	private final ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
 
-	public Stage(Composite parent, Access<I> access, StageLabelProvider provider) {
+	public Stage(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
 	}
 
-	public Stage(Composite parent, int style, Access<I> access, StageLabelProvider provider) {
+	public Stage(Composite parent, int style, Resolution<D> access, Decoration<D, Image> provider) {
 		super(parent, style);
 		this.access = access;
 		this.areaRectangle = new AreaRectangle();
-		this.actualBricks = new ActualBricks();
-		this.expiredBricks = new ExpiredBricks();
+		this.actualBricks = new ActualBricks<>();
+		this.expiredBricks = new ExpiredBricks<>();
 
 		this.labelProvider = provider;
 		bricksSelected = new ArrayList<>();
@@ -104,7 +104,7 @@ public final class Stage<I> extends Canvas {
 	}
 
 	private void initCalculator() {
-		calculator = new Calculator(registry);
+		calculator = new Calculator<>(registry);
 	}
 
 	private void initScrollBarHorizontal() {
@@ -137,12 +137,12 @@ public final class Stage<I> extends Canvas {
 
 	private void initListeners() {
 		addPaintListener(new StagePaint(this));
-		StageMouse mouse = new StageMouse(this);
+		StageMouse<D> mouse = new StageMouse<>(this);
 		addMouseListener(mouse);
 		addMouseMoveListener(mouse);
 		addMouseTrackListener(mouse);
-		addListener(SWT.MouseWheel, new StageWheel(this));
-		addListener(SWT.Resize, new StageResize(this));
+		addListener(SWT.MouseWheel, new StageWheel<>(this));
+		addListener(SWT.Resize, new StageResize<>(this));
 	}
 
 	public void verticalScroll(Event event) {
@@ -201,46 +201,47 @@ public final class Stage<I> extends Canvas {
 		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
 		Rectangle stageRectangle = areaRectangle.apply(visiableArea);
 		INSTANCE.getDrawingStagePainter().draw(gc, stageRectangle);
-		for (ChronographStageRulerRenderer painter : INSTANCE.getDrawingRulersPainter()) {
+		List<ChronographStageRulerRenderer> list = INSTANCE.getDrawingRulersPainter();
+		for (ChronographStageRulerRenderer painter : list) {
 			painter.draw(gc, stageRectangle, stageScale, pxlHint, pXhint, pX);
 		}
-		for (Section section : registry.getSections()) {
-			List<Group> groupsBySection = registry.getGroupBySection(section);
+		for (Group section : registry.groups()) {
+			List<Group> groupsBySection = registry.subGroups(section);
 			for (Group group : groupsBySection) {
 				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
 				for (Group subgroup : subGroups) {
-					Area area = getDrawingArea(subgroup);
+					Area area = calculator.getGroupAreaByGroup(subgroup);
 					if (area == null) {
 						continue;
 					}
-					List<Brick> bricks = registry.getBrickBySubgroup(subgroup.id(), group.id(), section.id());
+					List<Brick<D>> bricks = registry.getBrickBySubgroup(subgroup.id(), group.id(), section.id());
 					if (bricks != null) {
-						Collection<? extends Brick> selectedBriks = getSelectedObject();
-						Collection<? extends Brick> markedBricks = filterBricksBySeleted(bricks, selectedBriks);
+						Collection<Brick<D>> selectedBriks = getSelectedObject();
+						Collection<Brick<D>> markedBricks = filterBricksBySeleted(bricks, selectedBriks);
 						drawSceneObjects(gc, area, bricks);
 						if (!markedBricks.isEmpty()) {
 							drawSelectedObjects(gc, area, markedBricks);
 						}
 					}
 					Rectangle groupRectangle = areaRectangle.apply(area);
-					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(subgroup), groupRectangle,
+					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
 							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 				}
-				Area area = getDrawingArea(group);
+				Area area = calculator.getGroupAreaByGroup(group);
 				if (area == null) {
 					continue;
 				}
 				Rectangle groupRectangle = areaRectangle.apply(area);
-				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.getText(group), groupRectangle, getDisplay(),
+				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle, getDisplay(),
 						SectionStyler.getSectionWidth(), pYhint);
 			}
-			Area area = calculator.getGroupAreaBySectionId(section.id());// groupsAreas.get(section.id());
+			Area area = calculator.getGroupAreaByGroup(section);
 			if (area == null) {
 				continue;
 			}
 			Rectangle sectionRectangle = areaRectangle.apply(area);
-			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.getText(section), sectionRectangle, getDisplay(),
-					SectionStyler.getSectionWidth(), pYhint);
+			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
+					getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 		}
 		// status line
 		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
@@ -248,11 +249,11 @@ public final class Stage<I> extends Canvas {
 
 	}
 
-	private Collection<? extends Brick> filterBricksBySeleted(Collection<? extends Brick> bricks,
-			Collection<? extends Brick> selectedBriks) {
-		List<Brick> markedBricks = new ArrayList<Brick>();
-		for (Brick selectedBrick : selectedBriks) {
-			for (Brick brick : bricks) {
+	private Collection<Brick<D>> filterBricksBySeleted(Collection<Brick<D>> bricks,
+			Collection<Brick<D>> selectedBriks) {
+		List<Brick<D>> markedBricks = new ArrayList<>();
+		for (Brick<D> selectedBrick : selectedBriks) {
+			for (Brick<D> brick : bricks) {
 				if (brick.id().equals(selectedBrick.id())
 						&& brick.position().start() == selectedBrick.position().start()) {
 					markedBricks.add(brick);
@@ -262,16 +263,8 @@ public final class Stage<I> extends Canvas {
 		return markedBricks;
 	}
 
-	private List<Brick> getSelectedObject() {
+	private List<Brick<D>> getSelectedObject() {
 		return bricksSelected;
-	}
-
-	private Area getDrawingArea(Group group) {
-		return calculator.getGroupAreaByGroup(group);// groupsAreas.get(transformKey(group));
-	}
-
-	private Area getDrawingArea(Brick brick) {
-		return calculator.getBrickAreaById(brick.id());
 	}
 
 	@Override
@@ -290,36 +283,36 @@ public final class Stage<I> extends Canvas {
 		calculator.calculateObjectBounds(super.getBounds(), pYhint, zoom);
 	}
 
-	private void drawSceneObjects(final GC gc, Area area, final Collection<? extends Brick> bricks) {
+	private void drawSceneObjects(final GC gc, Area area, final Collection<Brick<D>> bricks) {
 		if (area == null) {
 			return;
 		}
 		bricks.stream().forEach(brick -> {
 			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-			Area brickArea = getDrawingArea(brick);
+			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
 				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
-				String label = labelProvider.getText(brick);
+				String label = labelProvider.brickText(brick);
 				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
 				INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 			}
 		});
 	}
 
-	private void drawSelectedObjects(final GC gc, Area area, final Collection<? extends Brick> bricks) {
+	private void drawSelectedObjects(final GC gc, Area area, final Collection<Brick<D>> bricks) {
 		if (area == null) {
 			return;
 		}
-		for (Brick brick : bricks) {
+		for (Brick<D> brick : bricks) {
 			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
-			Area brickArea = getDrawingArea(brick);
+			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea == null) {
 				continue;
 			}
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
 			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
-			String label = labelProvider.getText(brick);
+			String label = labelProvider.brickText(brick);
 			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
 			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 		}
@@ -412,19 +405,19 @@ public final class Stage<I> extends Canvas {
 		pXhint = pX / (pxlHint * stageScale);
 	}
 
-	public Optional<Brick> brickAt(int x, int y) {
+	public Optional<Brick<D>> brickAt(int x, int y) {
 		return calculator.brickAt(x, y);
 	}
 
-	public void select(Brick brick) {
-		List<Brick> markedBriks = new ArrayList<Brick>();
-		for (Brick selectedBrick : bricksSelected) {
+	public void select(Brick<D> brick) {
+		List<Brick<D>> markedBriks = new ArrayList<Brick<D>>();
+		for (Brick<D> selectedBrick : bricksSelected) {
 			if (selectedBrick.id().equals(brick.id())) {
 				markedBriks.add(selectedBrick);
 			}
 		}
 		if (!markedBriks.isEmpty()) {
-			for (Brick marked : markedBriks) {
+			for (Brick<D> marked : markedBriks) {
 				bricksSelected.remove(marked);
 			}
 		} else {
@@ -452,8 +445,8 @@ public final class Stage<I> extends Canvas {
 	private int getMaxBrickPosition() {
 		long max = 0;
 		// FIXME: this may take very long
-		Predicate<Brick> all = b -> true;
-		for (Brick brick : registry.query(all)) {
+		Predicate<Brick<D>> all = b -> true;
+		for (Brick<D> brick : registry.query(all)) {
 			if (brick.position().end() > max) {
 				max = brick.position().end();
 			}
@@ -463,7 +456,7 @@ public final class Stage<I> extends Canvas {
 
 	public void structure(List<Class<?>> types) {
 		registry = new PlainData<>(access);
-		calculator = new Calculator(registry);
+		calculator = new Calculator<>(registry);
 		registry.restructure(types);
 		calculateObjectBounds();
 		redraw();

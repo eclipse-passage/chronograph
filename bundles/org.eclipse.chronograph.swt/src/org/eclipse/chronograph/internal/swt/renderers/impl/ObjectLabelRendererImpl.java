@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.Rectangle;
  * Render implementation for label for {@link Brick} object
  *
  */
-public class ObjectLabelRendererImpl implements ChronographObjectLabelRenderer<Brick> {
+public class ObjectLabelRendererImpl<D> implements ChronographObjectLabelRenderer<D> {
 
 	@Override
 	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset, int scale) {

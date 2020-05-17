@@ -16,12 +16,15 @@ package org.eclipse.chronograph.internal.base;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Position;
 
-public class BrickImpl implements Brick {
+public class BrickImpl<D> implements Brick<D> {
 
+	private final D data;
 	private final String id;
 	private final Position position;
 
-	public BrickImpl(String id, int start, int end) {
+	// FIXME: should we pass function to resolve everything interesting here
+	public BrickImpl(String id, int start, int end, D data) {
+		this.data = data;
 		this.id = id;
 		this.position = new PositionImpl(start, end);
 	}
@@ -34,6 +37,11 @@ public class BrickImpl implements Brick {
 	@Override
 	public Position position() {
 		return position;
+	}
+
+	@Override
+	public D data() {
+		return data;
 	}
 
 }

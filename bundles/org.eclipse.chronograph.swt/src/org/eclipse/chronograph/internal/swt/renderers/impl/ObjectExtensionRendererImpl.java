@@ -22,9 +22,9 @@ import org.eclipse.swt.graphics.GC;
  * Render implementation for extension of {@link Brick} object
  *
  */
-public class ObjectExtensionRendererImpl implements ChronographObjectExtRenderer<Brick> {
+public class ObjectExtensionRendererImpl<D> implements ChronographObjectExtRenderer<D> {
 
 	@Override
-	public void drawObjectDuration(Brick to, GC gc, int vOffset) {
+	public void drawObjectDuration(Brick<D> to, GC gc, int vOffset) {
 	}
 }
