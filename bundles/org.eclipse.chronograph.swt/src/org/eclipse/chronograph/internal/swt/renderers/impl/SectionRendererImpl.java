@@ -34,11 +34,11 @@ public class SectionRendererImpl implements ChronographSectionRenderer {
 	public void draw(GC gc, String label, Rectangle bounds, Display display, int width, int hintY) {
 		gc.setAntialias(SWT.ON);
 		int fontHeight = gc.getFontMetrics().getHeight();
-
+		final Rectangle sectionRectangle = new Rectangle(bounds.x, bounds.y, width, bounds.height);
 		gc.setForeground(SectionStyler.SECTION_BTM_COLOR);
 		gc.setBackground(SectionStyler.SECTION_TOP_COLOR);
-		gc.fillRoundRectangle(0, bounds.y - hintY, width, bounds.height, width, width);
-		gc.drawRoundRectangle(0, bounds.y - hintY, width, bounds.height, width, width);
+		gc.fillRoundRectangle(0, sectionRectangle.y - hintY, width, sectionRectangle.height, width, width);
+		gc.drawRoundRectangle(0, sectionRectangle.y - hintY, width, sectionRectangle.height, width, width);
 
 		gc.setForeground(SectionStyler.SECTION_TOP_COLOR);
 		Point lblPoint = gc.stringExtent(label);
@@ -47,12 +47,36 @@ public class SectionRendererImpl implements ChronographSectionRenderer {
 		tr.rotate(-90);
 		gc.setTransform(tr);
 		gc.setForeground(SectionStyler.SECTION_TEXT_COLOR);
-		gc.drawString(label, -bounds.y - bounds.height + (bounds.height - lblPoint.x) / 2, fontHeight / 2, true);
 
+		Point stringExtent = gc.stringExtent(label);
+		String msg = calculateLabel(gc, label, sectionRectangle, stringExtent);
+		stringExtent = gc.stringExtent(msg);
+		int x = -sectionRectangle.height - sectionRectangle.y;
+		gc.drawString(msg, x + (sectionRectangle.height - stringExtent.x) / 2, fontHeight / 2, true);
 		gc.setBackground(SectionStyler.SECTION_BTM_COLOR);
-		gc.fillOval(-bounds.y - bounds.height, 0, width, width);
+		// gc.fillOval(-bounds.y - bounds.height, 0, width, width);
 
 		tr.dispose();
 		gc.setTransform(null);
 	}
+
+	private String calculateLabel(GC gc, String label, final Rectangle rectangle, Point stringExtent) {
+		String msg = ""; //$NON-NLS-1$
+		String ends = "..."; //$NON-NLS-1$
+		Point endsExt = gc.stringExtent(ends);
+		int chWidths = 0;
+		if (stringExtent.x > rectangle.height) {
+			for (char ch : label.toCharArray()) {
+				chWidths += gc.getCharWidth(ch);
+				if (chWidths < rectangle.height - endsExt.x) {
+					msg += ch;
+				}
+			}
+			msg += ends;
+		} else {
+			msg = label;
+		}
+		return msg;
+	}
+
 }

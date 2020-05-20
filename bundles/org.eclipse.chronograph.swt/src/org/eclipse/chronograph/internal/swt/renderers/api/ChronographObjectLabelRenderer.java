@@ -26,6 +26,7 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public interface ChronographObjectLabelRenderer<D> {
 
-	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset, int scale);
+	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset, int scale,
+			int zoom);
 
 }

@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.representation.Decoration;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
+import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.base.query.ActualBricks;
 import org.eclipse.chronograph.internal.base.query.ExpiredBricks;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
@@ -60,7 +62,7 @@ public final class Stage<D> extends Canvas {
 	private int pxlHint = 5;
 	private int pXhint;
 	private int pYhint;
-	private int stageScale = 5;
+	private int scale = 5;
 
 	private List<Brick<D>> bricksSelected;
 
@@ -110,7 +112,7 @@ public final class Stage<D> extends Canvas {
 	private void initScrollBarHorizontal() {
 		scrollBarHorizontal = getHorizontalBar();
 		scrollBarHorizontal.setVisible(true);
-		scrollBarHorizontal.setPageIncrement(stageScale);
+		scrollBarHorizontal.setPageIncrement(scale);
 		scrollBarHorizontal.setMaximum(pXMax);
 		scrollBarHorizontal.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -164,7 +166,7 @@ public final class Stage<D> extends Canvas {
 		if (!scrollBarHorizontal.isVisible()) {
 			return;
 		}
-		setPositionByX(scrollBarHorizontal.getSelection() * pxlHint * stageScale);
+		setPositionByX(scrollBarHorizontal.getSelection() * pxlHint * scale);
 		applyHint();
 		redraw();
 	}
@@ -203,7 +205,7 @@ public final class Stage<D> extends Canvas {
 		INSTANCE.getDrawingStagePainter().draw(gc, stageRectangle);
 		List<ChronographStageRulerRenderer> list = INSTANCE.getDrawingRulersPainter();
 		for (ChronographStageRulerRenderer painter : list) {
-			painter.draw(gc, stageRectangle, stageScale, pxlHint, pXhint, pX);
+			painter.draw(gc, stageRectangle, scale, pxlHint, pXhint, pX);
 		}
 		for (Group section : registry.groups()) {
 			List<Group> groupsBySection = registry.subGroups(section);
@@ -294,7 +296,7 @@ public final class Stage<D> extends Canvas {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
 				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
 				String label = labelProvider.brickText(brick);
-				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
+				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
 				INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 			}
 		});
@@ -313,13 +315,13 @@ public final class Stage<D> extends Canvas {
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
 			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
 			String label = labelProvider.brickText(brick);
-			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint);
+			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
 			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 		}
 	}
 
 	public void navigateToUnit(int hint) {
-		pX = hint * pxlHint * stageScale;
+		pX = hint * pxlHint * scale;
 		applyHint();
 		redraw();
 	}
@@ -346,29 +348,29 @@ public final class Stage<D> extends Canvas {
 	}
 
 	public int getScale() {
-		return stageScale;
+		return scale;
 	}
 
 	private void updateStageScale() {
-		if (stageScale <= 0) {
-			stageScale = 1;
+		if (scale <= 0) {
+			scale = 1;
 
 		}
-		pxlHint = stageScale;
-//		if (stageScale == 2 || stageScale == 3) {
-//			pxlHint = stageScale * 1;
+		pxlHint = scale;
+//		if (scale == 2 || scale == 3) {
+//			pxlHint = scale * 1;
 //		}
-//		if (stageScale == 4) {
-//			pxlHint = stageScale * 2;
+//		if (scale == 4) {
+//			pxlHint = scale * 2;
 //		}
-//		if (stageScale > 4) {
-//			pxlHint = stageScale * SCALE_DEFAULT;
+//		if (scale > 4) {
+//			pxlHint = scale * SCALE_DEFAULT;
 //		}
 	}
 
 	public void scaleUp() {
 		checkWidget();
-		stageScale--;
+		scale--;
 		updateStageScale();
 		redraw();
 		updateScrollers();
@@ -377,7 +379,7 @@ public final class Stage<D> extends Canvas {
 
 	public void scaleDown() {
 		checkWidget();
-		stageScale++;
+		scale++;
 		updateStageScale();
 		redraw();
 		navigateToUnit(pXhint);
@@ -402,7 +404,7 @@ public final class Stage<D> extends Canvas {
 	}
 
 	void applyHint() {
-		pXhint = pX / (pxlHint * stageScale);
+		pXhint = pX / (pxlHint * scale);
 	}
 
 	public Optional<Brick<D>> brickAt(int x, int y) {
@@ -464,5 +466,14 @@ public final class Stage<D> extends Canvas {
 
 	public void refresh() {
 		structure(registry.structure());
+	}
+
+	public void reset() {
+		zoom = 2;
+		scale = 3;
+		updateStageScale();
+		navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusMonths(5)));
+		calculateObjectBounds();
+		redraw();
 	}
 }
