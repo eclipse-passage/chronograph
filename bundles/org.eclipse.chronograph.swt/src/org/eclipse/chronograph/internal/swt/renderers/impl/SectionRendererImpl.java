@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class SectionRendererImpl implements ChronographSectionRenderer {
 
+	private final Labels labels = new Labels();
+
 	@Override
 	public void draw(GC gc, String label, Rectangle bounds, Display display, int width, int hintY) {
 		gc.setAntialias(SWT.ON);
@@ -41,7 +43,6 @@ public class SectionRendererImpl implements ChronographSectionRenderer {
 		gc.drawRoundRectangle(0, sectionRectangle.y - hintY, width, sectionRectangle.height, width, width);
 
 		gc.setForeground(SectionStyler.SECTION_TOP_COLOR);
-		Point lblPoint = gc.stringExtent(label);
 		Transform tr = new Transform(display);
 		tr.translate(0, -hintY);
 		tr.rotate(-90);
@@ -54,29 +55,18 @@ public class SectionRendererImpl implements ChronographSectionRenderer {
 		int x = -sectionRectangle.height - sectionRectangle.y;
 		gc.drawString(msg, x + (sectionRectangle.height - stringExtent.x) / 2, fontHeight / 2, true);
 		gc.setBackground(SectionStyler.SECTION_BTM_COLOR);
-		// gc.fillOval(-bounds.y - bounds.height, 0, width, width);
 
 		tr.dispose();
 		gc.setTransform(null);
 	}
 
-	private String calculateLabel(GC gc, String label, final Rectangle rectangle, Point stringExtent) {
-		String msg = ""; //$NON-NLS-1$
-		String ends = "..."; //$NON-NLS-1$
-		Point endsExt = gc.stringExtent(ends);
-		int chWidths = 0;
-		if (stringExtent.x > rectangle.height) {
-			for (char ch : label.toCharArray()) {
-				chWidths += gc.getCharWidth(ch);
-				if (chWidths < rectangle.height - endsExt.x) {
-					msg += ch;
-				}
-			}
-			msg += ends;
+	private String calculateLabel(GC gc, String label, Rectangle rectangle, Point extent) {
+		int limit = rectangle.height;
+		if (extent.x > limit) {
+			return labels.fit(label, limit, gc);
 		} else {
-			msg = label;
+			return label;
 		}
-		return msg;
 	}
 
 }

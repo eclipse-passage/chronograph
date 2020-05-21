@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class GroupRendererImpl implements ChronographGroupRenderer {
 
+	private final Labels labels = new Labels();
+
 	@Override
 	public void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY) {
 		int fontHeight = gc.getFontMetrics().getHeight();
@@ -57,30 +59,18 @@ public class GroupRendererImpl implements ChronographGroupRenderer {
 		gc.setTransform(tr);
 		gc.setForeground(GroupStyler.GROUP_TEXT_COLOR);
 		gc.drawString(msg, -groupRectangle.height + (groupRectangle.height - stringExtent.x) / 2, fontHeight / 2, true);
-		// gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
-		// gc.fillOval(-groupNameRectangle.height, 0, width, width);
 
 		tr.dispose();
 		gc.setTransform(null);
 	}
 
-	private String calculateLabel(GC gc, String label, final Rectangle groupRectangle, Point stringExtent) {
-		String msg = ""; //$NON-NLS-1$
-		String ends = "..."; //$NON-NLS-1$
-		Point endsExt = gc.stringExtent(ends);
-		int chWidths = 0;
-		if (stringExtent.x > groupRectangle.height) {
-			for (char ch : label.toCharArray()) {
-				chWidths += gc.getCharWidth(ch);
-				if (chWidths < groupRectangle.height - endsExt.x) {
-					msg += ch;
-				}
-			}
-			msg += ends;
+	private String calculateLabel(GC gc, String label, Rectangle rectangle, Point extent) {
+		int limit = rectangle.height;
+		if (extent.x > limit) {
+			return labels.fit(label, limit, gc);
 		} else {
-			msg = label;
+			return label;
 		}
-		return msg;
 	}
 
 }
