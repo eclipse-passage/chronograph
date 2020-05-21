@@ -30,41 +30,47 @@ import org.eclipse.swt.widgets.Display;
  */
 public class GroupRendererImpl implements ChronographGroupRenderer {
 
+	private final Labels labels = new Labels();
+
 	@Override
 	public void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY) {
 		int fontHeight = gc.getFontMetrics().getHeight();
-		final Rectangle groupNameRectangle = new Rectangle(groupBound.x, groupBound.y - hintY, width,
-				groupBound.height);
+		final Rectangle groupRectangle = new Rectangle(groupBound.x, groupBound.y - hintY, width, groupBound.height);
 		gc.setForeground(GroupStyler.GROUP_TOP_COLOR);
 		gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
 		gc.setAntialias(SWT.ON);
 		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
 		gc.setBackground(GroupStyler.GROUP_TOP_COLOR);
-		gc.fillRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
-				groupNameRectangle.height, width, width);
-		gc.drawRoundRectangle(groupNameRectangle.x, groupNameRectangle.y, groupNameRectangle.width,
-				groupNameRectangle.height, width, width);
+		gc.fillRoundRectangle(groupRectangle.x, groupRectangle.y, groupRectangle.width, groupRectangle.height, width,
+				width);
+		gc.drawRoundRectangle(groupRectangle.x, groupRectangle.y, groupRectangle.width, groupRectangle.height, width,
+				width);
 		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
 		gc.drawRoundRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height, width, width);
 
 		Point stringExtent = gc.stringExtent(label);
-		String msg = label; // $NON-NLS-1$
-		if (stringExtent.x > groupNameRectangle.height) {
-			msg = label.substring(0, 5) + "..."; //$NON-NLS-1$
-		}
+
+		String msg = calculateLabel(gc, label, groupRectangle, stringExtent);
+
 		stringExtent = gc.stringExtent(msg);
 		Transform tr = new Transform(display);
-		tr.translate(groupNameRectangle.x, groupNameRectangle.y);
+		tr.translate(groupRectangle.x, groupRectangle.y);
 		tr.rotate(-90);
 		gc.setTransform(tr);
 		gc.setForeground(GroupStyler.GROUP_TEXT_COLOR);
-		gc.drawString(msg, -groupNameRectangle.height + (groupNameRectangle.height - stringExtent.x) / 2,
-				fontHeight / 2, true);
-		// gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
-		// gc.fillOval(-groupNameRectangle.height, 0, width, width);
+		gc.drawString(msg, -groupRectangle.height + (groupRectangle.height - stringExtent.x) / 2, fontHeight / 2, true);
 
 		tr.dispose();
 		gc.setTransform(null);
+	}
+
+	private String calculateLabel(GC gc, String label, Rectangle rectangle, Point extent) {
+		int limit = rectangle.height;
+		if (extent.x > limit) {
+			return labels.fit(label, limit, gc);
+		} else {
+			return label;
+		}
 	}
 
 }

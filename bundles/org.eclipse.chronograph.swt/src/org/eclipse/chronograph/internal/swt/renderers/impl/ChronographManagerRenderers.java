@@ -16,7 +16,6 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectExtRenderer;
@@ -33,18 +32,17 @@ import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStatusRende
  */
 public class ChronographManagerRenderers<D> {
 
-	public static ChronographManagerRenderers INSTANCE = null;
-	private final ChronographObjectExtRenderer<Brick<D>> objectExtensionRenderer;
-	private final ChronographObjectLabelRenderer<Brick<D>> objectLabelRenderer;
-	private final ChronographObjectContentRenderer<Brick<D>> objectContentRenderer;
-	private final ChronographObjectContentRenderer<Brick<D>> objectSelectedRenderer;
+	private final ChronographObjectExtRenderer<D> objectExtensionRenderer;
+	private final ChronographObjectLabelRenderer<D> objectLabelRenderer;
+	private final ChronographObjectContentRenderer<D> objectContentRenderer;
+	private final ChronographObjectContentRenderer<D> objectSelectedRenderer;
 	private final ChronographGroupRenderer chronographGroupRenderer;
 	private final List<ChronographStageRulerRenderer> chronographStageRulerRenderers;
 	private final ChronographStageRenderer chronographStageRenderer;
 	private final ChronographStatusRenderer chronographStatusRenderer;
 	private final ChronographSectionRenderer sectionPinter;
 
-	private ChronographManagerRenderers() {
+	public ChronographManagerRenderers() {
 		this.objectContentRenderer = new ObjectContentRendererImpl<>();
 		this.objectLabelRenderer = new ObjectLabelRendererImpl<>();
 		this.objectExtensionRenderer = new ObjectExtensionRendererImpl<>();
@@ -60,22 +58,15 @@ public class ChronographManagerRenderers<D> {
 
 	}
 
-	public static synchronized <D> ChronographManagerRenderers<D> getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new ChronographManagerRenderers<>();
-		}
-		return INSTANCE;
-	}
-
-	public ChronographObjectContentRenderer<Brick<D>> getContentPainter() {
+	public ChronographObjectContentRenderer<D> getContentPainter() {
 		return this.objectContentRenderer;
 	}
 
-	public <V extends ChronographObjectExtRenderer<D>> ChronographObjectExtRenderer<Brick<D>> getDurationPainter() {
+	public ChronographObjectExtRenderer<D> getDurationPainter() {
 		return this.objectExtensionRenderer;
 	}
 
-	public <V extends ChronographObjectLabelRenderer<D>> ChronographObjectLabelRenderer<Brick<D>> getLabelPainter() {
+	public ChronographObjectLabelRenderer<D> getLabelPainter() {
 		return this.objectLabelRenderer;
 	}
 
@@ -99,7 +90,7 @@ public class ChronographManagerRenderers<D> {
 		return sectionPinter;
 	}
 
-	public ChronographObjectContentRenderer<Brick<D>> getSelectedContentPainter() {
+	public ChronographObjectContentRenderer<D> getSelectedContentPainter() {
 		return objectSelectedRenderer;
 	}
 
