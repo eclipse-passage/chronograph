@@ -55,7 +55,6 @@ public final class Stage<D> extends Canvas {
 	private final ExpiredBricks<D> expiredBricks;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
-	private static final int SCALE_DEFAULT = 5;
 	private int pX;
 	private int pY;
 	private int pXMax;
@@ -76,7 +75,7 @@ public final class Stage<D> extends Canvas {
 	private Calculator<D> calculator;
 	private int zoom = 1;
 
-	private final ChronographManagerRenderers INSTANCE = ChronographManagerRenderers.getInstance();
+	private final ChronographManagerRenderers<D> renderers = new ChronographManagerRenderers<>();
 
 	public Stage(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
@@ -202,8 +201,8 @@ public final class Stage<D> extends Canvas {
 		Rectangle clientArea = super.getClientArea();
 		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
 		Rectangle stageRectangle = areaRectangle.apply(visiableArea);
-		INSTANCE.getDrawingStagePainter().draw(gc, stageRectangle);
-		List<ChronographStageRulerRenderer> list = INSTANCE.getDrawingRulersPainter();
+		renderers.getDrawingStagePainter().draw(gc, stageRectangle);
+		List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
 		for (ChronographStageRulerRenderer painter : list) {
 			painter.draw(gc, stageRectangle, scale, pxlHint, pXhint, pX);
 		}
@@ -226,7 +225,7 @@ public final class Stage<D> extends Canvas {
 						}
 					}
 					Rectangle groupRectangle = areaRectangle.apply(area);
-					INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
+					renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
 							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 				}
 				Area area = calculator.getGroupAreaByGroup(group);
@@ -234,19 +233,19 @@ public final class Stage<D> extends Canvas {
 					continue;
 				}
 				Rectangle groupRectangle = areaRectangle.apply(area);
-				INSTANCE.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle, getDisplay(),
-						SectionStyler.getSectionWidth(), pYhint);
+				renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle,
+						getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 			}
 			Area area = calculator.getGroupAreaByGroup(section);
 			if (area == null) {
 				continue;
 			}
 			Rectangle sectionRectangle = areaRectangle.apply(area);
-			INSTANCE.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
+			renderers.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
 					getDisplay(), SectionStyler.getSectionWidth(), pYhint);
 		}
 		// status line
-		INSTANCE.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
+		renderers.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
 				registry.query(expiredBricks).size(), pYhint);
 
 	}
@@ -294,10 +293,11 @@ public final class Stage<D> extends Canvas {
 			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
-				INSTANCE.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
+				renderers.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
 				String label = labelProvider.brickText(brick);
-				INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
-				INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint,
+						zoom);
+				renderers.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 			}
 		});
 	}
@@ -313,10 +313,10 @@ public final class Stage<D> extends Canvas {
 				continue;
 			}
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
-			INSTANCE.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
+			renderers.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
 			String label = labelProvider.brickText(brick);
-			INSTANCE.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
-			INSTANCE.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+			renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
+			renderers.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
 		}
 	}
 
@@ -357,15 +357,6 @@ public final class Stage<D> extends Canvas {
 
 		}
 		pxlHint = scale;
-//		if (scale == 2 || scale == 3) {
-//			pxlHint = scale * 1;
-//		}
-//		if (scale == 4) {
-//			pxlHint = scale * 2;
-//		}
-//		if (scale > 4) {
-//			pxlHint = scale * SCALE_DEFAULT;
-//		}
 	}
 
 	public void scaleUp() {
