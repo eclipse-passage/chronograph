@@ -81,4 +81,12 @@ public class SWTChronograph<D> implements Chronograph {
 	public void reset() {
 		stage.reset();
 	}
+
+	public void zoomUp() {
+		stage.setZoomLevelUp();
+	}
+
+	public void zoomDown() {
+		stage.setZoomLevelDown();
+	}
 }
