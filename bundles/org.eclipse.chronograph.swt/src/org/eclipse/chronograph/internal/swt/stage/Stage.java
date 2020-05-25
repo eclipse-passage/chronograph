@@ -18,14 +18,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Position;
 import org.eclipse.chronograph.internal.api.representation.Decoration;
-import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PlainData;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.base.query.ActualBricks;
@@ -38,11 +37,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
@@ -54,26 +53,30 @@ public final class Stage<D> extends Canvas {
 	private final ActualBricks<D> actualBricks;
 	private final ExpiredBricks<D> expiredBricks;
 
-	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 15;
+	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 50;
+	private static final int SCALE_DEF = 3;
+	private static final int ZOOM_DEF = 2;
 	private int pX;
 	private int pY;
 	private int pXMax;
 	private int pxlHint = 5;
-	private int pXhint;
-	private int pYhint;
-	private int scale = 5;
+	private int pxHint;
+	private int pyHint;
+	private int pMaxHorizontal;
+	private int pMaxVertical;
 
 	private List<Brick<D>> bricksSelected;
 
 	private PlainData<D> registry;
 	private Rectangle boundsGlobal;
-	private Area visiableArea;
-	private final Point originalPosition = new Point(0, 0);
+
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
 	private Decoration<D, Image> labelProvider;
 	private Calculator<D> calculator;
-	private int zoom = 1;
+
+	private int zoom;
+	private int scale;
 
 	private final ChronographManagerRenderers<D> renderers = new ChronographManagerRenderers<>();
 
@@ -91,6 +94,7 @@ public final class Stage<D> extends Canvas {
 		this.labelProvider = provider;
 		bricksSelected = new ArrayList<>();
 		setLayout(new FillLayout());
+		initScale();
 		updateStageScale();
 		initListeners();
 		initScrollBarHorizontal();
@@ -98,6 +102,11 @@ public final class Stage<D> extends Canvas {
 		initRegistry();
 		initCalculator();
 		calculateObjectBounds();
+	}
+
+	private void initScale() {
+		scale = SCALE_DEF;
+		zoom = ZOOM_DEF;
 	}
 
 	private void initRegistry() {
@@ -126,7 +135,7 @@ public final class Stage<D> extends Canvas {
 		scrollBarVertical = getVerticalBar();
 		scrollBarVertical.setPageIncrement(VERTICAL_SCROLLBAR_PAGE_INC);
 		scrollBarVertical.setVisible(true);
-		scrollBarVertical.setMaximum(0);
+		scrollBarVertical.setMaximum(pMaxVertical);
 		scrollBarVertical.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
@@ -151,10 +160,10 @@ public final class Stage<D> extends Canvas {
 			return;
 		}
 		if (!scrollBarVertical.isVisible()) {
-			pYhint = 0;
+			pyHint = 0;
 			return;
 		}
-		pYhint = scrollBarVertical.getSelection();
+		pyHint = scrollBarVertical.getSelection();
 		redraw();
 	}
 
@@ -171,82 +180,77 @@ public final class Stage<D> extends Canvas {
 	}
 
 	public void updateScrollers() {
-		int maxPosition = getMaxBrickPosition();
-		scrollBarHorizontal.setMaximum(maxPosition);
-		scrollBarHorizontal.setSelection(pXhint);
+		pMaxVertical = calculator.getGroupsAreaHeight();
+		Optional<Position> optPosition = registry.getMaxBrickPosition();
+		if (optPosition.isPresent()) {
+			pMaxHorizontal = (int) (optPosition.get().end());
+		}
+		scrollBarVertical.setMaximum(pMaxVertical);
+		scrollBarVertical.setSelection(pyHint);
+		scrollBarHorizontal.setMaximum(pMaxHorizontal);
+		scrollBarHorizontal.setSelection(pxHint);
 	}
 
 	public void handleResize() {
-		Rectangle rect = getBounds();
-		Rectangle client = getClientArea();
-		scrollBarVertical.setMaximum(3000);
-		scrollBarVertical.setThumb(Math.min(rect.height, client.height));
-		int page = rect.height - client.height;
-		int selection = scrollBarVertical.getSelection();
-		if (selection >= page) {
-			if (page <= 0) {
-				selection = 0;
-			}
-			originalPosition.y = -selection;
-		}
-	}
-
-	public void redraw(Rectangle rectangle) {
-		redraw(rectangle.x, rectangle.y, rectangle.width, rectangle.height, false);
 	}
 
 	public void repaint(PaintEvent event) {
-		GC gc = event.gc;
-		// drawing
 		Rectangle clientArea = super.getClientArea();
-		visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
-		Rectangle stageRectangle = areaRectangle.apply(visiableArea);
-		renderers.getDrawingStagePainter().draw(gc, stageRectangle);
-		List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
-		for (ChronographStageRulerRenderer painter : list) {
-			painter.draw(gc, stageRectangle, scale, pxlHint, pXhint, pX);
-		}
-		for (Group section : registry.groups()) {
-			List<Group> groupsBySection = registry.subGroups(section);
-			for (Group group : groupsBySection) {
-				List<Group> subGroups = registry.getSubGroupByGroupSection(group);
-				for (Group subgroup : subGroups) {
-					Area area = calculator.getGroupAreaByGroup(subgroup);
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				GC gc = event.gc;
+				renderers.getDrawingStagePainter().draw(gc, clientArea);
+				List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
+				for (ChronographStageRulerRenderer painter : list) {
+					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
+				}
+				for (Group section : registry.groups()) {
+					List<Group> groupsBySection = registry.subGroups(section);
+					for (Group group : groupsBySection) {
+						List<Group> subGroups = registry.getSubGroupByGroupSection(group);
+						for (Group subgroup : subGroups) {
+							Area area = calculator.getGroupAreaByGroup(subgroup);
+							if (area == null) {
+								continue;
+							}
+							List<Brick<D>> bricks = registry.getBrickBySubgroup(subgroup.id(), group.id(),
+									section.id());
+							if (bricks != null) {
+								Collection<Brick<D>> selectedBriks = getSelectedObject();
+								Collection<Brick<D>> markedBricks = filterBricksBySeleted(bricks, selectedBriks);
+								drawSceneObjects(gc, area, bricks);
+								if (!markedBricks.isEmpty()) {
+									drawSelectedObjects(gc, area, markedBricks);
+								}
+							}
+							Rectangle groupRectangle = areaRectangle.apply(area);
+							renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup),
+									groupRectangle, getDisplay(), SectionStyler.getSectionWidth(), pyHint);
+						}
+						Area area = calculator.getGroupAreaByGroup(group);
+						if (area == null) {
+							continue;
+						}
+						Rectangle groupRectangle = areaRectangle.apply(area);
+						renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle,
+								getDisplay(), SectionStyler.getSectionWidth(), pyHint);
+					}
+					Area area = calculator.getGroupAreaByGroup(section);
 					if (area == null) {
 						continue;
 					}
-					List<Brick<D>> bricks = registry.getBrickBySubgroup(subgroup.id(), group.id(), section.id());
-					if (bricks != null) {
-						Collection<Brick<D>> selectedBriks = getSelectedObject();
-						Collection<Brick<D>> markedBricks = filterBricksBySeleted(bricks, selectedBriks);
-						drawSceneObjects(gc, area, bricks);
-						if (!markedBricks.isEmpty()) {
-							drawSelectedObjects(gc, area, markedBricks);
-						}
-					}
-					Rectangle groupRectangle = areaRectangle.apply(area);
-					renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup), groupRectangle,
-							getDisplay(), SectionStyler.getSectionWidth(), pYhint);
+
+					Rectangle sectionRectangle = areaRectangle.apply(area);
+					renderers.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
+							getDisplay(), SectionStyler.getSectionWidth(), pyHint);
 				}
-				Area area = calculator.getGroupAreaByGroup(group);
-				if (area == null) {
-					continue;
-				}
-				Rectangle groupRectangle = areaRectangle.apply(area);
-				renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle,
-						getDisplay(), SectionStyler.getSectionWidth(), pYhint);
+				// status line
+				renderers.getDrawingStatusPainter().draw(gc, clientArea, registry.query(actualBricks).size(),
+						registry.query(expiredBricks).size(), pyHint);
 			}
-			Area area = calculator.getGroupAreaByGroup(section);
-			if (area == null) {
-				continue;
-			}
-			Rectangle sectionRectangle = areaRectangle.apply(area);
-			renderers.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
-					getDisplay(), SectionStyler.getSectionWidth(), pYhint);
-		}
-		// status line
-		renderers.getDrawingStatusPainter().draw(gc, stageRectangle, registry.query(actualBricks).size(),
-				registry.query(expiredBricks).size(), pYhint);
+		});
 
 	}
 
@@ -281,7 +285,8 @@ public final class Stage<D> extends Canvas {
 	}
 
 	void calculateObjectBounds() {
-		calculator.calculateObjectBounds(super.getBounds(), pYhint, zoom);
+		calculator.calculateObjectBounds(super.getBounds(), zoom);
+
 	}
 
 	private void drawSceneObjects(final GC gc, Area area, final Collection<Brick<D>> bricks) {
@@ -289,15 +294,15 @@ public final class Stage<D> extends Canvas {
 			return;
 		}
 		bricks.stream().forEach(brick -> {
-			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint);
 			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
-				renderers.getContentPainter().draw(brick, gc, rectangleArea, pYhint);
+				renderers.getContentPainter().draw(brick, gc, rectangleArea, pyHint);
 				String label = labelProvider.brickText(brick);
-				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint,
+				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint,
 						zoom);
-				renderers.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+				renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
 			}
 		});
 	}
@@ -307,16 +312,16 @@ public final class Stage<D> extends Canvas {
 			return;
 		}
 		for (Brick<D> brick : bricks) {
-			calculator.calculateObjectPosition(brick, area, pXhint, pYhint, pxlHint);
+			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint);
 			Area brickArea = calculator.getBrickAreaById(brick.id());
 			if (brickArea == null) {
 				continue;
 			}
 			Rectangle rectangleArea = areaRectangle.apply(brickArea);
-			renderers.getSelectedContentPainter().draw(brick, gc, rectangleArea, pYhint);
+			renderers.getSelectedContentPainter().draw(brick, gc, rectangleArea, pyHint);
 			String label = labelProvider.brickText(brick);
-			renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pYhint, pxlHint, zoom);
-			renderers.getDurationPainter().drawObjectDuration(brick, gc, pYhint);
+			renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint, zoom);
+			renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
 		}
 	}
 
@@ -328,21 +333,21 @@ public final class Stage<D> extends Canvas {
 
 	public void clearSceneObjects() {
 		checkWidget();
-		pYhint = 0;
+		pyHint = 0;
 		scrollBarVertical.setSelection(0);
 		redraw();
 	}
 
 	public void clearGroups() {
 		checkWidget();
-		pYhint = 0;
+		pyHint = 0;
 		scrollBarVertical.setSelection(0);
 		redraw();
 	}
 
 	public void clearSections() {
 		checkWidget();
-		pYhint = 0;
+		pyHint = 0;
 		scrollBarVertical.setSelection(0);
 		redraw();
 	}
@@ -354,7 +359,6 @@ public final class Stage<D> extends Canvas {
 	private void updateStageScale() {
 		if (scale <= 0) {
 			scale = 1;
-
 		}
 		pxlHint = scale;
 	}
@@ -365,7 +369,7 @@ public final class Stage<D> extends Canvas {
 		updateStageScale();
 		redraw();
 		updateScrollers();
-		navigateToUnit(pXhint);
+		navigateToUnit(pxHint);
 	}
 
 	public void scaleDown() {
@@ -373,7 +377,7 @@ public final class Stage<D> extends Canvas {
 		scale++;
 		updateStageScale();
 		redraw();
-		navigateToUnit(pXhint);
+		navigateToUnit(pxHint);
 	}
 
 	@Override
@@ -385,8 +389,16 @@ public final class Stage<D> extends Canvas {
 		return pX;
 	}
 
+	int getPositionByY() {
+		return pY;
+	}
+
 	void setPositionByX(int x) {
 		this.pX = x;
+	}
+
+	void setPositionByY(int y) {
+		this.pY = y;
 	}
 
 	@Override
@@ -395,7 +407,7 @@ public final class Stage<D> extends Canvas {
 	}
 
 	void applyHint() {
-		pXhint = pX / (pxlHint * scale);
+		pxHint = pX / (pxlHint * scale);
 	}
 
 	public Optional<Brick<D>> brickAt(int x, int y) {
@@ -421,8 +433,12 @@ public final class Stage<D> extends Canvas {
 
 	public void setZoomLevelDown() {
 		this.zoom++;
-		this.calculateObjectBounds();
-		this.redraw();
+		if (zoom > 0) {
+			calculateObjectBounds();
+			handleResize();
+			updateScrollers();
+			redraw();
+		}
 
 	}
 
@@ -431,20 +447,10 @@ public final class Stage<D> extends Canvas {
 		if (this.zoom < 1) {
 			this.zoom = 1;
 		}
-		this.calculateObjectBounds();
-		this.redraw();
-	}
-
-	private int getMaxBrickPosition() {
-		long max = 0;
-		// FIXME: this may take very long
-		Predicate<Brick<D>> all = b -> true;
-		for (Brick<D> brick : registry.query(all)) {
-			if (brick.position().end() > max) {
-				max = brick.position().end();
-			}
-		}
-		return (int) max;
+		calculateObjectBounds();
+		handleResize();
+		updateScrollers();
+		redraw();
 	}
 
 	public void structure(List<Class<?>> types) {
@@ -452,6 +458,9 @@ public final class Stage<D> extends Canvas {
 		calculator = new Calculator<>(registry);
 		registry.restructure(types);
 		calculateObjectBounds();
+
+		handleResize();
+		updateScrollers();
 		redraw();
 	}
 

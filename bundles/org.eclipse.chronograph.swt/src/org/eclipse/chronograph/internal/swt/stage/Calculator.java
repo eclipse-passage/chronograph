@@ -44,9 +44,10 @@ public class Calculator<D> {
 		this.areaBricks = new HashMap<>();
 	}
 
-	public void calculateObjectBounds(Rectangle clientArea, int pYhint, int zoom) {
+	public void calculateObjectBounds(Rectangle clientArea, int zoom) {
 		Area visiableArea = new AreaImpl(clientArea.x, clientArea.y, clientArea.width, clientArea.height);
-		Area frameArea = new AreaImpl(visiableArea.x(), visiableArea.y() + StageStyler.getStageHeaderHeight() - pYhint,
+		Area frameArea = new AreaImpl(visiableArea.x(), visiableArea.y() + StageStyler.getStageHeaderHeight(), // -
+																												// pYhint,
 				visiableArea.width() - 10,
 				visiableArea.height() - StageStyler.getStageHeaderHeight() - RulerStyler.RULER_DAY_HEIGHT
 						- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT);
@@ -130,6 +131,10 @@ public class Calculator<D> {
 				.filter(a -> x >= a.x() && y >= a.y() && x <= a.x() + a.width() && y <= a.y() + a.height())//
 				.findFirst()//
 				.map(areaBricks::get);
+	}
+
+	public int getGroupsAreaHeight() {
+		return registry.groups().stream().map(p -> groupsAreas.get(p.fqid())).mapToInt(Area::height).sum();
 	}
 
 }

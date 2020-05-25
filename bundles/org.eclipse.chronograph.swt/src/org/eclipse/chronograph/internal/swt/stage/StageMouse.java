@@ -13,6 +13,9 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
+import java.util.Optional;
+
+import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -35,6 +38,7 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 	private Stage<D> stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
+	private static final Cursor CURSOR_NAVIGATION = new Cursor(Display.getDefault(), SWT.CURSOR_SIZEWE);
 	private Point startPoint;
 	private Tracker tracker;
 	private boolean isMouseDown;
@@ -51,7 +55,6 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 				if (startPoint == null) {
 					startPoint = new Point(me.x, me.y);
 				}
-
 				int xDiff = me.x - startPoint.x;
 				int deltaXPosition = xPosition - (xDiff * stage.getScale());
 				if (deltaXPosition < 0) {
@@ -60,8 +63,10 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 				stage.setPositionByX(deltaXPosition);
 				stage.applyHint();
 				stage.redraw();
-				stage.updateScrollers();
+//				stage.updateScrollers();
+
 			}
+
 		} catch (final Exception error) {
 			SWT.error(SWT.ERROR_UNSPECIFIED, error);
 		}
@@ -97,7 +102,14 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 			isMouseDown = true;
 			xPosition = stage.getPositionByX();
 		}
-		stage.brickAt(me.x, me.y).ifPresent(stage::select);
+		Optional<Brick<D>> underBrick = stage.brickAt(me.x, me.y);
+		if (underBrick.isPresent()) {
+			stage.setCursor(CURSOR_HAND);
+			stage.select(underBrick.get());
+		} else {
+			stage.setCursor(CURSOR_NAVIGATION);
+		}
+
 	}
 
 	@Override
@@ -107,8 +119,6 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 			tracker.dispose();
 		}
 		endEverything();
-		stage.updateScrollers();
-
 	}
 
 	public void endEverything() {

@@ -28,6 +28,6 @@ final class StageResize<D> implements Listener {
 	public void handleEvent(Event event) {
 		stage.calculateObjectBounds();
 		stage.handleResize();
-		stage.updateScrollers();
+		stage.redraw();
 	}
 }

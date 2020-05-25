@@ -16,6 +16,7 @@ package org.eclipse.chronograph.internal.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 import org.eclipse.chronograph.internal.api.data.Resolution;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
+import org.eclipse.chronograph.internal.api.graphics.Position;
 
 /**
  * Class intended to aggregate data
@@ -79,6 +81,21 @@ public class PlainData<D> {
 				.flatMap(List::stream) //
 				.filter(predicate) //
 				.collect(Collectors.toList());
+	}
+
+	public Optional<Position> getMaxBrickPosition() {
+		return bricksBySubgroup.values().stream() //
+				.flatMap(List::stream) //
+				.map(Brick::position) //
+				.max(new Comparator<Position>() {
+					@Override
+					public int compare(Position o1, Position o2) {
+						if (o1.end() > o2.end()) {
+							return 1;
+						}
+						return 0;
+					}
+				});
 	}
 
 	public void restructure(List<Class<?>> types) {
