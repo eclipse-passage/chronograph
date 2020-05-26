@@ -13,25 +13,24 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import org.eclipse.chronograph.internal.swt.RulerStyler;
-import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
+import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * 
- * Render implementation for day ruler
+ * Render implementation for stage lines
  *
  */
-public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
+public class StageLinesRendererImpl implements ChronographStageLinesRenderer {
 
-	private final SimpleDateFormat sdf = new SimpleDateFormat("dd"); //$NON-NLS-1$
 	private final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+	private final Calendar currentDate = Calendar.getInstance(TimeZone.getDefault());
 
 	@Override
 	public void draw(GC gc, Rectangle bounds, int scale, int width, int tiksOffset, int xAxis) {
@@ -47,13 +46,24 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		calendar.add(Calendar.DATE, tiksOffset);
 
 		while (true) {
+			if (currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+					&& currentDate.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
+				gc.setForeground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
+				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_TOP);
+				gc.fillGradientRectangle(xPosition, bounds.y, width, bounds.height, false);
+			}
 			gc.setForeground(RulerStyler.RULER_TOP_COLOR);
 			gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-			gc.fillGradientRectangle(xPosition, yBottomPosition, width, RulerStyler.RULER_DAY_HEIGHT, true);
-			gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
-			String msg = sdf.format(calendar.getTime());
-			if (xPosition >= bounds.x && width > 10) {
-				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);
+			gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT, xPosition, yBottomPosition);
+
+			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
+				// grid line
+				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+			}
+			if (scale > 4) {
+				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
+				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
 			}
 			xPosition += width;
 			if (xPosition > xMaxPosition) {

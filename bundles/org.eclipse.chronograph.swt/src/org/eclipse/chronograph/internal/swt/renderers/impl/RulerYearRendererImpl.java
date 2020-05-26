@@ -48,10 +48,6 @@ public class RulerYearRendererImpl implements ChronographStageRulerRenderer {
 		gc.fillGradientRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_YEAR_HEIGHT, true);
 		while (true) {
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-				gc.setForeground(RulerStyler.RULER_BRD_COLOR);
-				gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_YEAR_HEIGHT, xPosition, yBottomPosition);
-				// Keep here to show in ticks
-				// int currentTick = (xPosition / width) + (xAxis / (width * scale));
 				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
 				String msg = sdf.format(calendar.getTime());
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);

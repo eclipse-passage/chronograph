@@ -31,6 +31,7 @@ import org.eclipse.chronograph.internal.base.query.ActualBricks;
 import org.eclipse.chronograph.internal.base.query.ExpiredBricks;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
+import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.swt.SWT;
@@ -95,7 +96,7 @@ public final class Stage<D> extends Canvas {
 		bricksSelected = new ArrayList<>();
 		setLayout(new FillLayout());
 		initScale();
-		updateStageScale();
+		// updateStageScale();
 		initListeners();
 		initScrollBarHorizontal();
 		initScrollBarVertical();
@@ -202,10 +203,8 @@ public final class Stage<D> extends Canvas {
 			public void run() {
 				GC gc = event.gc;
 				renderers.getDrawingStagePainter().draw(gc, clientArea);
-				List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
-				for (ChronographStageRulerRenderer painter : list) {
-					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
-				}
+				ChronographStageLinesRenderer stageLinesPainter = renderers.getStageLinesPainter();
+				stageLinesPainter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
 				for (Group section : registry.groups()) {
 					List<Group> groupsBySection = registry.subGroups(section);
 					for (Group group : groupsBySection) {
@@ -249,6 +248,11 @@ public final class Stage<D> extends Canvas {
 				// status line
 				renderers.getDrawingStatusPainter().draw(gc, clientArea, registry.query(actualBricks).size(),
 						registry.query(expiredBricks).size(), pyHint);
+
+				List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
+				for (ChronographStageRulerRenderer painter : list) {
+					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
+				}
 			}
 		});
 
