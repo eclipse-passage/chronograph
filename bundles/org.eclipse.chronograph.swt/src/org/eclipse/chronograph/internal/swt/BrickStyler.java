@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Display;
 public class BrickStyler implements Styler {
 
 	private static final Display DISPLAY = Display.getDefault();
-	// private static int BRICK_HEIGHT_DEFAULT;
 	private static Color COLOR_TOP;
 	private static Color COLOR_BOTTOM;
 	private static Color SELECTED_COLOR_TOP;
@@ -70,7 +69,9 @@ public class BrickStyler implements Styler {
 	public static int getHeight() {
 		GC gc = new GC(DISPLAY);
 		FontMetrics fontMetrics = gc.getFontMetrics();
-		return fontMetrics.getHeight() * 2;
+		int height = fontMetrics.getHeight();
+		gc.dispose();
+		return height * 2;
 	}
 
 	public static Color getColorTop() {

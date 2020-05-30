@@ -38,7 +38,6 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 		int xMaxPosition = bounds.width + bounds.x;
 		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_MOUNTH_HEIGHT
 				- RulerStyler.RULER_YEAR_HEIGHT;
-		int yTopPosition = bounds.y + bounds.height - RulerStyler.RULER_YEAR_HEIGHT;
 		int xPosition = 0;
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
@@ -54,7 +53,6 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
 				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
 				// grid line
-				gc.drawLine(xPosition, bounds.y, xPosition, yTopPosition);
 				String msg = sdf.format(calendar.getTime());
 				if (width < 2) {
 					msg = sdfNum.format(calendar.getTime());

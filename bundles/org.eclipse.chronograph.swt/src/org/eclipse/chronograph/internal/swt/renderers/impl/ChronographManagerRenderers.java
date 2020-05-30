@@ -21,6 +21,7 @@ import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectConte
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectExtRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectLabelRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographSectionRenderer;
+import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStatusRenderer;
@@ -41,6 +42,7 @@ public class ChronographManagerRenderers<D> {
 	private final ChronographStageRenderer chronographStageRenderer;
 	private final ChronographStatusRenderer chronographStatusRenderer;
 	private final ChronographSectionRenderer sectionPinter;
+	private final ChronographStageLinesRenderer chronographStageLinesRenderer;
 
 	public ChronographManagerRenderers() {
 		this.objectContentRenderer = new ObjectContentRendererImpl<>();
@@ -48,6 +50,7 @@ public class ChronographManagerRenderers<D> {
 		this.objectExtensionRenderer = new ObjectExtensionRendererImpl<>();
 		this.objectSelectedRenderer = new ObjectSelectedRendererImpl<>();
 		this.chronographStageRulerRenderers = new ArrayList<>();
+		this.chronographStageLinesRenderer = new StageLinesRendererImpl();
 		this.chronographStageRulerRenderers.add(new RulerDayRendererImpl());
 		this.chronographStageRulerRenderers.add(new RulerMonthRendererImpl());
 		this.chronographStageRulerRenderers.add(new RulerYearRendererImpl());
@@ -94,4 +97,7 @@ public class ChronographManagerRenderers<D> {
 		return objectSelectedRenderer;
 	}
 
+	public ChronographStageLinesRenderer getStageLinesPainter() {
+		return chronographStageLinesRenderer;
+	}
 }

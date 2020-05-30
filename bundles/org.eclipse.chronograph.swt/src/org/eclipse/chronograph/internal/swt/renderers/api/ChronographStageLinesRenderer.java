@@ -11,23 +11,18 @@
  *	Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - 
  *												initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.swt.stage;
+package org.eclipse.chronograph.internal.swt.renderers.api;
 
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 
-final class StageResize<D> implements Listener {
+/**
+ * 
+ * Interface intended to render rulers
+ *
+ */
+public interface ChronographStageLinesRenderer {
 
-	private final Stage<D> stage;
+	void draw(GC gc, Rectangle globalBounds, int scale, int width, int offset, int xAxis);
 
-	public StageResize(Stage<D> stage) {
-		this.stage = stage;
-	}
-
-	@Override
-	public void handleEvent(Event event) {
-		stage.calculateObjectBounds();
-		stage.handleResize();
-		stage.redraw();
-	}
 }
