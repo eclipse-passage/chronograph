@@ -15,11 +15,14 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import java.time.LocalDate;
 
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
+import org.eclipse.chronograph.internal.swt.providers.AbstractContentDecorationProvider;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -29,10 +32,14 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * @param <D> - type of data object
  */
-public class ObjectContentRendererImpl<D> implements ChronographObjectContentRenderer<D> {
+public class ObjectContentRendererImpl<D> implements ChronographObjectContentRenderer {
 
 	@Override
-	public void draw(Brick<D> object, GC gc, Rectangle bounds, int vOffset) {
+	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
+		drawContent(object, gc, bounds, BrickStyler.getColorBottom());
+	}
+
+	private void drawContent(Brick object, GC gc, Rectangle bounds, Color color) {
 		LocalDate now = LocalDate.now();
 		LocalDate start = UnitConverter.unitsToLocalDate((int) object.position().start());
 		LocalDate end = UnitConverter.unitsToLocalDate((int) object.position().end());
@@ -40,21 +47,25 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 		gc.setBackground(BrickStyler.getColorBottom());
 
 		if (now.isAfter(start) && now.isBefore(end)) {
-			gc.setForeground(BrickStyler.getColorBottom());
-			gc.setBackground(BrickStyler.getActiveColorTop());
+			gc.setForeground(color);
+			gc.setBackground(color);
 		} else {
 			gc.setForeground(BrickStyler.getColorTop());
 			gc.setBackground(BrickStyler.getColorBottom());
 		}
 		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
 
-		if (now.isAfter(start) && now.isBefore(end)) {
-			gc.setForeground(BrickStyler.getColorBottom());
-			gc.setBackground(BrickStyler.getColorBottom());
-		} else {
-			gc.setForeground(BrickStyler.getActiveColorTop());
-			gc.setBackground(BrickStyler.getActiveColorTop());
-		}
+		gc.setForeground(BrickStyler.getActiveColorTop());
+		gc.setBackground(BrickStyler.getOvalColor());
 		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
+	}
+
+	@Override
+	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset) {
+		if (provider instanceof AbstractContentDecorationProvider) {
+			AbstractContentDecorationProvider decoratorProvider = (AbstractContentDecorationProvider) provider;
+			Color contentColor = decoratorProvider.getContentColor(obj.data());
+			drawContent(obj, gc, bounds, contentColor);
+		}
 	}
 }

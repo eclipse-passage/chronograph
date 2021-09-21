@@ -47,7 +47,7 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 
 		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
 		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-		gc.fillGradientRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_MOUNTH_HEIGHT, true);
+		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_MOUNTH_HEIGHT);
 		while (true) {
 
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
@@ -59,6 +59,7 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 				}
 				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);
+				gc.drawLine(xPosition, yBottomPosition, xPosition, yBottomPosition + RulerStyler.RULER_MOUNTH_HEIGHT);
 
 			}
 			xPosition += width;

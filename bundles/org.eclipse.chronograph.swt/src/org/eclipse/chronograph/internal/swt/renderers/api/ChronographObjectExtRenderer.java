@@ -24,6 +24,6 @@ import org.eclipse.swt.graphics.GC;
  */
 public interface ChronographObjectExtRenderer<D> {
 
-	public void drawObjectDuration(Brick<D> to, GC gc, int vOffset);
+	public void drawObjectDuration(Brick to, GC gc, int vOffset);
 
 }

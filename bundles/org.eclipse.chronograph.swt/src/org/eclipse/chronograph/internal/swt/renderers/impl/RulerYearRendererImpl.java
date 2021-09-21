@@ -45,18 +45,20 @@ public class RulerYearRendererImpl implements ChronographStageRulerRenderer {
 
 		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
 		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-		gc.fillGradientRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_YEAR_HEIGHT, true);
+		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_YEAR_HEIGHT);
+
 		while (true) {
-			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+			if (calendar.get(Calendar.DAY_OF_YEAR) == 1) {
 				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
 				String msg = sdf.format(calendar.getTime());
+				gc.drawLine(xPosition, yBottomPosition, xPosition, yBottomPosition + RulerStyler.RULER_YEAR_HEIGHT);
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);
 			}
 			xPosition += width;
 			if (xPosition > xMaxPosition) {
 				break;
 			}
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			calendar.add(Calendar.DAY_OF_YEAR, 1);
 		}
 	}
 }

@@ -60,4 +60,9 @@ public class AreaImpl implements Area {
 	public int y() {
 		return y;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Area: x=%d, y=%d, w=%d, h=%d ,dx=%d ,dy=%d", x, y, width, height, x + width, y + height); //$NON-NLS-1$
+	}
 }

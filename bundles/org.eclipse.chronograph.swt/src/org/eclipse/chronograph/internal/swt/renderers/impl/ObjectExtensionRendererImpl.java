@@ -25,6 +25,6 @@ import org.eclipse.swt.graphics.GC;
 public class ObjectExtensionRendererImpl<D> implements ChronographObjectExtRenderer<D> {
 
 	@Override
-	public void drawObjectDuration(Brick<D> to, GC gc, int vOffset) {
+	public void drawObjectDuration(Brick to, GC gc, int vOffset) {
 	}
 }

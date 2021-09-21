@@ -26,8 +26,10 @@ import org.eclipse.swt.widgets.Group;
  *
  */
 public class GroupStyler implements Styler {
-	public static final int GROUP_HEIGHT_DEFAULT = 50;
 	private static final Display DISPLAY = Display.getDefault();
+
+	public static final int GROUP_HEIGHT_DEFAULT = 50;
+
 	public static Color GROUP_TOP_COLOR;
 	public static Color GROUP_BTM_COLOR;
 	public static Color GROUP_TEXT_COLOR;
@@ -44,5 +46,17 @@ public class GroupStyler implements Styler {
 		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
 		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
 		GROUP_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));
+	}
+
+	public static int getGroupSeparatorHeight() {
+		return 5;
+	}
+
+	public static int getGroupWith() {
+//		FontData[] fontData = Display.getDefault().getSystemFont().getFontData();
+//		if (fontData.length > 0) {
+//			return fontData[0].getHeight();
+//		}
+		return 30;
 	}
 }

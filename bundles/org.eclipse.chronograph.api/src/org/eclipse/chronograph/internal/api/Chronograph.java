@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 ArSysOp
+ * Copyright (c) 2020, 2021 ArSysOp
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,10 @@ package org.eclipse.chronograph.internal.api;
 
 import java.util.List;
 
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
+import org.eclipse.chronograph.internal.api.data.LabelDataProvider;
+import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
+import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.representation.Style;
 
 /**
@@ -29,7 +33,7 @@ public interface Chronograph {
 	 * 
 	 * @param types the types to group the input
 	 */
-	void structure(List<Class<?>> types);
+	void structure(List<Object> types);
 
 	/**
 	 * Applies the given style
@@ -42,5 +46,13 @@ public interface Chronograph {
 	 * Refreshes the data using current structure and style
 	 */
 	void refresh();
+
+	void setStructureProvider(StructureDataProvider structureProvider);
+
+	void setPositionProvider(PositionDataProvider positionDataProvider);
+
+	void setLabelProvider(LabelDataProvider decoratorDataProvider);
+
+	void setContentDecoratorProvider(ContentDecorationProvider contentDecorator);
 
 }

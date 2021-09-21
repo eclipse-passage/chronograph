@@ -13,8 +13,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -24,14 +24,20 @@ import org.eclipse.swt.graphics.Rectangle;
  * Render implementation for selected {@link Brick} object
  *
  */
-public class ObjectSelectedRendererImpl<D> implements ChronographObjectContentRenderer<D> {
+public class ObjectSelectedRendererImpl implements ChronographObjectContentRenderer {
 
 	@Override
-	public void draw(Brick<D> object, GC gc, Rectangle bounds, int vOffset) {
-		gc.setForeground(BrickStyler.getColorTopSelected());
-		gc.setBackground(BrickStyler.getColorBottomSelected());
-		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30, 30);
-		gc.setBackground(BrickStyler.getColorTopSelected());
-		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
+	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
+//		gc.setForeground(BrickStyler.getColorTopSelected());
+//		gc.setBackground(BrickStyler.getColorBottomSelected());
+//		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, 30, 30);
+//		gc.setBackground(BrickStyler.getColorTopSelected());
+//		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
+	}
+
+	@Override
+	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset) {
+		// TODO Auto-generated method stub
+
 	}
 }

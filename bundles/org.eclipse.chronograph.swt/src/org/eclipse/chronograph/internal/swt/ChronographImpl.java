@@ -18,14 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.chronograph.internal.api.Chronograph;
-import org.eclipse.chronograph.internal.api.data.Resolution;
-import org.eclipse.chronograph.internal.api.representation.Decoration;
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
+import org.eclipse.chronograph.internal.api.data.LabelDataProvider;
+import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
+import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.representation.Style;
 import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.stage.Stage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
@@ -35,14 +36,14 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 //FIXME: it looks like this type is not really needed
-public class SWTChronograph<D> implements Chronograph {
-	private final Stage<D> stage;
+public class ChronographImpl implements Chronograph {
+	private final Stage stage;
 	private final List<Styler> stylers;
+	private List<Object> input = new ArrayList<>();
 
-	public SWTChronograph(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
-		this.stage = new Stage<>(parent, access, provider);
+	public ChronographImpl(Composite parent) {
+		this.stage = new Stage(parent);
 		this.stage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 		stylers = new ArrayList<>();
 		stylers.add(new BrickStyler());
 		stylers.add(new StageStyler());
@@ -51,6 +52,7 @@ public class SWTChronograph<D> implements Chronograph {
 		stylers.add(new RulerStyler());
 		stylers.add(new StatusStyler());
 		initClassicStyle();
+
 	}
 
 	public void initClassicStyle() {
@@ -69,8 +71,11 @@ public class SWTChronograph<D> implements Chronograph {
 	}
 
 	@Override
-	public void structure(List<Class<?>> types) {
-		stage.structure(types);
+	public void structure(List<Object> input) {
+		this.input = input;
+		this.stage.init();
+		stage.structure(input);
+		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
 	}
 
 	@Override
@@ -88,5 +93,28 @@ public class SWTChronograph<D> implements Chronograph {
 
 	public void zoomDown() {
 		stage.setZoomLevelDown();
+	}
+
+	@Override
+	public void setStructureProvider(StructureDataProvider structureProvider) {
+		stage.setStructureProvider(structureProvider);
+
+	}
+
+	@Override
+	public void setPositionProvider(PositionDataProvider positionDataProvider) {
+		stage.setPositionProvider(positionDataProvider);
+
+	}
+
+	@Override
+	public void setLabelProvider(LabelDataProvider labelDataProvider) {
+		stage.setLabelProvider(labelDataProvider);
+
+	}
+
+	@Override
+	public void setContentDecoratorProvider(ContentDecorationProvider contentDecorator) {
+		stage.setDecoratorProvider(contentDecorator);
 	}
 }

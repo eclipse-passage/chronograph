@@ -52,12 +52,13 @@ public class ObjectLabelRendererImpl<D> implements ChronographObjectLabelRendere
 			gc.drawString(msg, objectBounds.x + objectBounds.width - (msgExtent.x + msgExtent.y),
 					objectBounds.y + mediana, true);
 		}
-		gc.setLineStyle(SWT.LINE_SOLID);
-		gc.setForeground(StageStyler.STAGE_TOP_COLOR);
-		gc.drawLine(objectBounds.x, 0, objectBounds.x, 20);
-		gc.setForeground(BrickStyler.getColorBorder());
-		gc.drawLine(objectBounds.x + objectBounds.width, objectBounds.y + objectBounds.height,
-				objectBounds.x + objectBounds.width, objectBounds.y + objectBounds.height);
-		gc.setLineStyle(SWT.LINE_SOLID);
+		// gc.setLineStyle(SWT.LINE_SOLID);
+		// gc.setForeground(StageStyler.STAGE_TOP_COLOR);
+		// gc.drawLine(objectBounds.x, 0, objectBounds.x, 20);
+		// gc.setForeground(BrickStyler.getColorBorder());
+		// gc.drawLine(objectBounds.x + objectBounds.width, objectBounds.y +
+		// objectBounds.height,
+		// objectBounds.x + objectBounds.width, objectBounds.y + objectBounds.height);
+		// gc.setLineStyle(SWT.LINE_SOLID);
 	}
 }

@@ -34,7 +34,7 @@ public class UnitConverter {
 		return (int) ChronoUnit.DAYS.between(HISTORICAL_TIME, targetDate);
 	}
 
-	public static LocalDate unitsToLocalDate(int units) {
+	public static LocalDate unitsToLocalDate(long units) {
 		return ChronoUnit.DAYS.addTo(HISTORICAL_TIME, units);
 	}
 }

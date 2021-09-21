@@ -22,41 +22,15 @@ import org.eclipse.chronograph.internal.api.graphics.Group;
  */
 public class GroupImpl implements Group {
 
-	private final String id;
-	private final String fqid;
-	private final int level;
 	private final Object data;
 
-	public GroupImpl(String id, String parent, int level, Object data) {
-		this.id = id;
-		this.fqid = parent + "::" + id; //$NON-NLS-1$
-		this.level = level;
-		this.data = data;
-	}
-
-	@Override
-	public String id() {
-		return id;
-	}
-
-	@Override
-	public int level() {
-		return level;
-	}
-
-	@Override
-	public String fqid() {
-		return fqid;
+	public GroupImpl(Object t) {
+		this.data = t;
 	}
 
 	@Override
 	public Object data() {
 		return data;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString();
 	}
 
 }

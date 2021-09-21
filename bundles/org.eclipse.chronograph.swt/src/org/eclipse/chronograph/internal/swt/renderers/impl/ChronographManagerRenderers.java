@@ -31,24 +31,25 @@ import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStatusRende
  * Class intended to aggregate the renders
  *
  */
-public class ChronographManagerRenderers<D> {
+public class ChronographManagerRenderers {
 
-	private final ChronographObjectExtRenderer<D> objectExtensionRenderer;
-	private final ChronographObjectLabelRenderer<D> objectLabelRenderer;
-	private final ChronographObjectContentRenderer<D> objectContentRenderer;
-	private final ChronographObjectContentRenderer<D> objectSelectedRenderer;
+	private final ChronographObjectExtRenderer objectExtensionRenderer;
+	private final ChronographObjectLabelRenderer objectLabelRenderer;
+	private final ChronographObjectContentRenderer objectContentRenderer;
+	private final ChronographObjectContentRenderer objectSelectedRenderer;
 	private final ChronographGroupRenderer chronographGroupRenderer;
 	private final List<ChronographStageRulerRenderer> chronographStageRulerRenderers;
 	private final ChronographStageRenderer chronographStageRenderer;
 	private final ChronographStatusRenderer chronographStatusRenderer;
 	private final ChronographSectionRenderer sectionPinter;
 	private final ChronographStageLinesRenderer chronographStageLinesRenderer;
+	private final ChronographToolTipRendererImpl chronographToolTipRenderer;
 
 	public ChronographManagerRenderers() {
-		this.objectContentRenderer = new ObjectContentRendererImpl<>();
-		this.objectLabelRenderer = new ObjectLabelRendererImpl<>();
-		this.objectExtensionRenderer = new ObjectExtensionRendererImpl<>();
-		this.objectSelectedRenderer = new ObjectSelectedRendererImpl<>();
+		this.objectContentRenderer = new ObjectContentRendererImpl();
+		this.objectLabelRenderer = new ObjectLabelRendererImpl();
+		this.objectExtensionRenderer = new ObjectExtensionRendererImpl();
+		this.objectSelectedRenderer = new ObjectSelectedRendererImpl();
 		this.chronographStageRulerRenderers = new ArrayList<>();
 		this.chronographStageLinesRenderer = new StageLinesRendererImpl();
 		this.chronographStageRulerRenderers.add(new RulerDayRendererImpl());
@@ -58,18 +59,19 @@ public class ChronographManagerRenderers<D> {
 		this.chronographStatusRenderer = new StatusRendererImpl();
 		this.chronographGroupRenderer = new GroupRendererImpl();
 		this.sectionPinter = new SectionRendererImpl();
+		this.chronographToolTipRenderer = new ChronographToolTipRendererImpl();
 
 	}
 
-	public ChronographObjectContentRenderer<D> getContentPainter() {
+	public ChronographObjectContentRenderer getContentPainter() {
 		return this.objectContentRenderer;
 	}
 
-	public ChronographObjectExtRenderer<D> getDurationPainter() {
+	public ChronographObjectExtRenderer getDurationPainter() {
 		return this.objectExtensionRenderer;
 	}
 
-	public ChronographObjectLabelRenderer<D> getLabelPainter() {
+	public ChronographObjectLabelRenderer getLabelPainter() {
 		return this.objectLabelRenderer;
 	}
 
@@ -93,11 +95,16 @@ public class ChronographManagerRenderers<D> {
 		return sectionPinter;
 	}
 
-	public ChronographObjectContentRenderer<D> getSelectedContentPainter() {
+	public ChronographObjectContentRenderer getSelectedContentPainter() {
 		return objectSelectedRenderer;
 	}
 
 	public ChronographStageLinesRenderer getStageLinesPainter() {
 		return chronographStageLinesRenderer;
 	}
+
+	public ChronographToolTipRendererImpl getChronographToolTipRenderer() {
+		return chronographToolTipRenderer;
+	}
+
 }

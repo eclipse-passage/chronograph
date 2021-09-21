@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 ArSysOp
+ * Copyright (c) 2021 ArSysOp
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,20 +8,16 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *     Sergei Kovalchuk <sergei.kovalchuk@arsysop.ru> - initial API and implementation
+ *     ArSysOp - initial API and implementation
  *******************************************************************************/
-package org.eclipse.chronograph.internal.api.graphics;
+package org.eclipse.chronograph.internal.api.data;
 
-/**
- * 
- * The Group describes typed container with sequence Brick items
- *
- */
-public interface Group {
+import java.util.Date;
 
-	/**
-	 * 
-	 * @return object used for grouping
-	 */
-	Object data();
+public interface PositionDataProvider {
+
+	Date getStart(Object object);
+
+	Date getEnd(Object object);
+
 }

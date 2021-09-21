@@ -16,28 +16,32 @@ package org.eclipse.chronograph.internal.swt.stage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
-import org.eclipse.chronograph.internal.api.data.Resolution;
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
+import org.eclipse.chronograph.internal.api.data.LabelDataProvider;
+import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
+import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Position;
-import org.eclipse.chronograph.internal.api.representation.Decoration;
-import org.eclipse.chronograph.internal.base.PlainData;
+import org.eclipse.chronograph.internal.base.PositionImpl;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.base.query.ActualBricks;
-import org.eclipse.chronograph.internal.base.query.ExpiredBricks;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
+import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
+import org.eclipse.chronograph.internal.swt.renderers.api.ChronographToolTipRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -47,62 +51,60 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 
-public final class Stage<D> extends Canvas {
+public final class Stage extends Canvas {
 
-	private final Resolution<D> access;
+	private StructureDataProvider structureProvider;
+	private PositionDataProvider positionProvider;
+	private LabelDataProvider labelProvider;
+	private ContentDecorationProvider decoratorProvider;
+
 	private final AreaRectangle areaRectangle;
-	private final ActualBricks<D> actualBricks;
-	private final ExpiredBricks<D> expiredBricks;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 50;
 	private static final int SCALE_DEF = 3;
 	private static final int ZOOM_DEF = 2;
 	private int pX;
 	private int pY;
-	private int pXMax;
-	private int pxlHint = 5;
 	private int pxHint;
 	private int pyHint;
 	private int pMaxHorizontal;
 	private int pMaxVertical;
 
-	private List<Brick<D>> bricksSelected;
+	private int pXMax;
+	private int pxlHint = 5;
 
-	private PlainData<D> registry;
+	private List<Brick> bricksSelected;
+
 	private Rectangle boundsGlobal;
 
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
-	private Decoration<D, Image> labelProvider;
-	private Calculator<D> calculator;
+
+	private Calculator calculator;
 
 	private int zoom;
 	private int scale;
 
-	private final ChronographManagerRenderers<D> renderers = new ChronographManagerRenderers<>();
+	private final ChronographManagerRenderers renderers = new ChronographManagerRenderers();
+	private Map<Brick, Position> objectWithToolTips = new HashMap<>();
 
-	public Stage(Composite parent, Resolution<D> access, Decoration<D, Image> provider) {
-		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL, access, provider);
+	public Stage(Composite parent) {
+		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL);
 	}
 
-	public Stage(Composite parent, int style, Resolution<D> access, Decoration<D, Image> provider) {
+	public Stage(Composite parent, int style) {
 		super(parent, style);
-		this.access = access;
 		this.areaRectangle = new AreaRectangle();
-		this.actualBricks = new ActualBricks<>();
-		this.expiredBricks = new ExpiredBricks<>();
-
-		this.labelProvider = provider;
-		bricksSelected = new ArrayList<>();
+		this.bricksSelected = new ArrayList<>();
 		setLayout(new FillLayout());
+	}
+
+	public void init() {
 		initScale();
-		// updateStageScale();
 		initListeners();
 		initScrollBarHorizontal();
 		initScrollBarVertical();
-		initRegistry();
 		initCalculator();
-		calculateObjectBounds();
 	}
 
 	private void initScale() {
@@ -110,12 +112,8 @@ public final class Stage<D> extends Canvas {
 		zoom = ZOOM_DEF;
 	}
 
-	private void initRegistry() {
-		registry = new PlainData<>(access);
-	}
-
 	private void initCalculator() {
-		calculator = new Calculator<>(registry);
+		calculator = new Calculator(structureProvider, positionProvider);
 	}
 
 	private void initScrollBarHorizontal() {
@@ -132,7 +130,6 @@ public final class Stage<D> extends Canvas {
 	}
 
 	private void initScrollBarVertical() {
-
 		scrollBarVertical = getVerticalBar();
 		scrollBarVertical.setPageIncrement(VERTICAL_SCROLLBAR_PAGE_INC);
 		scrollBarVertical.setVisible(true);
@@ -148,12 +145,12 @@ public final class Stage<D> extends Canvas {
 
 	private void initListeners() {
 		addPaintListener(new StagePaint(this));
-		StageMouse<D> mouse = new StageMouse<>(this);
+		StageMouse mouse = new StageMouse(this);
 		addMouseListener(mouse);
 		addMouseMoveListener(mouse);
 		addMouseTrackListener(mouse);
-		addListener(SWT.MouseWheel, new StageWheel<>(this));
-		addListener(SWT.Resize, new StageResize<>(this));
+		addListener(SWT.MouseWheel, new StageWheel(this));
+		addListener(SWT.Resize, new StageResize(this));
 	}
 
 	public void verticalScroll(Event event) {
@@ -182,7 +179,7 @@ public final class Stage<D> extends Canvas {
 
 	public void updateScrollers() {
 		pMaxVertical = calculator.getGroupsAreaHeight();
-		Optional<Position> optPosition = registry.getMaxBrickPosition();
+		Optional<Position> optPosition = structureProvider.getMaxBrickPosition();
 		if (optPosition.isPresent()) {
 			pMaxHorizontal = (int) (optPosition.get().end());
 		}
@@ -190,9 +187,6 @@ public final class Stage<D> extends Canvas {
 		scrollBarVertical.setSelection(pyHint);
 		scrollBarHorizontal.setMaximum(pMaxHorizontal);
 		scrollBarHorizontal.setSelection(pxHint);
-	}
-
-	public void handleResize() {
 	}
 
 	public void repaint(PaintEvent event) {
@@ -205,82 +199,49 @@ public final class Stage<D> extends Canvas {
 				renderers.getDrawingStagePainter().draw(gc, clientArea);
 				ChronographStageLinesRenderer stageLinesPainter = renderers.getStageLinesPainter();
 				stageLinesPainter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
-				for (Group section : registry.groups()) {
-					List<Group> groupsBySection = registry.subGroups(section);
-					for (Group group : groupsBySection) {
-						List<Group> subGroups = registry.getSubGroupByGroupSection(group);
-						for (Group subgroup : subGroups) {
-							Area area = calculator.getGroupAreaByGroup(subgroup);
-							if (area == null) {
-								continue;
-							}
-							List<Brick<D>> bricks = registry.getBrickBySubgroup(subgroup.id(), group.id(),
-									section.id());
-							if (bricks != null) {
-								Collection<Brick<D>> selectedBriks = getSelectedObject();
-								Collection<Brick<D>> markedBricks = filterBricksBySeleted(bricks, selectedBriks);
-								drawSceneObjects(gc, area, bricks);
-								if (!markedBricks.isEmpty()) {
-									drawSelectedObjects(gc, area, markedBricks);
-								}
-							}
-							Rectangle groupRectangle = areaRectangle.apply(area);
-							renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(subgroup),
-									groupRectangle, getDisplay(), SectionStyler.getSectionWidth(), pyHint);
-						}
-						Area area = calculator.getGroupAreaByGroup(group);
-						if (area == null) {
-							continue;
-						}
-						Rectangle groupRectangle = areaRectangle.apply(area);
-						renderers.getDrawingGroupPainter().draw(gc, labelProvider.groupText(group), groupRectangle,
-								getDisplay(), SectionStyler.getSectionWidth(), pyHint);
-					}
-					Area area = calculator.getGroupAreaByGroup(section);
-					if (area == null) {
-						continue;
-					}
-
-					Rectangle sectionRectangle = areaRectangle.apply(area);
-					renderers.getDrawingSectionPainter().draw(gc, labelProvider.groupText(section), sectionRectangle,
-							getDisplay(), SectionStyler.getSectionWidth(), pyHint);
+				calculator.resetBrickCash();
+				for (Group group : structureProvider.groups()) {
+					drawGroupWithChild(gc, group);
 				}
-				// status line
-				renderers.getDrawingStatusPainter().draw(gc, clientArea, registry.query(actualBricks).size(),
-						registry.query(expiredBricks).size(), pyHint);
-
-				List<ChronographStageRulerRenderer> list = renderers.getDrawingRulersPainter();
-				for (ChronographStageRulerRenderer painter : list) {
+				for (ChronographStageRulerRenderer painter : renderers.getDrawingRulersPainter()) {
 					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
+				}
+				// tooltip
+				if (!objectWithToolTips.isEmpty()) {
+					ChronographToolTipRenderer toolTipRenderer = renderers.getChronographToolTipRenderer();
+					for (Entry<Brick, Position> entry : objectWithToolTips.entrySet()) {
+						String tt = labelProvider.getToolTip(entry.getKey().data());
+						if (tt != null) {
+							toolTipRenderer.draw(gc, entry.getValue(), tt);
+						}
+					}
+				}
+
+			}
+
+			private void drawGroupWithChild(GC gc, Group group) {
+				List<Group> groupsByGroup = structureProvider.getChildGroups(group);
+				if (!groupsByGroup.isEmpty()) {
+					groupsByGroup.forEach(c -> {
+						drawGroupWithChild(gc, c);
+					});
+				}
+				List<Brick> bricks = structureProvider.getElementsByGroup(group);
+				Area area = calculator.getGroupAreaByGroup(group);
+				if (area != null && !bricks.isEmpty()) {
+					drawSceneObjects(gc, area, bricks);
+				}
+				if (area != null) {
+					Rectangle groupRectangle = areaRectangle.apply(area);
+					renderers.getDrawingGroupPainter().draw(gc, labelProvider.getText(group.data()), groupRectangle,
+							getDisplay(), SectionStyler.getSectionWidth(), pyHint);
 				}
 			}
 		});
-
-	}
-
-	private Collection<Brick<D>> filterBricksBySeleted(Collection<Brick<D>> bricks,
-			Collection<Brick<D>> selectedBriks) {
-		List<Brick<D>> markedBricks = new ArrayList<>();
-		for (Brick<D> selectedBrick : selectedBriks) {
-			for (Brick<D> brick : bricks) {
-				if (brick.id().equals(selectedBrick.id())
-						&& brick.position().start() == selectedBrick.position().start()) {
-					markedBricks.add(brick);
-				}
-			}
-		}
-		return markedBricks;
-	}
-
-	private List<Brick<D>> getSelectedObject() {
-		return bricksSelected;
 	}
 
 	@Override
 	public Rectangle getBounds() {
-		if (boundsGlobal == null) {
-			return super.getBounds();
-		}
 		return new Rectangle(0, 0, super.getBounds().width, pY);
 	}
 
@@ -289,43 +250,26 @@ public final class Stage<D> extends Canvas {
 	}
 
 	void calculateObjectBounds() {
-		calculator.calculateObjectBounds(super.getBounds(), zoom);
-
+		calculator.computeBounds(this.getBounds(), zoom);
 	}
 
-	private void drawSceneObjects(final GC gc, Area area, final Collection<Brick<D>> bricks) {
+	private void drawSceneObjects(final GC gc, Area area, final Collection<Brick> bricks) {
 		if (area == null) {
 			return;
 		}
-		bricks.stream().forEach(brick -> {
-			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint);
-			Area brickArea = calculator.getBrickAreaById(brick.id());
+		int shiftInGroup = BrickStyler.getHeight() / 2;
+		for (Brick brick : bricks) {
+			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint, shiftInGroup);
+			Area brickArea = calculator.getBrickArea(brick);
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
-				renderers.getContentPainter().draw(brick, gc, rectangleArea, pyHint);
-				String label = labelProvider.brickText(brick);
+				renderers.getContentPainter().draw(decoratorProvider, brick, gc, rectangleArea, pyHint);
+				String label = labelProvider.getText(brick.data());
 				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint,
 						zoom);
 				renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
 			}
-		});
-	}
-
-	private void drawSelectedObjects(final GC gc, Area area, final Collection<Brick<D>> bricks) {
-		if (area == null) {
-			return;
-		}
-		for (Brick<D> brick : bricks) {
-			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint);
-			Area brickArea = calculator.getBrickAreaById(brick.id());
-			if (brickArea == null) {
-				continue;
-			}
-			Rectangle rectangleArea = areaRectangle.apply(brickArea);
-			renderers.getSelectedContentPainter().draw(brick, gc, rectangleArea, pyHint);
-			String label = labelProvider.brickText(brick);
-			renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint, zoom);
-			renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
+			shiftInGroup += (BrickStyler.getHeight() + BrickStyler.getHeight() / 2);
 		}
 	}
 
@@ -414,19 +358,19 @@ public final class Stage<D> extends Canvas {
 		pxHint = pX / (pxlHint * scale);
 	}
 
-	public Optional<Brick<D>> brickAt(int x, int y) {
+	public Optional<Brick> brickAt(int x, int y) {
 		return calculator.brickAt(x, y);
 	}
 
-	public void select(Brick<D> brick) {
-		List<Brick<D>> markedBriks = new ArrayList<Brick<D>>();
-		for (Brick<D> selectedBrick : bricksSelected) {
-			if (selectedBrick.id().equals(brick.id())) {
+	public void select(Brick brick) {
+		List<Brick> markedBriks = new ArrayList<>();
+		for (Brick selectedBrick : bricksSelected) {
+			if (selectedBrick.equals(brick)) {
 				markedBriks.add(selectedBrick);
 			}
 		}
 		if (!markedBriks.isEmpty()) {
-			for (Brick<D> marked : markedBriks) {
+			for (Brick marked : markedBriks) {
 				bricksSelected.remove(marked);
 			}
 		} else {
@@ -438,12 +382,8 @@ public final class Stage<D> extends Canvas {
 	public void setZoomLevelDown() {
 		this.zoom++;
 		if (zoom > 0) {
-			calculateObjectBounds();
 			handleResize();
-			updateScrollers();
-			redraw();
 		}
-
 	}
 
 	public void setZoomLevelUp() {
@@ -451,25 +391,22 @@ public final class Stage<D> extends Canvas {
 		if (this.zoom < 1) {
 			this.zoom = 1;
 		}
-		calculateObjectBounds();
 		handleResize();
+	}
+
+	public void handleResize() {
+		calculateObjectBounds();
 		updateScrollers();
 		redraw();
 	}
 
-	public void structure(List<Class<?>> types) {
-		registry = new PlainData<>(access);
-		calculator = new Calculator<>(registry);
-		registry.restructure(types);
-		calculateObjectBounds();
-
+	public void structure(List<Object> input) {
+		structureProvider.restructure(input);
 		handleResize();
-		updateScrollers();
-		redraw();
 	}
 
 	public void refresh() {
-		structure(registry.structure());
+		// ??? TODO:
 	}
 
 	public void reset() {
@@ -478,6 +415,33 @@ public final class Stage<D> extends Canvas {
 		updateStageScale();
 		navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusMonths(5)));
 		calculateObjectBounds();
+		redraw();
+	}
+
+	public void setStructureProvider(StructureDataProvider structureProvider) {
+		this.structureProvider = structureProvider;
+	}
+
+	public void setLabelProvider(LabelDataProvider labelProvider) {
+		this.labelProvider = labelProvider;
+	}
+
+	public void setPositionProvider(PositionDataProvider positionProvider) {
+		this.positionProvider = positionProvider;
+	}
+
+	public void setDecoratorProvider(ContentDecorationProvider decorationProvider) {
+		this.decoratorProvider = decorationProvider;
+	}
+
+	public void addBrickToolTip(Brick b, int x, int y) {
+		Position p = new PositionImpl(x, y);
+		objectWithToolTips.put(b, p);
+		redraw();
+	}
+
+	public void clearToolTips() {
+		objectWithToolTips.clear();
 		redraw();
 	}
 }

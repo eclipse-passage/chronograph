@@ -34,8 +34,12 @@ public class GroupRendererImpl implements ChronographGroupRenderer {
 
 	@Override
 	public void draw(GC gc, String label, Rectangle groupBound, Display display, int width, int hintY) {
+		if (groupBound.height <= 0) {
+			return;
+		}
 		int fontHeight = gc.getFontMetrics().getHeight();
-		final Rectangle groupRectangle = new Rectangle(groupBound.x, groupBound.y - hintY, width, groupBound.height);
+		final Rectangle groupRectangle = new Rectangle(groupBound.x - GroupStyler.getGroupWith(), groupBound.y - hintY,
+				width, groupBound.height);
 		gc.setForeground(GroupStyler.GROUP_TOP_COLOR);
 		gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
 		gc.setAntialias(SWT.ON);

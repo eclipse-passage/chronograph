@@ -30,39 +30,43 @@ import org.eclipse.swt.widgets.Display;
 public class BrickStyler implements Styler {
 
 	private static final Display DISPLAY = Display.getDefault();
-	private static Color COLOR_TOP;
-	private static Color COLOR_BOTTOM;
-	private static Color SELECTED_COLOR_TOP;
-	private static Color SELECTED_COLOR_BOTTOM;
-	private static Color COLOR_BORDER;
-	private static Color COLOR_TEXT;
+	private static Color DEF_TOP_COLOR;
+	private static Color DEF_BOTTOM_COLOR;
+	private static Color ACTIVE_TOP_COLOR;
+	private static Color ACTIVE_BOTTOM_COLOR;
+	private static Color SELECTED_TOP_COLOR;
+	private static Color SELECTED_BOTTOM_COLOR;
+	private static Color BORDER_COLOR;
+	private static Color TEXT_COLOR;
 	private static Color COLOR_CALL_OUT;
-	private static Color ACTIVE_COLOR_TOP;
-	private static Color ACTIVE_COLOR_BOTTOM;
+	private static Color OVAL_COLOR;
+	private static Color DESCR_BCKG_COLOR;
 
 	@Override
 	public void initClassicTheme() {
-		COLOR_TOP = new Color(DISPLAY, new RGB(195, 245, 180));
-		COLOR_BOTTOM = new Color(DISPLAY, new RGB(100, 150, 90));
-		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(110, 190, 82));
-		SELECTED_COLOR_BOTTOM = new Color(DISPLAY, new RGB(80, 140, 82));
-		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(110, 190, 82));
-		ACTIVE_COLOR_BOTTOM = new Color(DISPLAY, new RGB(80, 140, 82));
-		COLOR_BORDER = new Color(DISPLAY, new RGB(95, 95, 95));
-		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));
+		DEF_TOP_COLOR = new Color(DISPLAY, new RGB(195, 245, 180));
+		DEF_BOTTOM_COLOR = new Color(DISPLAY, new RGB(100, 150, 90));
+		SELECTED_TOP_COLOR = new Color(DISPLAY, new RGB(110, 190, 82));
+		SELECTED_BOTTOM_COLOR = new Color(DISPLAY, new RGB(80, 140, 82));
+		ACTIVE_TOP_COLOR = new Color(DISPLAY, new RGB(110, 190, 82));
+		ACTIVE_BOTTOM_COLOR = new Color(DISPLAY, new RGB(80, 140, 82));
+		BORDER_COLOR = new Color(DISPLAY, new RGB(95, 95, 95));
+		TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
 		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(100, 100, 100));
+		OVAL_COLOR = new Color(DISPLAY, new RGB(213, 219, 219));
+		DESCR_BCKG_COLOR = new Color(DISPLAY, new RGB(240, 242, 252));
 	}
 
 	@Override
 	public void initDarkTheme() {
-		COLOR_TOP = new Color(DISPLAY, new RGB(136, 105, 184));
-		COLOR_BOTTOM = new Color(DISPLAY, new RGB(64, 36, 89));
-		SELECTED_COLOR_TOP = new Color(DISPLAY, new RGB(136, 105, 184));
-		SELECTED_COLOR_BOTTOM = new Color(DISPLAY, new RGB(64, 36, 89));
-		ACTIVE_COLOR_TOP = new Color(DISPLAY, new RGB(149, 140, 184));
-		ACTIVE_COLOR_BOTTOM = new Color(DISPLAY, new RGB(104, 136, 89));
-		COLOR_BORDER = new Color(DISPLAY, new RGB(190, 155, 184));
-		COLOR_TEXT = new Color(DISPLAY, new RGB(220, 220, 220));
+		DEF_TOP_COLOR = new Color(DISPLAY, new RGB(136, 105, 184));
+		DEF_BOTTOM_COLOR = new Color(DISPLAY, new RGB(64, 36, 89));
+		SELECTED_TOP_COLOR = new Color(DISPLAY, new RGB(136, 105, 184));
+		SELECTED_BOTTOM_COLOR = new Color(DISPLAY, new RGB(64, 36, 89));
+		ACTIVE_TOP_COLOR = new Color(DISPLAY, new RGB(149, 140, 184));
+		ACTIVE_BOTTOM_COLOR = new Color(DISPLAY, new RGB(104, 136, 89));
+		BORDER_COLOR = new Color(DISPLAY, new RGB(190, 155, 184));
+		TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(220, 220, 220));
 	}
 
@@ -75,27 +79,27 @@ public class BrickStyler implements Styler {
 	}
 
 	public static Color getColorTop() {
-		return COLOR_TOP;
+		return DEF_TOP_COLOR;
 	}
 
 	public static Color getColorBottom() {
-		return COLOR_BOTTOM;
+		return DEF_BOTTOM_COLOR;
 	}
 
 	public static Color getColorTopSelected() {
-		return SELECTED_COLOR_TOP;
+		return SELECTED_TOP_COLOR;
 	}
 
 	public static Color getColorBottomSelected() {
-		return SELECTED_COLOR_BOTTOM;
+		return SELECTED_BOTTOM_COLOR;
 	}
 
 	public static Color getColorBorder() {
-		return COLOR_BORDER;
+		return BORDER_COLOR;
 	}
 
 	public static Color getColorText() {
-		return COLOR_TEXT;
+		return TEXT_COLOR;
 	}
 
 	public static Color getColorCallout() {
@@ -103,11 +107,19 @@ public class BrickStyler implements Styler {
 	}
 
 	public static Color getActiveColorTop() {
-		return ACTIVE_COLOR_TOP;
+		return ACTIVE_TOP_COLOR;
+	}
+
+	public static Color getOvalColor() {
+		return OVAL_COLOR;
 	}
 
 	public static Color getActiveColorBottom() {
-		return ACTIVE_COLOR_BOTTOM;
+		return ACTIVE_BOTTOM_COLOR;
+	}
+
+	public static Color getDescriptionColor() {
+		return DESCR_BCKG_COLOR;
 	}
 
 }

@@ -50,18 +50,19 @@ public class StageLinesRendererImpl implements ChronographStageLinesRenderer {
 					&& currentDate.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
 				gc.setForeground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
 				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_TOP);
-				gc.fillGradientRectangle(xPosition, bounds.y, width, bounds.height, false);
+				// gc.fillGradientRectangle(xPosition, bounds.y, width, bounds.height, false);
 			}
-			gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-			gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-			gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT, xPosition, yBottomPosition);
+			// gc.setForeground(RulerStyler.RULER_TOP_COLOR);
+			// gc.setBackground(RulerStyler.RULER_BTM_COLOR);
+			// gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT,
+			// xPosition, yBottomPosition);
 
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
 				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
 				// grid line
 				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
 			}
-			if (scale > 4) {
+			if (scale > 20) {
 				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
 				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
 			}

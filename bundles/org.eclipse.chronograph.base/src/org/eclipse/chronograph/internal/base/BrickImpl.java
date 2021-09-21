@@ -1,5 +1,5 @@
 /*******************************************************************************
- *	Copyright (c) 2020 ArSysOp
+ *	Copyright (c) 2020, 2021 ArSysOp
  *
  *	This program and the accompanying materials are made available under the
  *	terms of the Eclipse Public License 2.0 which is available at
@@ -16,22 +16,19 @@ package org.eclipse.chronograph.internal.base;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Position;
 
-public class BrickImpl<D> implements Brick<D> {
+public class BrickImpl implements Brick {
 
-	private final D data;
-	private final String id;
-	private final Position position;
+	private final Object data;
+	private Position position;
 
-	// FIXME: should we pass function to resolve everything interesting here
-	public BrickImpl(String id, int start, int end, D data) {
+	public BrickImpl(int start, int end, Object data) {
 		this.data = data;
-		this.id = id;
 		this.position = new PositionImpl(start, end);
 	}
 
-	@Override
-	public String id() {
-		return this.id;
+	public BrickImpl(Object t) {
+		this.data = t;
+		this.position = new PositionImpl(0, 0);
 	}
 
 	@Override
@@ -40,8 +37,13 @@ public class BrickImpl<D> implements Brick<D> {
 	}
 
 	@Override
-	public D data() {
+	public Object data() {
 		return data;
+	}
+
+	@Override
+	public void setPosition(Position p) {
+		this.position = p;
 	}
 
 }

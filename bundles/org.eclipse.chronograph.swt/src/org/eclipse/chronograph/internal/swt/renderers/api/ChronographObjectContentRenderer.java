@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.api;
 
+import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -23,7 +24,10 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * @param <D> - type of data object
  */
-public interface ChronographObjectContentRenderer<D> {
+public interface ChronographObjectContentRenderer {
 
-	public void draw(Brick<D> obj, GC gc, Rectangle bounds, int vOffset);
+	public void draw(Brick obj, GC gc, Rectangle bounds, int vOffset);
+
+	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset);
+
 }

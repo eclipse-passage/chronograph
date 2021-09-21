@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 ArSysOp
+ * Copyright (c) 2020, 2021 ArSysOp
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,13 +17,7 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Brick describes the drawing element on the stage
  *
  */
-public interface Brick<D> {
-
-	/**
-	 * 
-	 * @return the String identifier of Brick
-	 */
-	String id();
+public interface Brick {
 
 	/**
 	 * 
@@ -36,5 +30,12 @@ public interface Brick<D> {
 	 * 
 	 * @return domain object
 	 */
-	D data();
+	Object data();
+
+	/**
+	 * Set element position
+	 * 
+	 * @param position
+	 */
+	void setPosition(Position p);
 }

@@ -8,6 +8,4 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-Copyright: %Bundle-Copyright
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.chronograph.api;bundle-version="0.1.0"
-Export-Package: org.eclipse.chronograph.internal.base,
- org.eclipse.chronograph.internal.base.data,
- org.eclipse.chronograph.internal.base.query
+Export-Package: org.eclipse.chronograph.internal.base

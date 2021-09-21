@@ -16,18 +16,16 @@ package org.eclipse.chronograph.internal.swt.stage;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-final class StageResize<D> implements Listener {
+final class StageResize implements Listener {
 
-	private final Stage<D> stage;
+	private final Stage stage;
 
-	public StageResize(Stage<D> stage) {
+	public StageResize(Stage stage) {
 		this.stage = stage;
 	}
 
 	@Override
 	public void handleEvent(Event event) {
-		stage.calculateObjectBounds();
 		stage.handleResize();
-		stage.redraw();
 	}
 }

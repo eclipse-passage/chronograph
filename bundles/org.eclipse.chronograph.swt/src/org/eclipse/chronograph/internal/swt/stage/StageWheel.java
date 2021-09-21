@@ -17,11 +17,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-final class StageWheel<D> implements Listener {
+final class StageWheel implements Listener {
 
-	private final Stage<D> stage;
+	private final Stage stage;
 
-	public StageWheel(Stage<D> stage) {
+	public StageWheel(Stage stage) {
 		this.stage = stage;
 	}
 

@@ -33,9 +33,9 @@ import org.eclipse.swt.widgets.Tracker;
  *
  * @param <T>
  */
-final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrackListener {
+final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackListener {
 
-	private Stage<D> stage;
+	private Stage stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
 	private static final Cursor CURSOR_NAVIGATION = new Cursor(Display.getDefault(), SWT.CURSOR_SIZEWE);
@@ -44,13 +44,16 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 	private boolean isMouseDown;
 	private int xPosition = 0;
 
-	public StageMouse(Stage<D> stage) {
+	public StageMouse(Stage stage) {
 		this.stage = stage;
 	}
 
 	@Override
 	public void mouseMove(MouseEvent me) {
+
 		try {
+			// reset tooltip
+			stage.clearToolTips();
 			if (isMouseDown) {
 				if (startPoint == null) {
 					startPoint = new Point(me.x, me.y);
@@ -60,11 +63,10 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 				if (deltaXPosition < 0) {
 					deltaXPosition = 0;
 				}
+
 				stage.setPositionByX(deltaXPosition);
 				stage.applyHint();
 				stage.redraw();
-//				stage.updateScrollers();
-
 			}
 
 		} catch (final Exception error) {
@@ -87,7 +89,12 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 		}
 		Rectangle mainBounds = stage.getMainBounds();
 		if (mainBounds == null || me.x >= mainBounds.x) {
-			stage.brickAt(me.x, me.y).ifPresent(b -> stage.setCursor(CURSOR_HAND));
+
+			stage.brickAt(me.x, me.y) //
+					.ifPresent(b -> {
+						stage.setCursor(CURSOR_HAND);
+						stage.addBrickToolTip(b, me.x, me.y);
+					});
 		}
 	}
 
@@ -101,8 +108,9 @@ final class StageMouse<D> implements MouseListener, MouseMoveListener, MouseTrac
 		if (me.button == 1) {
 			isMouseDown = true;
 			xPosition = stage.getPositionByX();
+
 		}
-		Optional<Brick<D>> underBrick = stage.brickAt(me.x, me.y);
+		Optional<Brick> underBrick = stage.brickAt(me.x, me.y);
 		if (underBrick.isPresent()) {
 			stage.setCursor(CURSOR_HAND);
 			stage.select(underBrick.get());

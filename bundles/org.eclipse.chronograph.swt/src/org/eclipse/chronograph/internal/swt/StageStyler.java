@@ -37,8 +37,8 @@ public class StageStyler implements Styler {
 
 	@Override
 	public void initClassicTheme() {
-		STAGE_BG_COLOR = new Color(DISPLAY, new RGB(235, 235, 235));
-		STAGE_TOP_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
+		STAGE_BG_COLOR = new Color(DISPLAY, new RGB(253, 254, 254));
+		STAGE_TOP_COLOR = new Color(DISPLAY, new RGB(253, 254, 254));
 		STAGE_TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
 	}
 

@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * 
- * Сonverts {@link Area} to {@link Rectangle}
+ * Converts {@link Area} to {@link Rectangle}
  *
  */
 public final class AreaRectangle implements Function<Area, Rectangle> {

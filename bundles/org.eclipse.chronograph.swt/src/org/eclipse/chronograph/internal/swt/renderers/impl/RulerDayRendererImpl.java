@@ -19,7 +19,6 @@ import java.util.TimeZone;
 
 import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -39,20 +38,25 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
 				- RulerStyler.RULER_YEAR_HEIGHT;
 		int xPosition = 0;
-		gc.setAntialias(SWT.ON);
+		// gc.setAntialias(SWT.ON);
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
 
+		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
+		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
+		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_DAY_HEIGHT);
+
 		while (true) {
-			gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-			gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-			gc.fillGradientRectangle(xPosition, yBottomPosition, width, RulerStyler.RULER_DAY_HEIGHT, true);
-			gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
-			String msg = sdf.format(calendar.getTime());
-			if (xPosition >= bounds.x && width > 10) {
+			if (xPosition >= bounds.x && width > 20) {
+				gc.setForeground(RulerStyler.RULER_TOP_COLOR);
+				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
+
+				gc.drawLine(xPosition, yBottomPosition, xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT);
+				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
+				String msg = sdf.format(calendar.getTime());
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);
 			}
 			xPosition += width;
