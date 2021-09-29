@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class StageStyler implements Styler {
 	private final static Display DISPLAY = Display.getDefault();
+	public static final int DEFAULT_ZOOM_VALUE = 2;
+	public static final int DEFAULT_SCALE_VALUE = 3;
 	private static int STAGE_HEADER_HEIGHT = 30;
 	public static Color STAGE_BG_COLOR;
 	public static Color STAGE_TOP_COLOR;
@@ -48,4 +50,5 @@ public class StageStyler implements Styler {
 		STAGE_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
 		STAGE_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));
 	}
+
 }

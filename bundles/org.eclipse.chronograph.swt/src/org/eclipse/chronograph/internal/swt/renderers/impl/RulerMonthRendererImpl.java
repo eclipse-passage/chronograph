@@ -45,13 +45,13 @@ public class RulerMonthRendererImpl implements ChronographStageRulerRenderer {
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
 
-		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
+		gc.setForeground(RulerStyler.RULER_BORDER_COLOR);
+		gc.setBackground(RulerStyler.RULER_CONTENT_COLOR);
 		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_MOUNTH_HEIGHT);
 		while (true) {
 
 			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
+				gc.setForeground(RulerStyler.RULER_CONTENT_2_COLOR);
 				// grid line
 				String msg = sdf.format(calendar.getTime());
 				if (width < 2) {

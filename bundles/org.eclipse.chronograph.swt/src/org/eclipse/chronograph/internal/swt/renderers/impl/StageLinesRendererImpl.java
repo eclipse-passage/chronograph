@@ -50,22 +50,26 @@ public class StageLinesRendererImpl implements ChronographStageLinesRenderer {
 					&& currentDate.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
 				gc.setForeground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
 				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_TOP);
-				// gc.fillGradientRectangle(xPosition, bounds.y, width, bounds.height, false);
+				gc.fillRectangle(xPosition, bounds.y, width, bounds.height);
 			}
-			// gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-			// gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-			// gc.drawLine(xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT,
-			// xPosition, yBottomPosition);
-
-			if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
-				// grid line
-				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+			gc.setForeground(RulerStyler.RULER_CONTENT_2_COLOR);
+			gc.setLineStyle(SWT.LINE_DOT);
+			if (scale < 2) {
+				if (calendar.get(Calendar.DAY_OF_YEAR) == 1) {
+					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+				}
 			}
-			if (scale > 20) {
-				gc.setForeground(RulerStyler.RULER_BTM_COLOR);
-				gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+			if (scale >= 2) {
+				if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+					gc.setAlpha(200);
+					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+				}
+				if (scale > 20) {
+					gc.setAlpha(100);
+					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+				}
 			}
+			gc.setAlpha(255);
 			xPosition += width;
 			if (xPosition > xMaxPosition) {
 				break;

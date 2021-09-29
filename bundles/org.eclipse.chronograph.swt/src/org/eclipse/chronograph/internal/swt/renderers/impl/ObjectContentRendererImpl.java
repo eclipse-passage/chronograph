@@ -61,10 +61,14 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 	}
 
 	@Override
-	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset) {
+	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset,
+			boolean isSelected) {
 		if (provider instanceof AbstractContentDecorationProvider) {
 			AbstractContentDecorationProvider decoratorProvider = (AbstractContentDecorationProvider) provider;
 			Color contentColor = decoratorProvider.getContentColor(obj.data());
+			if (isSelected) {
+				contentColor = decoratorProvider.getSelectionColor(obj.data());
+			}
 			drawContent(obj, gc, bounds, contentColor);
 		}
 	}

@@ -36,7 +36,6 @@ public class ChronographManagerRenderers {
 	private final ChronographObjectExtRenderer objectExtensionRenderer;
 	private final ChronographObjectLabelRenderer objectLabelRenderer;
 	private final ChronographObjectContentRenderer objectContentRenderer;
-	private final ChronographObjectContentRenderer objectSelectedRenderer;
 	private final ChronographGroupRenderer chronographGroupRenderer;
 	private final List<ChronographStageRulerRenderer> chronographStageRulerRenderers;
 	private final ChronographStageRenderer chronographStageRenderer;
@@ -49,7 +48,6 @@ public class ChronographManagerRenderers {
 		this.objectContentRenderer = new ObjectContentRendererImpl();
 		this.objectLabelRenderer = new ObjectLabelRendererImpl();
 		this.objectExtensionRenderer = new ObjectExtensionRendererImpl();
-		this.objectSelectedRenderer = new ObjectSelectedRendererImpl();
 		this.chronographStageRulerRenderers = new ArrayList<>();
 		this.chronographStageLinesRenderer = new StageLinesRendererImpl();
 		this.chronographStageRulerRenderers.add(new RulerDayRendererImpl());
@@ -93,10 +91,6 @@ public class ChronographManagerRenderers {
 
 	public ChronographSectionRenderer getDrawingSectionPainter() {
 		return sectionPinter;
-	}
-
-	public ChronographObjectContentRenderer getSelectedContentPainter() {
-		return objectSelectedRenderer;
 	}
 
 	public ChronographStageLinesRenderer getStageLinesPainter() {

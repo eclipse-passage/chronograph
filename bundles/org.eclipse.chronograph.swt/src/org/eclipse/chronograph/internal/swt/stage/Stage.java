@@ -28,6 +28,7 @@ import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
 import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
+import org.eclipse.chronograph.internal.api.graphics.Drawing;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Position;
 import org.eclipse.chronograph.internal.base.PositionImpl;
@@ -35,6 +36,7 @@ import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
+import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographToolTipRenderer;
@@ -61,32 +63,25 @@ public final class Stage extends Canvas {
 	private final AreaRectangle areaRectangle;
 
 	private static final int VERTICAL_SCROLLBAR_PAGE_INC = 50;
-	private static final int SCALE_DEF = 3;
-	private static final int ZOOM_DEF = 2;
+
 	private int pX;
 	private int pY;
 	private int pxHint;
 	private int pyHint;
 	private int pMaxHorizontal;
 	private int pMaxVertical;
-
 	private int pXMax;
 	private int pxlHint = 5;
-
-	private List<Brick> bricksSelected;
-
-	private Rectangle boundsGlobal;
+	private List<Drawing> selectedList;
 
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
-
 	private Calculator calculator;
-
 	private int zoom;
 	private int scale;
 
 	private final ChronographManagerRenderers renderers = new ChronographManagerRenderers();
-	private Map<Brick, Position> objectWithToolTips = new HashMap<>();
+	private Map<Drawing, Position> objectWithToolTips = new HashMap<>();
 
 	public Stage(Composite parent) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -95,7 +90,7 @@ public final class Stage extends Canvas {
 	public Stage(Composite parent, int style) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
-		this.bricksSelected = new ArrayList<>();
+		this.selectedList = new ArrayList<>();
 		setLayout(new FillLayout());
 	}
 
@@ -108,8 +103,8 @@ public final class Stage extends Canvas {
 	}
 
 	private void initScale() {
-		scale = SCALE_DEF;
-		zoom = ZOOM_DEF;
+		scale = StageStyler.DEFAULT_SCALE_VALUE;
+		zoom = StageStyler.DEFAULT_ZOOM_VALUE;
 	}
 
 	private void initCalculator() {
@@ -199,9 +194,10 @@ public final class Stage extends Canvas {
 				renderers.getDrawingStagePainter().draw(gc, clientArea);
 				ChronographStageLinesRenderer stageLinesPainter = renderers.getStageLinesPainter();
 				stageLinesPainter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
-				calculator.resetBrickCash();
+				calculator.reset();
+
 				for (Group group : structureProvider.groups()) {
-					drawGroupWithChild(gc, group);
+					drawGroup(gc, group);
 				}
 				for (ChronographStageRulerRenderer painter : renderers.getDrawingRulersPainter()) {
 					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
@@ -209,21 +205,20 @@ public final class Stage extends Canvas {
 				// tooltip
 				if (!objectWithToolTips.isEmpty()) {
 					ChronographToolTipRenderer toolTipRenderer = renderers.getChronographToolTipRenderer();
-					for (Entry<Brick, Position> entry : objectWithToolTips.entrySet()) {
+					for (Entry<Drawing, Position> entry : objectWithToolTips.entrySet()) {
 						String tt = labelProvider.getToolTip(entry.getKey().data());
 						if (tt != null) {
 							toolTipRenderer.draw(gc, entry.getValue(), tt);
 						}
 					}
 				}
-
 			}
 
-			private void drawGroupWithChild(GC gc, Group group) {
+			private void drawGroup(GC gc, Group group) {
 				List<Group> groupsByGroup = structureProvider.getChildGroups(group);
 				if (!groupsByGroup.isEmpty()) {
 					groupsByGroup.forEach(c -> {
-						drawGroupWithChild(gc, c);
+						drawGroup(gc, c);
 					});
 				}
 				List<Brick> bricks = structureProvider.getElementsByGroup(group);
@@ -245,10 +240,6 @@ public final class Stage extends Canvas {
 		return new Rectangle(0, 0, super.getBounds().width, pY);
 	}
 
-	public Rectangle getMainBounds() {
-		return boundsGlobal;
-	}
-
 	void calculateObjectBounds() {
 		calculator.computeBounds(this.getBounds(), zoom);
 	}
@@ -263,7 +254,8 @@ public final class Stage extends Canvas {
 			Area brickArea = calculator.getBrickArea(brick);
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
-				renderers.getContentPainter().draw(decoratorProvider, brick, gc, rectangleArea, pyHint);
+				boolean selection = selectedList.contains(brick);
+				renderers.getContentPainter().draw(decoratorProvider, brick, gc, rectangleArea, pyHint, selection);
 				String label = labelProvider.getText(brick.data());
 				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint,
 						zoom);
@@ -362,19 +354,16 @@ public final class Stage extends Canvas {
 		return calculator.brickAt(x, y);
 	}
 
-	public void select(Brick brick) {
-		List<Brick> markedBriks = new ArrayList<>();
-		for (Brick selectedBrick : bricksSelected) {
-			if (selectedBrick.equals(brick)) {
-				markedBriks.add(selectedBrick);
-			}
-		}
-		if (!markedBriks.isEmpty()) {
-			for (Brick marked : markedBriks) {
-				bricksSelected.remove(marked);
-			}
+	public Optional<Group> groupAt(int x, int y) {
+		return calculator.groupAt(x, y);
+
+	}
+
+	public void select(Drawing object) {
+		if (selectedList.contains(object)) {
+			selectedList.remove(object);
 		} else {
-			bricksSelected.add(brick);
+			selectedList.add(object);
 		}
 		redraw();
 	}
@@ -405,13 +394,9 @@ public final class Stage extends Canvas {
 		handleResize();
 	}
 
-	public void refresh() {
-		// ??? TODO:
-	}
-
 	public void reset() {
-		zoom = 2;
-		scale = 3;
+		zoom = StageStyler.DEFAULT_ZOOM_VALUE;
+		scale = StageStyler.DEFAULT_SCALE_VALUE;
 		updateStageScale();
 		navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusMonths(5)));
 		calculateObjectBounds();
@@ -434,7 +419,7 @@ public final class Stage extends Canvas {
 		this.decoratorProvider = decorationProvider;
 	}
 
-	public void addBrickToolTip(Brick b, int x, int y) {
+	public void setToolTipForObject(Drawing b, int x, int y) {
 		Position p = new PositionImpl(x, y);
 		objectWithToolTips.put(b, p);
 		redraw();
@@ -444,4 +429,5 @@ public final class Stage extends Canvas {
 		objectWithToolTips.clear();
 		redraw();
 	}
+
 }

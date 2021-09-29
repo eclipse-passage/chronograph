@@ -30,9 +30,9 @@ public class RulerStyler implements Styler {
 	public static final int RULER_MOUNTH_HEIGHT = 20;
 	public static final int RULER_YEAR_HEIGHT = 20;
 
-	public static Color RULER_TOP_COLOR;
-	public static Color RULER_BTM_COLOR;
-	public static Color RULER_BRD_COLOR;
+	public static Color RULER_CONTENT_COLOR;
+	public static Color RULER_CONTENT_2_COLOR;
+	public static Color RULER_BORDER_COLOR;
 	public static Color RULER_TEXT_COLOR;
 
 	public static Color RULER_CUREENT_DAY_COLOR_TOP;
@@ -41,9 +41,9 @@ public class RulerStyler implements Styler {
 
 	@Override
 	public void initClassicTheme() {
-		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(253, 254, 254));
-		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(253, 254, 254));
-		RULER_BRD_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
+		RULER_CONTENT_COLOR = new Color(DISPLAY, new RGB(245, 240, 250));
+		RULER_CONTENT_2_COLOR = new Color(DISPLAY, new RGB(240, 220, 250));
+		RULER_BORDER_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(50, 80, 130));
 		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(240, 120, 80));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(220, 220, 220));
@@ -51,9 +51,9 @@ public class RulerStyler implements Styler {
 
 	@Override
 	public void initDarkTheme() {
-		RULER_TOP_COLOR = new Color(DISPLAY, new RGB(106, 155, 164));
-		RULER_BTM_COLOR = new Color(DISPLAY, new RGB(55, 99, 124));
-		RULER_BRD_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
+		RULER_CONTENT_COLOR = new Color(DISPLAY, new RGB(106, 155, 164));
+		RULER_CONTENT_2_COLOR = new Color(DISPLAY, new RGB(55, 99, 124));
+		RULER_BORDER_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(255, 148, 0));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(55, 99, 120));

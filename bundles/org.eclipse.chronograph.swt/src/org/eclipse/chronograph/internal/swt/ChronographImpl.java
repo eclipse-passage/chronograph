@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Composite;
  * The main entry point to the SWT implementation of {@link Chronograph}
  *
  */
-//FIXME: it looks like this type is not really needed
+
 public class ChronographImpl implements Chronograph {
 	private final Stage stage;
 	private final List<Styler> stylers;
@@ -71,16 +71,11 @@ public class ChronographImpl implements Chronograph {
 	}
 
 	@Override
-	public void structure(List<Object> input) {
-		this.input = input;
+	public void structure(List<Object> inputData) {
+		this.input = inputData;
 		this.stage.init();
-		stage.structure(input);
+		stage.structure(this.input);
 		this.stage.navigateToUnit(UnitConverter.localDatetoUnits(LocalDate.now().minusDays(7)));
-	}
-
-	@Override
-	public void refresh() {
-		stage.refresh();
 	}
 
 	public void reset() {

@@ -40,16 +40,17 @@ public class GroupRendererImpl implements ChronographGroupRenderer {
 		int fontHeight = gc.getFontMetrics().getHeight();
 		final Rectangle groupRectangle = new Rectangle(groupBound.x - GroupStyler.getGroupWith(), groupBound.y - hintY,
 				width, groupBound.height);
-		gc.setForeground(GroupStyler.GROUP_TOP_COLOR);
-		gc.setBackground(GroupStyler.GROUP_BTM_COLOR);
+		gc.setForeground(GroupStyler.GROUP_SELECTION_1_COLOR);
+		gc.setBackground(GroupStyler.GROUP_CONTENT_COLOR);
 		gc.setAntialias(SWT.ON);
-		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
-		gc.setBackground(GroupStyler.GROUP_TOP_COLOR);
+
 		gc.fillRoundRectangle(groupRectangle.x, groupRectangle.y, groupRectangle.width, groupRectangle.height, width,
 				width);
+		gc.setForeground(GroupStyler.GROUP_BORDER_COLOR);
 		gc.drawRoundRectangle(groupRectangle.x, groupRectangle.y, groupRectangle.width, groupRectangle.height, width,
 				width);
-		gc.setForeground(GroupStyler.GROUP_BTM_COLOR);
+
+		gc.setForeground(GroupStyler.GROUP_BORDER_COLOR);
 		gc.drawRoundRectangle(groupBound.x, groupBound.y - hintY, groupBound.width, groupBound.height, width, width);
 
 		Point stringExtent = gc.stringExtent(label);
@@ -63,7 +64,6 @@ public class GroupRendererImpl implements ChronographGroupRenderer {
 		gc.setTransform(tr);
 		gc.setForeground(GroupStyler.GROUP_TEXT_COLOR);
 		gc.drawString(msg, -groupRectangle.height + (groupRectangle.height - stringExtent.x) / 2, fontHeight / 2, true);
-
 		tr.dispose();
 		gc.setTransform(null);
 	}

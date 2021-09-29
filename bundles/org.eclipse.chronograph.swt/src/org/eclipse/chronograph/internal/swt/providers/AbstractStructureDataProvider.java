@@ -61,6 +61,13 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 	}
 
 	@Override
+	public List<Brick> getElementsByGroup(Group key) {
+		return getElements(key.data()).stream() //
+				.map(getBrickByObject())//
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<Group> getChildGroups(Group obj) {
 		return group2groups.computeIfAbsent(obj, new Function<Group, List<Group>>() {
 			@Override
@@ -100,13 +107,12 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 		};
 	}
 
-	@Override
-	public List<Brick> getElementsByGroup(Group key) {
-		return getElements(key.data()).stream().map(new Function<Object, Brick>() {
+	private Function<Object, Brick> getBrickByObject() {
+		return new Function<Object, Brick>() {
 			@Override
 			public Brick apply(Object t) {
 				return new BrickImpl(t);
 			}
-		}).collect(Collectors.toList());
+		};
 	}
 }

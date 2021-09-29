@@ -43,8 +43,8 @@ public class RulerYearRendererImpl implements ChronographStageRulerRenderer {
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
 
-		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
+		gc.setForeground(RulerStyler.RULER_BORDER_COLOR);
+		gc.setBackground(RulerStyler.RULER_CONTENT_COLOR);
 		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_YEAR_HEIGHT);
 
 		while (true) {

@@ -12,13 +12,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api.representation;
 
-/**
- * 
- * Interface intended to specify common style.
- * 
- * @deprecated use {@link Style} interface
- */
-@Deprecated
 public interface Styler {
 
 	void initClassicTheme();

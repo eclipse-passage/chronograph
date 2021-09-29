@@ -16,4 +16,12 @@ public interface ContentDecorationProvider {
 	 */
 	int[] getRGBBorderColor(Object obj);
 
+	/**
+	 * s
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	int[] getRGBSelectionColor(Object obj);
+
 }

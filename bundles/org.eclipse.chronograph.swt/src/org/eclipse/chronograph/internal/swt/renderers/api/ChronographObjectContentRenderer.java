@@ -28,6 +28,7 @@ public interface ChronographObjectContentRenderer {
 
 	public void draw(Brick obj, GC gc, Rectangle bounds, int vOffset);
 
-	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset);
+	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset,
+			boolean isSelected);
 
 }

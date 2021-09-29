@@ -30,21 +30,32 @@ public class GroupStyler implements Styler {
 
 	public static final int GROUP_HEIGHT_DEFAULT = 50;
 
-	public static Color GROUP_TOP_COLOR;
-	public static Color GROUP_BTM_COLOR;
+	public static Color GROUP_BORDER_COLOR;
+	public static Color GROUP_CONTENT_COLOR;
 	public static Color GROUP_TEXT_COLOR;
+	public static Color GROUP_SELECTION_COLOR;
+	public static Color GROUP_SELECTION_1_COLOR;
+	public static Color GROUP_SELECTION_2_COLOR;
+	public static Color GROUP_SELECTION_3_COLOR;
+	public static Color GROUP_SHADOW_COLOR;
 
 	@Override
 	public void initClassicTheme() {
-		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
-		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(170, 170, 170));
+		GROUP_BORDER_COLOR = new Color(DISPLAY, new RGB(240, 220, 250));
+		GROUP_CONTENT_COLOR = new Color(DISPLAY, new RGB(170, 170, 170));
 		GROUP_TEXT_COLOR = new Color(DISPLAY, new RGB(10, 10, 10));
+		GROUP_SELECTION_COLOR = new Color(DISPLAY, new RGB(240, 248, 255));
+		GROUP_SELECTION_1_COLOR = new Color(DISPLAY, new RGB(240, 248, 255));
+		GROUP_SELECTION_2_COLOR = new Color(DISPLAY, new RGB(30, 129, 176));
+		GROUP_SELECTION_3_COLOR = new Color(DISPLAY, new RGB(75, 207, 224));
+		GROUP_SHADOW_COLOR = new Color(DISPLAY, new RGB(233, 228, 255));
+
 	}
 
 	@Override
 	public void initDarkTheme() {
-		GROUP_TOP_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
-		GROUP_BTM_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
+		GROUP_BORDER_COLOR = new Color(DISPLAY, new RGB(88, 110, 117));
+		GROUP_CONTENT_COLOR = new Color(DISPLAY, new RGB(0, 100, 117));
 		GROUP_TEXT_COLOR = new Color(DISPLAY, new RGB(253, 246, 227));
 	}
 
@@ -53,10 +64,6 @@ public class GroupStyler implements Styler {
 	}
 
 	public static int getGroupWith() {
-//		FontData[] fontData = Display.getDefault().getSystemFont().getFontData();
-//		if (fontData.length > 0) {
-//			return fontData[0].getHeight();
-//		}
 		return 30;
 	}
 }

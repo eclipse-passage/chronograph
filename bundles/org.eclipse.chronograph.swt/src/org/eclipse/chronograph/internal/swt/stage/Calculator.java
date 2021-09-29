@@ -43,14 +43,12 @@ public class Calculator {
 	private StructureDataProvider provider;
 	private final Map<Group, Area> groupsAreas;
 	private final Map<Brick, Area> bricksAreas;
-	// private final Map<Area, Brick> areaBricks;
 	private PositionDataProvider positionProvider;
 
 	public Calculator(StructureDataProvider provider, PositionDataProvider positionProvider) {
 		this.provider = provider;
 		this.groupsAreas = new HashMap<>();
 		this.bricksAreas = new HashMap<>();
-		// this.areaBricks = new HashMap<>();
 		this.provider = provider;
 		this.positionProvider = positionProvider;
 	}
@@ -75,7 +73,7 @@ public class Calculator {
 	}
 
 	private void computeGroupBounds(Area area, Collection<Group> rootGroups, int margine, int zoom) {
-		int yPosition = area.y();
+		int pY = area.y();
 		for (Group group : rootGroups) {
 			int groupCapacityPx = computeGroupCapacity(group, margine);
 			/*
@@ -83,13 +81,12 @@ public class Calculator {
 			 * title
 			 */
 			if (groupCapacityPx == 0) {
-				// groupCapacityPx = GroupStyler.GROUP_HEIGHT_DEFAULT;
 				continue;
 			}
-			Area groupArea = new AreaImpl(area.x() + GroupStyler.getGroupWith(), yPosition, area.width() * zoom,
+			Area groupArea = new AreaImpl(area.x() + GroupStyler.getGroupWith(), pY, area.width() * zoom,
 					groupCapacityPx);
 			addDrawingArea(group, groupArea);
-			yPosition += groupCapacityPx + margine;
+			pY += groupCapacityPx + margine;
 		}
 
 	}
@@ -122,13 +119,48 @@ public class Calculator {
 				UnitConverter.localDatetoUnits(positionProvider.getStart(brick.data())),
 				UnitConverter.localDatetoUnits(positionProvider.getEnd(brick.data())));
 		brick.setPosition(brickPosition);
-		int pixelWitdh = (int) brickPosition.duration() * hintWidth;
-		int pointX = (int) brickPosition.start() * hintWidth - (hintX * hintWidth);
-		int pointY = area.y() - hintY + shiftY;
-		Area brickArea = new AreaImpl(pointX, pointY, pixelWitdh, BrickStyler.getHeight());
+		int witdhPx = (int) brickPosition.duration() * hintWidth;
+		int pX = (int) brickPosition.start() * hintWidth - (hintX * hintWidth);
+		int pY = area.y() - hintY + shiftY;
+		Area brickArea = new AreaImpl(pX, pY, witdhPx, BrickStyler.getHeight());
 		bricksAreas.put(brick, brickArea);
-		// areaBricks.put(brickArea, brick);
 		return brick;
+	}
+
+	public Optional<Brick> brickAt(int x, int y) {
+		Optional<Brick> result = Optional.empty();
+		Optional<Entry<Brick, Area>> entryArea = bricksAreas.entrySet().stream()//
+				.filter(entry -> {
+					Area area = entry.getValue();
+					if (x >= area.x() && x <= area.x() + area.width()) {
+						if (y >= area.y() && y <= area.y() + area.height()) {
+							return true;
+						}
+					}
+					return false;
+				}).findFirst();
+		if (entryArea.isPresent()) {
+			return Optional.of(entryArea.get().getKey());
+		}
+		return result;
+	}
+
+	public Optional<Group> groupAt(int x, int y) {
+		Optional<Group> result = Optional.empty();
+		Optional<Entry<Group, Area>> entryArea = groupsAreas.entrySet().stream()//
+				.filter(entry -> {
+					Area area = entry.getValue();
+					if (x >= area.x() - GroupStyler.getGroupWith() && x <= area.x()) {
+						if (y >= area.y() && y <= area.y() + area.height()) {
+							return true;
+						}
+					}
+					return false;
+				}).findFirst();
+		if (entryArea.isPresent()) {
+			return Optional.of(entryArea.get().getKey());
+		}
+		return result;
 	}
 
 	private void addDrawingArea(Group group, Area area) {
@@ -143,25 +175,6 @@ public class Calculator {
 		return groupsAreas.get(group);
 	}
 
-	public Optional<Brick> brickAt(int x, int y) {
-		Optional<Brick> result = Optional.empty();
-		Optional<Entry<Brick, Area>> entryArea = bricksAreas.entrySet().stream()//
-				.filter(entry -> {
-					Area area = entry.getValue();
-					if (x >= area.x() && x <= area.x() + area.width()) {
-						if (y >= area.y() && y <= area.y() + area.height()) {
-							System.out.println("Result: " + area.toString()); //$NON-NLS-1$
-							return true;
-						}
-					}
-					return false;
-				}).findFirst();
-		if (entryArea.isPresent()) {
-			return Optional.of(entryArea.get().getKey());
-		}
-		return result;
-	}
-
 	public int getGroupsAreaHeight() {
 		if (provider.groups() == null || provider.groups().isEmpty() || groupsAreas.isEmpty()) {
 			return 0;
@@ -169,7 +182,7 @@ public class Calculator {
 		return provider.groups().stream().map(p -> groupsAreas.get(p)).mapToInt(Area::height).sum();
 	}
 
-	public void resetBrickCash() {
+	public void reset() {
 		bricksAreas.clear();
 	}
 }

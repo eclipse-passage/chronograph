@@ -13,9 +13,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
-import java.util.Optional;
-
-import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -53,6 +50,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 
 		try {
 			// reset tooltip
+			stage.setCursor(CURSOR_NONE);
 			stage.clearToolTips();
 			if (isMouseDown) {
 				if (startPoint == null) {
@@ -87,15 +85,29 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 		if (me.stateMask != 0) {
 			return;
 		}
-		Rectangle mainBounds = stage.getMainBounds();
-		if (mainBounds == null || me.x >= mainBounds.x) {
-
-			stage.brickAt(me.x, me.y) //
-					.ifPresent(b -> {
-						stage.setCursor(CURSOR_HAND);
-						stage.addBrickToolTip(b, me.x, me.y);
-					});
+		if (!isMousePositionInBounds(me)) {
+			return;
 		}
+
+		stage.groupAt(me.x, me.y).ifPresent(g -> {
+			stage.setCursor(CURSOR_HAND);
+			stage.setToolTipForObject(g, me.x, me.y);
+			return;
+		});
+
+		stage.brickAt(me.x, me.y).ifPresent(b -> {
+			stage.setCursor(CURSOR_HAND);
+			stage.setToolTipForObject(b, me.x, me.y);
+		});
+
+	}
+
+	private boolean isMousePositionInBounds(MouseEvent me) {
+		Rectangle mainBounds = stage.getClientArea();
+		if (mainBounds == null || me.x < mainBounds.x) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -110,13 +122,19 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 			xPosition = stage.getPositionByX();
 
 		}
-		Optional<Brick> underBrick = stage.brickAt(me.x, me.y);
-		if (underBrick.isPresent()) {
-			stage.setCursor(CURSOR_HAND);
-			stage.select(underBrick.get());
-		} else {
-			stage.setCursor(CURSOR_NAVIGATION);
+		if (!isMousePositionInBounds(me)) {
+			return;
 		}
+		stage.groupAt(me.x, me.y).ifPresent(g -> {
+			stage.setCursor(CURSOR_HAND);
+			stage.select(g);
+			return;
+		});
+
+		stage.brickAt(me.x, me.y).ifPresent(b -> {
+			stage.setCursor(CURSOR_HAND);
+			stage.select(b);
+		});
 
 	}
 

@@ -45,16 +45,19 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
 
-		gc.setForeground(RulerStyler.RULER_TOP_COLOR);
-		gc.setBackground(RulerStyler.RULER_BTM_COLOR);
-		gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_DAY_HEIGHT);
+		if (scale > 20) {
+			gc.setForeground(RulerStyler.RULER_CONTENT_COLOR);
+			gc.setBackground(RulerStyler.RULER_CONTENT_COLOR);
+			gc.fillRectangle(xPosition, yBottomPosition, bounds.width, RulerStyler.RULER_DAY_HEIGHT);
+		}
 
 		while (true) {
 			if (xPosition >= bounds.x && width > 20) {
-				gc.setForeground(RulerStyler.RULER_TOP_COLOR);
+				gc.setForeground(RulerStyler.RULER_CONTENT_COLOR);
 				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
 
-				gc.drawLine(xPosition, yBottomPosition, xPosition, yBottomPosition + RulerStyler.RULER_DAY_HEIGHT);
+				// gc.drawLine(xPosition, yBottomPosition, xPosition, yBottomPosition +
+				// RulerStyler.RULER_DAY_HEIGHT);
 				gc.setForeground(RulerStyler.RULER_TEXT_COLOR);
 				String msg = sdf.format(calendar.getTime());
 				gc.drawString(msg, xPosition + 4, yBottomPosition + 3, true);

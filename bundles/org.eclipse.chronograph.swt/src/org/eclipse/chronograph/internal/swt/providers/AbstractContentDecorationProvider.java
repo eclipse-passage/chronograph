@@ -13,12 +13,22 @@ public abstract class AbstractContentDecorationProvider implements ContentDecora
 	Map<Integer, Color> colorPallete = new HashMap<>();
 	public static Color CONTENT_DEF_COLOR = new Color(Display.getDefault(), new RGB(220, 220, 220));
 	public static Color BORDER_DEF_COLOR = new Color(Display.getDefault(), new RGB(150, 150, 150));
+	public static Color SELECTION_DEF_COLOR = new Color(Display.getDefault(), new RGB(150, 100, 200));
 
 	public Color getContentColor(Object obj) {
 		int[] RGB = getRGBContentColor(obj);
 		Color contentColor = computeColor(RGB);
 		if (contentColor == null) {
 			contentColor = CONTENT_DEF_COLOR;
+		}
+		return contentColor;
+	}
+
+	public Color getSelectionColor(Object obj) {
+		int[] RGB = getRGBSelectionColor(obj);
+		Color contentColor = computeColor(RGB);
+		if (contentColor == null) {
+			contentColor = SELECTION_DEF_COLOR;
 		}
 		return contentColor;
 	}
