@@ -35,14 +35,15 @@ import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
-import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Rectangle;
 
 public class Calculator {
 	private StructureDataProvider provider;
+	// objects to area
 	private final Map<Group, Area> groupsAreas;
 	private final Map<Brick, Area> bricksAreas;
+
 	private PositionDataProvider positionProvider;
 
 	public Calculator(StructureDataProvider provider, PositionDataProvider positionProvider) {
@@ -54,11 +55,11 @@ public class Calculator {
 	}
 
 	public void computeBounds(Rectangle clientArea, int zoom) {
-		Area frameArea = new AreaImpl(clientArea.x, // x
-				clientArea.y + StageStyler.getStageHeaderHeight(), // y
+		Area frameArea = new AreaImpl(0, // x
+				0, // y
 				clientArea.width, // w
-				clientArea.height - StageStyler.getStageHeaderHeight() - RulerStyler.RULER_DAY_HEIGHT
-						- RulerStyler.RULER_MOUNTH_HEIGHT - RulerStyler.RULER_YEAR_HEIGHT);
+				clientArea.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
+						- RulerStyler.RULER_YEAR_HEIGHT);
 		computeGroups(provider.groups(), frameArea, zoom);
 	}
 
@@ -80,10 +81,7 @@ public class Calculator {
 			 * Shift computed area to right by x on group width to keep left part for group
 			 * title
 			 */
-			if (groupCapacityPx == 0) {
-				continue;
-			}
-			Area groupArea = new AreaImpl(area.x() + GroupStyler.getGroupWith(), pY, area.width() * zoom,
+			Area groupArea = new AreaImpl(area.x() + GroupStyler.getGroupWith(), pY + margine, area.width() * zoom,
 					groupCapacityPx);
 			addDrawingArea(group, groupArea);
 			pY += groupCapacityPx + margine;
@@ -100,15 +98,17 @@ public class Calculator {
 				String msg = NLS.bind("Group {0} should consits of at least one element", group.data().toString()); //$NON-NLS-1$
 				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, msg);
 			} else {
-				return elements.size() * (BrickStyler.getHeight() + BrickStyler.getHeight() / 2)
+				return elements.size() * (BrickStyler.getHeight() + BrickStyler.getHeight() / 2 + margine)
 						+ BrickStyler.getHeight() / 2;
 			}
 		} else {
 			for (Group gr : childGroups) {
-				capacity += (computeGroupCapacity(gr, margine) + margine);
+				capacity += computeGroupCapacity(gr, margine) + margine;
 			}
+			capacity += margine;
 		}
-		return capacity - margine;
+
+		return capacity;
 	}
 
 	public Brick calculateObjectPosition(Brick brick, Area area, int hintX, int hintY, int hintWidth, int shiftY) {
@@ -183,6 +183,6 @@ public class Calculator {
 	}
 
 	public void reset() {
-		bricksAreas.clear();
+		// bricksAreas.clear();
 	}
 }

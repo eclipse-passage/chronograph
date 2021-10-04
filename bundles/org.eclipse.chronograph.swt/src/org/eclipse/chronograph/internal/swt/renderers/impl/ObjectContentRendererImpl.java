@@ -15,11 +15,9 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import java.time.LocalDate;
 
-import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.providers.AbstractContentDecorationProvider;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -35,7 +33,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class ObjectContentRendererImpl<D> implements ChronographObjectContentRenderer {
 
 	@Override
-	public void draw(Brick object, GC gc, Rectangle bounds, int vOffset) {
+	public void draw(Brick object, GC gc, Rectangle bounds) {
 		drawContent(object, gc, bounds, BrickStyler.getColorBottom());
 	}
 
@@ -47,11 +45,13 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 		gc.setBackground(BrickStyler.getColorBottom());
 
 		if (now.isAfter(start) && now.isBefore(end)) {
+			// active task
 			gc.setForeground(color);
 			gc.setBackground(color);
 		} else {
+			// not active
 			gc.setForeground(BrickStyler.getColorTop());
-			gc.setBackground(BrickStyler.getColorBottom());
+			gc.setBackground(BrickStyler.getNonActiveColor());
 		}
 		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
 
@@ -61,15 +61,11 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 	}
 
 	@Override
-	public void draw(ContentDecorationProvider provider, Brick obj, GC gc, Rectangle bounds, int vOffset,
-			boolean isSelected) {
-		if (provider instanceof AbstractContentDecorationProvider) {
-			AbstractContentDecorationProvider decoratorProvider = (AbstractContentDecorationProvider) provider;
-			Color contentColor = decoratorProvider.getContentColor(obj.data());
-			if (isSelected) {
-				contentColor = decoratorProvider.getSelectionColor(obj.data());
-			}
-			drawContent(obj, gc, bounds, contentColor);
+	public void draw(Brick obj, GC gc, Rectangle bounds, Color color) {
+		if (color == null) {
+			draw(obj, gc, bounds);
+		} else {
+			drawContent(obj, gc, bounds, color);
 		}
 	}
 }

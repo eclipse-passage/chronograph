@@ -44,7 +44,7 @@ public abstract class AbstractContentDecorationProvider implements ContentDecora
 
 	private Color computeColor(int[] RGB) {
 		if (RGB.length == 3) {
-			int index = RGB[0] + RGB[1] + RGB[2];
+			int index = RGB[0] * 1000000 + RGB[1] * 1000 + RGB[2];
 			Color color = colorPallete.get(index);
 			if (color == null) {
 				color = new Color(new RGB(RGB[0], RGB[1], RGB[2]));

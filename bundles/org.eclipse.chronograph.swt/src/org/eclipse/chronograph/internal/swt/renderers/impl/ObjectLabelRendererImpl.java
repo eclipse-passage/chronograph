@@ -33,8 +33,7 @@ import org.eclipse.swt.graphics.Rectangle;
 public class ObjectLabelRendererImpl<D> implements ChronographObjectLabelRenderer<D> {
 
 	@Override
-	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int vOffset, int scale,
-			int zoom) {
+	public void drawLabel(String label, Position brickPosition, GC gc, Rectangle objectBounds, int scale, int zoom) {
 		FontMetrics fontMetrics = gc.getFontMetrics();
 		int height = fontMetrics.getHeight();
 		gc.setForeground(StageStyler.STAGE_TEXT_COLOR);

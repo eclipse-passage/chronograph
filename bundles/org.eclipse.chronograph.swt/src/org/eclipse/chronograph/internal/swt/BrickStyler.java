@@ -34,6 +34,7 @@ public class BrickStyler implements Styler {
 	private static Color DEF_BOTTOM_COLOR;
 	private static Color ACTIVE_TOP_COLOR;
 	private static Color ACTIVE_BOTTOM_COLOR;
+	private static Color NON_ACTIVE_COLOR;
 	private static Color SELECTED_TOP_COLOR;
 	private static Color SELECTED_BOTTOM_COLOR;
 	private static Color BORDER_COLOR;
@@ -55,6 +56,7 @@ public class BrickStyler implements Styler {
 		COLOR_CALL_OUT = new Color(DISPLAY, new RGB(100, 100, 100));
 		OVAL_COLOR = new Color(DISPLAY, new RGB(213, 219, 219));
 		DESCR_BCKG_COLOR = new Color(DISPLAY, new RGB(240, 242, 252));
+		NON_ACTIVE_COLOR = new Color(DISPLAY, new RGB(240, 232, 232), 200);
 	}
 
 	@Override
@@ -120,6 +122,10 @@ public class BrickStyler implements Styler {
 
 	public static Color getDescriptionColor() {
 		return DESCR_BCKG_COLOR;
+	}
+
+	public static Color getNonActiveColor() {
+		return NON_ACTIVE_COLOR;
 	}
 
 }

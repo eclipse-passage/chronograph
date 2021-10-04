@@ -28,7 +28,7 @@ public class StageStyler implements Styler {
 	private final static Display DISPLAY = Display.getDefault();
 	public static final int DEFAULT_ZOOM_VALUE = 2;
 	public static final int DEFAULT_SCALE_VALUE = 3;
-	private static int STAGE_HEADER_HEIGHT = 30;
+	private static int STAGE_HEADER_HEIGHT = 10;
 	public static Color STAGE_BG_COLOR;
 	public static Color STAGE_TOP_COLOR;
 	public static Color STAGE_TEXT_COLOR;

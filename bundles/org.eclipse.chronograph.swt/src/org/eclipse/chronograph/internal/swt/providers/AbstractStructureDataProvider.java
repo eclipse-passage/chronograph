@@ -19,7 +19,6 @@ import org.eclipse.chronograph.internal.base.BrickImpl;
 import org.eclipse.chronograph.internal.base.GroupImpl;
 
 public abstract class AbstractStructureDataProvider implements StructureDataProvider {
-
 	private List<Group> rootGroups = new ArrayList<>();
 	private Map<Group, List<Group>> group2groups = new HashMap<>();
 	private Map<Group, List<Brick>> group2elemnt = new HashMap<>();
@@ -31,23 +30,23 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 				.collect(Collectors.toList());
 
 		// created groups by sections
-		getGroupByGroup(rootGroups);
+		structureGroupByGroup(rootGroups);
 
 		// if section as root does not have groups let's find elements
 		for (Entry<Group, List<Group>> entry : group2groups.entrySet()) {
 			if (entry.getValue() == null || entry.getValue().isEmpty()) {
 				// groups does not defined for root let's find elements for it
 				Group key = entry.getKey();
-				group2elemnt.put(key, getElementsByGroup(key));
+				group2elemnt.put(key, structureElementsByGroup(key));
 			} else {
 				entry.getValue().stream().forEach(c -> {
-					group2elemnt.put(c, getElementsByGroup(c));
+					group2elemnt.put(c, structureElementsByGroup(c));
 				});
 			}
 		}
 	}
 
-	private void getGroupByGroup(List<Group> groupElements) {
+	private void structureGroupByGroup(List<Group> groupElements) {
 		groupElements.stream().forEach(p -> {
 			List<Object> childs = getGroups(p.data());
 			if (!childs.isEmpty()) {
@@ -55,23 +54,35 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 						.map(getGroupByObject()) //
 						.collect(Collectors.toList());
 				group2groups.put(p, groups);
-				getGroupByGroup(groups);
+				structureGroupByGroup(groups);
 			}
 		});
 	}
 
-	@Override
-	public List<Brick> getElementsByGroup(Group key) {
+	public List<Brick> structureElementsByGroup(Group key) {
 		return getElements(key.data()).stream() //
 				.map(getBrickByObject())//
 				.collect(Collectors.toList());
 	}
 
 	@Override
+	public List<Brick> getElementsByGroup(Group key) {
+		return group2elemnt.computeIfAbsent(key, new Function<Group, List<Brick>>() {
+			@Override
+			public List<Brick> apply(Group t) {
+				return Collections.emptyList();
+			}
+		});
+//		return getElements(key.data()).stream() //
+//				.map(getBrickByObject())//
+//				.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<Group> getChildGroups(Group obj) {
 		return group2groups.computeIfAbsent(obj, new Function<Group, List<Group>>() {
 			@Override
-			public java.util.List<Group> apply(Group t) {
+			public List<Group> apply(Group t) {
 				return Collections.emptyList();
 			};
 		});

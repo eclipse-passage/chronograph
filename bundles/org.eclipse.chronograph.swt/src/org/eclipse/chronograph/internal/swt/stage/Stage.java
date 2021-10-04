@@ -37,12 +37,14 @@ import org.eclipse.chronograph.internal.swt.AreaRectangle;
 import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.SectionStyler;
 import org.eclipse.chronograph.internal.swt.StageStyler;
+import org.eclipse.chronograph.internal.swt.providers.AbstractContentDecorationProvider;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographToolTipRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -58,7 +60,7 @@ public final class Stage extends Canvas {
 	private StructureDataProvider structureProvider;
 	private PositionDataProvider positionProvider;
 	private LabelDataProvider labelProvider;
-	private ContentDecorationProvider decoratorProvider;
+	private AbstractContentDecorationProvider decoratorProvider;
 
 	private final AreaRectangle areaRectangle;
 
@@ -228,8 +230,15 @@ public final class Stage extends Canvas {
 				}
 				if (area != null) {
 					Rectangle groupRectangle = areaRectangle.apply(area);
-					renderers.getDrawingGroupPainter().draw(gc, labelProvider.getText(group.data()), groupRectangle,
-							getDisplay(), SectionStyler.getSectionWidth(), pyHint);
+					String label = labelProvider.getText(group.data());
+					Color color;
+					if (selectedList.contains(group)) {
+						color = decoratorProvider.getSelectionColor(group.data());
+					} else {
+						color = decoratorProvider.getContentColor(group.data());
+					}
+					renderers.getDrawingGroupPainter().draw(gc, label, groupRectangle, getDisplay(),
+							SectionStyler.getSectionWidth(), pyHint, color);
 				}
 			}
 		});
@@ -237,7 +246,7 @@ public final class Stage extends Canvas {
 
 	@Override
 	public Rectangle getBounds() {
-		return new Rectangle(0, 0, super.getBounds().width, pY);
+		return super.getBounds();
 	}
 
 	void calculateObjectBounds() {
@@ -254,12 +263,16 @@ public final class Stage extends Canvas {
 			Area brickArea = calculator.getBrickArea(brick);
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
-				boolean selection = selectedList.contains(brick);
-				renderers.getContentPainter().draw(decoratorProvider, brick, gc, rectangleArea, pyHint, selection);
+				Color color;
+				if (selectedList.contains(brick)) {
+					color = decoratorProvider.getSelectionColor(brick.data());
+				} else {
+					color = decoratorProvider.getContentColor(brick.data());
+				}
+				renderers.getContentPainter().draw(brick, gc, rectangleArea, color);
 				String label = labelProvider.getText(brick.data());
-				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pyHint, pxlHint,
-						zoom);
-				renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
+				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pxlHint, zoom);
+				// renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
 			}
 			shiftInGroup += (BrickStyler.getHeight() + BrickStyler.getHeight() / 2);
 		}
@@ -416,7 +429,10 @@ public final class Stage extends Canvas {
 	}
 
 	public void setDecoratorProvider(ContentDecorationProvider decorationProvider) {
-		this.decoratorProvider = decorationProvider;
+		if (decorationProvider instanceof AbstractContentDecorationProvider) {
+			this.decoratorProvider = (AbstractContentDecorationProvider) decorationProvider;
+		}
+		// TODO log something
 	}
 
 	public void setToolTipForObject(Drawing b, int x, int y) {
