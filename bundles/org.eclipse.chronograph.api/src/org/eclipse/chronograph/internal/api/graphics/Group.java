@@ -17,6 +17,6 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Group describes typed container with sequence Brick items
  *
  */
-public interface Group extends Drawing {
+public interface Group extends Drawable {
 
 }

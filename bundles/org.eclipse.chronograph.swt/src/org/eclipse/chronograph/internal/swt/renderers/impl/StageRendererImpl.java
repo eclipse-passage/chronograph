@@ -13,8 +13,8 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.StageStyler;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 

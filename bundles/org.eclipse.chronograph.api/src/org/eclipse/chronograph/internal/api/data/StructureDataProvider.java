@@ -18,20 +18,22 @@ import java.util.Optional;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Position;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 /**
  * Not for client implementation use {@link AbstractStructureDataProvider} *
  */
-public interface StructureDataProvider {
+public interface StructureDataProvider extends IStructuredContentProvider {
 
-	public void restructure(List<Object> input);
+	public void restructure(Object[] input);
 
 	// public API
-	public List<Object> getRoots(List<Object> input);
+	public List<Object> getRoots();
 
 	public List<Object> getGroups(Object parent);
 
-	public List<Object> getElements(Object parent);
+	@Override
+	public Object[] getElements(Object parent);
 
 	// internal API
 	public List<Group> groups();

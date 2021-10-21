@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
+import org.eclipse.chronograph.internal.api.graphics.StageObjects;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -35,7 +36,6 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 	private Stage stage;
 	private static final Cursor CURSOR_NONE = new Cursor(Display.getDefault(), SWT.NONE);
 	private static final Cursor CURSOR_HAND = new Cursor(Display.getDefault(), SWT.CURSOR_HAND);
-	private static final Cursor CURSOR_NAVIGATION = new Cursor(Display.getDefault(), SWT.CURSOR_SIZEWE);
 	private Point startPoint;
 	private Tracker tracker;
 	private boolean isMouseDown;
@@ -52,6 +52,7 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 			// reset tooltip
 			stage.setCursor(CURSOR_NONE);
 			stage.clearToolTips();
+			stage.setCursorPosition(me.x, me.y);
 			if (isMouseDown) {
 				if (startPoint == null) {
 					startPoint = new Point(me.x, me.y);
@@ -88,7 +89,6 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 		if (!isMousePositionInBounds(me)) {
 			return;
 		}
-
 		stage.groupAt(me.x, me.y).ifPresent(g -> {
 			stage.setCursor(CURSOR_HAND);
 			stage.setToolTipForObject(g, me.x, me.y);
@@ -127,13 +127,20 @@ final class StageMouse implements MouseListener, MouseMoveListener, MouseTrackLi
 		}
 		stage.groupAt(me.x, me.y).ifPresent(g -> {
 			stage.setCursor(CURSOR_HAND);
-			stage.select(g);
+			if (isMouseDown) {
+				stage.setSelected(StageObjects.GROUP, g);
+			}
+			isMouseDown = false;
 			return;
 		});
 
 		stage.brickAt(me.x, me.y).ifPresent(b -> {
 			stage.setCursor(CURSOR_HAND);
-			stage.select(b);
+			if (isMouseDown) {
+				stage.setSelected(StageObjects.BRICK, b);
+			}
+			isMouseDown = false;
+			return;
 		});
 
 	}

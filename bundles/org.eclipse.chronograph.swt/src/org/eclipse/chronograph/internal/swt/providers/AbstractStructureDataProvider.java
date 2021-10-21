@@ -1,6 +1,7 @@
 package org.eclipse.chronograph.internal.swt.providers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
@@ -24,8 +26,17 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 	private Map<Group, List<Brick>> group2elemnt = new HashMap<>();
 
 	@Override
-	public void restructure(List<Object> input) {
-		rootGroups = getRoots(input).stream() //
+	public void restructure(Object[] objects) {
+		// clear
+		rootGroups.clear();
+		group2groups.clear();
+		group2elemnt.clear();
+		//
+		List<Object> input = Arrays.asList(objects);
+		if (input == null || input.isEmpty()) {
+			input = getRoots();
+		}
+		rootGroups = input.stream() //
 				.map(getGroupByObject()) //
 				.collect(Collectors.toList());
 
@@ -60,7 +71,7 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 	}
 
 	public List<Brick> structureElementsByGroup(Group key) {
-		return getElements(key.data()).stream() //
+		return Stream.of(getElements(key.data())) //
 				.map(getBrickByObject())//
 				.collect(Collectors.toList());
 	}
@@ -73,9 +84,6 @@ public abstract class AbstractStructureDataProvider implements StructureDataProv
 				return Collections.emptyList();
 			}
 		});
-//		return getElements(key.data()).stream() //
-//				.map(getBrickByObject())//
-//				.collect(Collectors.toList());
 	}
 
 	@Override

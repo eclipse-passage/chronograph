@@ -31,10 +31,11 @@ import org.eclipse.chronograph.internal.api.graphics.Position;
 import org.eclipse.chronograph.internal.base.AreaImpl;
 import org.eclipse.chronograph.internal.base.PositionImpl;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.GroupStyler;
-import org.eclipse.chronograph.internal.swt.RulerStyler;
-import org.eclipse.chronograph.internal.swt.SectionStyler;
+import org.eclipse.chronograph.internal.swt.stylers.BrickStyler;
+import org.eclipse.chronograph.internal.swt.stylers.GroupStyler;
+import org.eclipse.chronograph.internal.swt.stylers.RulerStyler;
+import org.eclipse.chronograph.internal.swt.stylers.SectionStyler;
+import org.eclipse.chronograph.internal.swt.stylers.StageStyler;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -47,20 +48,20 @@ public class Calculator {
 	private PositionDataProvider positionProvider;
 
 	public Calculator(StructureDataProvider provider, PositionDataProvider positionProvider) {
-		this.provider = provider;
 		this.groupsAreas = new HashMap<>();
 		this.bricksAreas = new HashMap<>();
 		this.provider = provider;
 		this.positionProvider = positionProvider;
 	}
 
-	public void computeBounds(Rectangle clientArea, int zoom) {
+	public Area computeBounds(Rectangle clientArea, int zoom) {
 		Area frameArea = new AreaImpl(0, // x
-				0, // y
+				StageStyler.getStageHeaderHeight(), // y
 				clientArea.width, // w
 				clientArea.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
 						- RulerStyler.RULER_YEAR_HEIGHT);
 		computeGroups(provider.groups(), frameArea, zoom);
+		return frameArea;
 	}
 
 	private void computeGroups(List<Group> groups, Area area, int zoom) {
@@ -179,10 +180,14 @@ public class Calculator {
 		if (provider.groups() == null || provider.groups().isEmpty() || groupsAreas.isEmpty()) {
 			return 0;
 		}
-		return provider.groups().stream().map(p -> groupsAreas.get(p)).mapToInt(Area::height).sum();
+		return provider.groups().stream() //
+				.map(p -> groupsAreas.get(p)) //
+				.mapToInt(Area::height) //
+				.sum();
 	}
 
-	public void reset() {
-		// bricksAreas.clear();
+	public void restructure() {
+		groupsAreas.clear();
+		bricksAreas.clear();
 	}
 }

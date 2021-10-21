@@ -12,7 +12,7 @@
  *												initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.internal.swt;
+package org.eclipse.chronograph.internal.swt.stylers;
 
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.representation.Styler;

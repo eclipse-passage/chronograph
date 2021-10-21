@@ -18,16 +18,16 @@ import org.eclipse.chronograph.internal.api.graphics.Position;
 
 public class BrickImpl implements Brick {
 
-	private final Object data;
+	private final Object userData;
 	private Position position;
 
 	public BrickImpl(int start, int end, Object data) {
-		this.data = data;
+		this.userData = data;
 		this.position = new PositionImpl(start, end);
 	}
 
 	public BrickImpl(Object t) {
-		this.data = t;
+		this.userData = t;
 		this.position = new PositionImpl(0, 0);
 	}
 
@@ -38,7 +38,7 @@ public class BrickImpl implements Brick {
 
 	@Override
 	public Object data() {
-		return data;
+		return userData;
 	}
 
 	@Override

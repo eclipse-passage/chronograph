@@ -30,4 +30,6 @@ public interface ChronographObjectContentRenderer {
 
 	public void draw(Brick obj, GC gc, Rectangle bounds, Color color);
 
+	void drawSelected(Brick obj, GC gc, Rectangle bounds, Color color, Rectangle grBounds);
+
 }

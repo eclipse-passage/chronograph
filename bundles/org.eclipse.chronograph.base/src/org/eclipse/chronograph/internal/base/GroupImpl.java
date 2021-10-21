@@ -22,15 +22,15 @@ import org.eclipse.chronograph.internal.api.graphics.Group;
  */
 public class GroupImpl implements Group {
 
-	private final Object data;
+	private final Object userData;
 
 	public GroupImpl(Object t) {
-		this.data = t;
+		this.userData = t;
 	}
 
 	@Override
 	public Object data() {
-		return data;
+		return userData;
 	}
 
 }

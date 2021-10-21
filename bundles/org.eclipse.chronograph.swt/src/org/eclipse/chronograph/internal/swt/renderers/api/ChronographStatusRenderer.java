@@ -25,4 +25,6 @@ public interface ChronographStatusRenderer {
 
 	void draw(GC gc, Rectangle bounds, int actual, int expired, int hintY);
 
+	void drawCursorPosition(GC gc, Rectangle bounds, int x, int y);
+
 }

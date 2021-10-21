@@ -13,8 +13,9 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
-import org.eclipse.chronograph.internal.swt.StatusStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStatusRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.StageStyler;
+import org.eclipse.chronograph.internal.swt.stylers.StatusStyler;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -25,6 +26,7 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  */
 public class StatusRendererImpl implements ChronographStatusRenderer {
+	private static final String CURSOR_POSITION = "x: %d  y: %d"; //$NON-NLS-1$
 
 	@Override
 	public void draw(GC gc, Rectangle bounds, int actual, int expired, int hintY) {
@@ -39,6 +41,13 @@ public class StatusRendererImpl implements ChronographStatusRenderer {
 		msg = "Actual: " + actual; //$NON-NLS-1$
 		Point pointActual = gc.stringExtent(msg);
 		gc.drawText(msg, x - pointActual.x - 10, bounds.y + pointActual.y / 2 - hintY, true);
+	}
+
+	@Override
+	public void drawCursorPosition(GC gc, Rectangle bounds, int x, int y) {
+		String msg = String.format(CURSOR_POSITION, x, y);
+		gc.setForeground(StageStyler.STAGE_TEXT_COLOR);
+		gc.drawText(msg, bounds.x + bounds.width - 100, bounds.y - 10, true);
 	}
 
 }

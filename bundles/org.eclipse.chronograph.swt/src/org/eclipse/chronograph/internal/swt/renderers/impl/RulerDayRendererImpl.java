@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.eclipse.chronograph.internal.swt.RulerStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.RulerStyler;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -45,6 +45,8 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
 
+		//
+		// ???
 		if (scale > 20) {
 			gc.setForeground(RulerStyler.RULER_CONTENT_COLOR);
 			gc.setBackground(RulerStyler.RULER_CONTENT_COLOR);
@@ -69,4 +71,5 @@ public class RulerDayRendererImpl implements ChronographStageRulerRenderer {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 	}
+
 }

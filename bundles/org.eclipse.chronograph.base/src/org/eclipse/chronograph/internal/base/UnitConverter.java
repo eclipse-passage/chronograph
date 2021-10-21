@@ -18,7 +18,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class UnitConverter {
 	public static final LocalDate HISTORICAL_TIME = LocalDate.of(2019, 1, 1);
@@ -36,5 +38,16 @@ public class UnitConverter {
 
 	public static LocalDate unitsToLocalDate(long units) {
 		return ChronoUnit.DAYS.addTo(HISTORICAL_TIME, units);
+	}
+
+	public static Calendar unitsToCalendar(int units) {
+		Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+		calendar.clear();
+		calendar.set(Calendar.YEAR, HISTORICAL_TIME.getYear());
+		calendar.set(Calendar.MONTH, HISTORICAL_TIME.getMonthValue() - 1);
+		calendar.set(Calendar.DAY_OF_MONTH, HISTORICAL_TIME.getDayOfMonth());
+		// move to units
+		calendar.add(Calendar.DATE, units);
+		return calendar;
 	}
 }

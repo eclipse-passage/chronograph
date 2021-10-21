@@ -17,8 +17,8 @@ import java.time.LocalDate;
 
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectContentRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.BrickStyler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -56,8 +56,10 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
 
 		gc.setForeground(BrickStyler.getActiveColorTop());
+		gc.setBackground(color);
+		gc.fillOval(bounds.x, bounds.y, bounds.height, bounds.height);
 		gc.setBackground(BrickStyler.getOvalColor());
-		gc.fillOval(bounds.x - bounds.height / 10, bounds.y, bounds.height, bounds.height);
+		gc.fillOval(bounds.x + bounds.width - bounds.height, bounds.y, bounds.height, bounds.height);
 	}
 
 	@Override
@@ -67,5 +69,20 @@ public class ObjectContentRendererImpl<D> implements ChronographObjectContentRen
 		} else {
 			drawContent(obj, gc, bounds, color);
 		}
+	}
+
+	@Override
+	public void drawSelected(Brick object, GC gc, Rectangle bounds, Color color, Rectangle grBounds) {
+		gc.setLineStyle(SWT.LINE_DOT);
+		gc.setForeground(BrickStyler.getColorBorder());
+		gc.setBackground(color);
+		int y1 = bounds.y + bounds.height / 2;
+		int y2 = grBounds.y + grBounds.height;
+		gc.drawLine(bounds.x, y1, bounds.x, y2);
+		gc.drawLine(bounds.x + bounds.width, y1, bounds.x + bounds.width, y2);
+		gc.setAlpha(100);
+		gc.fillRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
+		gc.drawRoundRectangle(bounds.x, bounds.y, bounds.width, bounds.height, bounds.height, bounds.height);
+		gc.setAlpha(250);
 	}
 }

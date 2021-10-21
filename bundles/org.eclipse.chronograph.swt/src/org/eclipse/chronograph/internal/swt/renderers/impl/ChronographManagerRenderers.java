@@ -64,7 +64,7 @@ public class ChronographManagerRenderers {
 		return this.objectLabelRenderer;
 	}
 
-	public List<ChronographStageRulerRenderer> getDrawingRulersPainter() {
+	public List<ChronographStageRulerRenderer> getRulersPainter() {
 		return chronographStageRulerRenderers;
 	}
 

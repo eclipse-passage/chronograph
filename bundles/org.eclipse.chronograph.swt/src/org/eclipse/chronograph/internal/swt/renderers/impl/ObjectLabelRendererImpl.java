@@ -16,9 +16,9 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.graphics.Position;
 import org.eclipse.chronograph.internal.base.UnitConverter;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographObjectLabelRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.BrickStyler;
+import org.eclipse.chronograph.internal.swt.stylers.StageStyler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -48,7 +48,8 @@ public class ObjectLabelRendererImpl<D> implements ChronographObjectLabelRendere
 		if (scale > 1) {
 			msg = String.valueOf(UnitConverter.unitsToLocalDate((int) brickPosition.end()));
 			Point msgExtent = gc.textExtent(msg);
-			gc.drawString(msg, objectBounds.x + objectBounds.width - (msgExtent.x + msgExtent.y),
+			gc.drawString(msg,
+					objectBounds.x + objectBounds.width - (msgExtent.x + msgExtent.y) - objectBounds.height / 2,
 					objectBounds.y + mediana, true);
 		}
 		// gc.setLineStyle(SWT.LINE_SOLID);

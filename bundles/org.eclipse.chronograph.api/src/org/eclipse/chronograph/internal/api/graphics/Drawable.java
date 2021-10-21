@@ -1,6 +1,6 @@
 package org.eclipse.chronograph.internal.api.graphics;
 
-public interface Drawing {
+public interface Drawable {
 
 	/**
 	 * Associated domain object

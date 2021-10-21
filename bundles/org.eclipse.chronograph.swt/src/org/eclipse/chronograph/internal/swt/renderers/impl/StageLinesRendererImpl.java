@@ -16,8 +16,10 @@ package org.eclipse.chronograph.internal.swt.renderers.impl;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.eclipse.chronograph.internal.swt.RulerStyler;
+import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.GroupStyler;
+import org.eclipse.chronograph.internal.swt.stylers.RulerStyler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -35,46 +37,65 @@ public class StageLinesRendererImpl implements ChronographStageLinesRenderer {
 	@Override
 	public void draw(GC gc, Rectangle bounds, int scale, int width, int tiksOffset, int xAxis) {
 		int xMaxPosition = bounds.width + bounds.x;
-		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_DAY_HEIGHT - RulerStyler.RULER_MOUNTH_HEIGHT
+		int yBottomPosition = bounds.y + bounds.height - RulerStyler.RULER_MOUNTH_HEIGHT
 				- RulerStyler.RULER_YEAR_HEIGHT;
-		int xPosition = 0;
-		gc.setAntialias(SWT.ON);
+		int x = bounds.x;
+		int y = bounds.y + GroupStyler.getGroupSeparatorHeight();
+		// gc.setAntialias(SWT.ON);
 		calendar.clear();
 		calendar.set(Calendar.YEAR, 2019);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 01);
 		calendar.add(Calendar.DATE, tiksOffset);
+		Calendar xAxisCalendar = UnitConverter.unitsToCalendar(tiksOffset + (xAxis / width));
 
 		while (true) {
 			if (currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
 					&& currentDate.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
 				gc.setForeground(RulerStyler.RULER_CUREENT_DAY_COLOR_BTM);
 				gc.setBackground(RulerStyler.RULER_CUREENT_DAY_COLOR_TOP);
-				gc.fillRectangle(xPosition, bounds.y, width, bounds.height);
+				gc.setAlpha(100);
+				gc.fillRectangle(x, y, width, bounds.height);
 			}
+
+			if (xAxisCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+					&& xAxisCalendar.get(Calendar.DAY_OF_YEAR) == calendar.get(Calendar.DAY_OF_YEAR)) {
+				gc.setForeground(RulerStyler.RULER_CONTENT_2_COLOR);
+				gc.setBackground(RulerStyler.RULER_CONTENT_2_COLOR);
+				gc.setAlpha(100);
+				gc.fillRectangle(x, y, width, bounds.height);
+			}
+
 			gc.setForeground(RulerStyler.RULER_CONTENT_2_COLOR);
 			gc.setLineStyle(SWT.LINE_DOT);
 			if (scale < 2) {
 				if (calendar.get(Calendar.DAY_OF_YEAR) == 1) {
-					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+					if (x > GroupStyler.getGroupWith()) {
+						gc.drawLine(x, y, x, yBottomPosition);
+					}
 				}
 			}
 			if (scale >= 2) {
 				if (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
-					gc.setAlpha(200);
-					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+					if (x > GroupStyler.getGroupWith()) {
+						gc.setAlpha(200);
+						gc.drawLine(x, y, x, yBottomPosition);
+					}
 				}
 				if (scale > 20) {
-					gc.setAlpha(100);
-					gc.drawLine(xPosition, bounds.y, xPosition, yBottomPosition);
+					if (x > GroupStyler.getGroupWith()) {
+						gc.setAlpha(100);
+						gc.drawLine(x, y, x, yBottomPosition);
+					}
 				}
 			}
 			gc.setAlpha(255);
-			xPosition += width;
-			if (xPosition > xMaxPosition) {
+			x += width;
+			if (x > xMaxPosition) {
 				break;
 			}
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
+
 		}
 	}
 }

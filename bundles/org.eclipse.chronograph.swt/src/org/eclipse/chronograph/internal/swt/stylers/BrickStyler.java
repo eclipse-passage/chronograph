@@ -12,7 +12,7 @@
  *												initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.internal.swt;
+package org.eclipse.chronograph.internal.swt.stylers;
 
 import org.eclipse.chronograph.internal.api.graphics.Brick;
 import org.eclipse.chronograph.internal.api.representation.Styler;
@@ -42,6 +42,7 @@ public class BrickStyler implements Styler {
 	private static Color COLOR_CALL_OUT;
 	private static Color OVAL_COLOR;
 	private static Color DESCR_BCKG_COLOR;
+	private static Color LINES_COLOR;
 
 	@Override
 	public void initClassicTheme() {
@@ -57,6 +58,7 @@ public class BrickStyler implements Styler {
 		OVAL_COLOR = new Color(DISPLAY, new RGB(213, 219, 219));
 		DESCR_BCKG_COLOR = new Color(DISPLAY, new RGB(240, 242, 252));
 		NON_ACTIVE_COLOR = new Color(DISPLAY, new RGB(240, 232, 232), 200);
+		LINES_COLOR = new Color(DISPLAY, new RGB(240, 50, 252));
 	}
 
 	@Override
@@ -126,6 +128,10 @@ public class BrickStyler implements Styler {
 
 	public static Color getNonActiveColor() {
 		return NON_ACTIVE_COLOR;
+	}
+
+	public static Color getLinesColor() {
+		return LINES_COLOR;
 	}
 
 }

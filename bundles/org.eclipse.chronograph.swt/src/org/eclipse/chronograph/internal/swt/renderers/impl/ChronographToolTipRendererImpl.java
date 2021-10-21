@@ -1,8 +1,8 @@
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import org.eclipse.chronograph.internal.api.graphics.Position;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographToolTipRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.BrickStyler;
 import org.eclipse.swt.graphics.GC;
 
 public class ChronographToolTipRendererImpl implements ChronographToolTipRenderer {

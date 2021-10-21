@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.api;
 
-import java.util.List;
-
 import org.eclipse.chronograph.internal.api.data.ContentDecorationProvider;
 import org.eclipse.chronograph.internal.api.data.LabelDataProvider;
 import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
@@ -33,7 +31,9 @@ public interface Chronograph {
 	 * 
 	 * @param types the types to group the input
 	 */
-	void structure(List<Object> types);
+	void structure();
+
+	void setInput(Object[] objects);
 
 	/**
 	 * Applies the given style

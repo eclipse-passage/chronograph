@@ -14,8 +14,8 @@
 package org.eclipse.chronograph.internal.swt.renderers.impl;
 
 import org.eclipse.chronograph.internal.api.graphics.Group;
-import org.eclipse.chronograph.internal.swt.GroupStyler;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographGroupRenderer;
+import org.eclipse.chronograph.internal.swt.stylers.GroupStyler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;

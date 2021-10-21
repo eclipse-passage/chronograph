@@ -13,6 +13,9 @@
  *******************************************************************************/
 package org.eclipse.chronograph.internal.swt.stage;
 
+import java.time.LocalDate;
+
+import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -28,11 +31,14 @@ final class StageWheel implements Listener {
 	@Override
 	public void handleEvent(Event event) {
 		if (event.stateMask == SWT.CTRL) {
+			LocalDate dateTime = stage.computeDateByCursor(event.x);
 			if (event.count > 0) {
 				stage.scaleDown();
 			} else {
 				stage.scaleUp();
 			}
+			stage.navigateToUnit(UnitConverter.localDatetoUnits(dateTime), event.x);
+
 		} else if (event.stateMask == SWT.ALT) {
 			if (event.count > 0) {
 				stage.setZoomLevelDown();

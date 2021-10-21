@@ -12,7 +12,7 @@
  *												initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.chronograph.internal.swt;
+package org.eclipse.chronograph.internal.swt.stylers;
 
 import org.eclipse.chronograph.internal.api.representation.Styler;
 import org.eclipse.swt.graphics.Color;
@@ -41,11 +41,11 @@ public class RulerStyler implements Styler {
 
 	@Override
 	public void initClassicTheme() {
-		RULER_CONTENT_COLOR = new Color(DISPLAY, new RGB(245, 240, 250));
-		RULER_CONTENT_2_COLOR = new Color(DISPLAY, new RGB(234, 170, 0));
+		RULER_CONTENT_COLOR = new Color(DISPLAY, new RGB(193, 195, 199));
+		RULER_CONTENT_2_COLOR = new Color(DISPLAY, new RGB(144, 171, 229));
 		RULER_BORDER_COLOR = new Color(DISPLAY, new RGB(220, 220, 220));
 		RULER_TEXT_COLOR = new Color(DISPLAY, new RGB(50, 80, 130));
-		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(240, 120, 80));
+		RULER_CUREENT_DAY_COLOR_TOP = new Color(DISPLAY, new RGB(214, 38, 67));
 		RULER_CUREENT_DAY_COLOR_BTM = new Color(DISPLAY, new RGB(220, 220, 220));
 	}
 

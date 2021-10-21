@@ -28,20 +28,22 @@ import org.eclipse.chronograph.internal.api.data.PositionDataProvider;
 import org.eclipse.chronograph.internal.api.data.StructureDataProvider;
 import org.eclipse.chronograph.internal.api.graphics.Area;
 import org.eclipse.chronograph.internal.api.graphics.Brick;
-import org.eclipse.chronograph.internal.api.graphics.Drawing;
+import org.eclipse.chronograph.internal.api.graphics.Drawable;
 import org.eclipse.chronograph.internal.api.graphics.Group;
 import org.eclipse.chronograph.internal.api.graphics.Position;
+import org.eclipse.chronograph.internal.api.graphics.StageObjects;
 import org.eclipse.chronograph.internal.base.PositionImpl;
 import org.eclipse.chronograph.internal.base.UnitConverter;
 import org.eclipse.chronograph.internal.swt.AreaRectangle;
-import org.eclipse.chronograph.internal.swt.BrickStyler;
-import org.eclipse.chronograph.internal.swt.SectionStyler;
-import org.eclipse.chronograph.internal.swt.StageStyler;
 import org.eclipse.chronograph.internal.swt.providers.AbstractContentDecorationProvider;
+import org.eclipse.chronograph.internal.swt.providers.AbstractStructureDataProvider;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageLinesRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographStageRulerRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.api.ChronographToolTipRenderer;
 import org.eclipse.chronograph.internal.swt.renderers.impl.ChronographManagerRenderers;
+import org.eclipse.chronograph.internal.swt.stylers.BrickStyler;
+import org.eclipse.chronograph.internal.swt.stylers.SectionStyler;
+import org.eclipse.chronograph.internal.swt.stylers.StageStyler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
@@ -73,8 +75,16 @@ public final class Stage extends Canvas {
 	private int pMaxHorizontal;
 	private int pMaxVertical;
 	private int pXMax;
-	private int pxlHint = 5;
-	private List<Drawing> selectedList;
+	/**
+	 * Day per pixels
+	 * 
+	 */
+	private int pxl2One = 1;
+
+	/**
+	 * 1 pixel to metric
+	 */
+	private int metric = 2; // 1 pixel equal 2 days
 
 	private ScrollBar scrollBarVertical;
 	private ScrollBar scrollBarHorizontal;
@@ -83,7 +93,16 @@ public final class Stage extends Canvas {
 	private int scale;
 
 	private final ChronographManagerRenderers renderers = new ChronographManagerRenderers();
-	private Map<Drawing, Position> objectWithToolTips = new HashMap<>();
+	private Map<Drawable, Position> objectWithToolTips = new HashMap<>();
+	private Map<StageObjects, List<Drawable>> selectedObjects2types = new HashMap<>();
+
+	private Area drawingArea;
+
+	/**
+	 * Cursor position
+	 */
+	private int xCursor;
+	private int yCursor;
 
 	public Stage(Composite parent) {
 		this(parent, SWT.NO_BACKGROUND | SWT.DOUBLE_BUFFERED | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -92,7 +111,6 @@ public final class Stage extends Canvas {
 	public Stage(Composite parent, int style) {
 		super(parent, style);
 		this.areaRectangle = new AreaRectangle();
-		this.selectedList = new ArrayList<>();
 		setLayout(new FillLayout());
 	}
 
@@ -169,7 +187,7 @@ public final class Stage extends Canvas {
 		if (!scrollBarHorizontal.isVisible()) {
 			return;
 		}
-		setPositionByX(scrollBarHorizontal.getSelection() * pxlHint * scale);
+		setPositionByX(scrollBarHorizontal.getSelection() * pxl2One * scale);
 		applyHint();
 		redraw();
 	}
@@ -187,33 +205,37 @@ public final class Stage extends Canvas {
 	}
 
 	public void repaint(PaintEvent event) {
-		Rectangle clientArea = super.getClientArea();
+		Rectangle stageArea = super.getClientArea();
+		Rectangle clientArea = areaRectangle.apply(drawingArea);
 		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				GC gc = event.gc;
-				renderers.getDrawingStagePainter().draw(gc, clientArea);
+				renderers.getDrawingStagePainter().draw(gc, stageArea);
 				ChronographStageLinesRenderer stageLinesPainter = renderers.getStageLinesPainter();
-				stageLinesPainter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
-				calculator.reset();
-
+				// lines
+				stageLinesPainter.draw(gc, clientArea, scale, pxl2One, pxHint, xCursor);
+				// objects
 				for (Group group : structureProvider.groups()) {
 					drawGroup(gc, group);
 				}
-				for (ChronographStageRulerRenderer painter : renderers.getDrawingRulersPainter()) {
-					painter.draw(gc, clientArea, scale, pxlHint, pxHint, pX);
+				// rulers
+				for (ChronographStageRulerRenderer painter : renderers.getRulersPainter()) {
+					painter.draw(gc, stageArea, scale, pxl2One, pxHint, xCursor);
 				}
-				// tooltip
+				// tooltips
 				if (!objectWithToolTips.isEmpty()) {
 					ChronographToolTipRenderer toolTipRenderer = renderers.getChronographToolTipRenderer();
-					for (Entry<Drawing, Position> entry : objectWithToolTips.entrySet()) {
+					for (Entry<Drawable, Position> entry : objectWithToolTips.entrySet()) {
 						String tt = labelProvider.getToolTip(entry.getKey().data());
 						if (tt != null) {
 							toolTipRenderer.draw(gc, entry.getValue(), tt);
 						}
 					}
 				}
+				// cursor position
+				renderers.getDrawingStatusPainter().drawCursorPosition(gc, clientArea, xCursor, yCursor);
 			}
 
 			private void drawGroup(GC gc, Group group) {
@@ -232,7 +254,8 @@ public final class Stage extends Canvas {
 					Rectangle groupRectangle = areaRectangle.apply(area);
 					String label = labelProvider.getText(group.data());
 					Color color;
-					if (selectedList.contains(group)) {
+					if (selectedObjects2types.get(StageObjects.GROUP) != null
+							&& selectedObjects2types.get(StageObjects.GROUP).contains(group)) {
 						color = decoratorProvider.getSelectionColor(group.data());
 					} else {
 						color = decoratorProvider.getContentColor(group.data());
@@ -250,7 +273,7 @@ public final class Stage extends Canvas {
 	}
 
 	void calculateObjectBounds() {
-		calculator.computeBounds(this.getBounds(), zoom);
+		drawingArea = calculator.computeBounds(this.getBounds(), zoom);
 	}
 
 	private void drawSceneObjects(final GC gc, Area area, final Collection<Brick> bricks) {
@@ -259,27 +282,40 @@ public final class Stage extends Canvas {
 		}
 		int shiftInGroup = BrickStyler.getHeight() / 2;
 		for (Brick brick : bricks) {
-			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxlHint, shiftInGroup);
+			calculator.calculateObjectPosition(brick, area, pxHint, pyHint, pxl2One, shiftInGroup);
 			Area brickArea = calculator.getBrickArea(brick);
 			if (brickArea != null) {
 				Rectangle rectangleArea = areaRectangle.apply(brickArea);
+				Rectangle stageRectangle = areaRectangle.apply(drawingArea);
 				Color color;
-				if (selectedList.contains(brick)) {
+				if (selectedObjects2types.get(StageObjects.BRICK) != null
+						&& selectedObjects2types.get(StageObjects.BRICK).contains(brick)) {
 					color = decoratorProvider.getSelectionColor(brick.data());
+					renderers.getContentPainter().drawSelected(brick, gc, rectangleArea, color, stageRectangle);
 				} else {
 					color = decoratorProvider.getContentColor(brick.data());
+					renderers.getContentPainter().draw(brick, gc, rectangleArea, color);
 				}
-				renderers.getContentPainter().draw(brick, gc, rectangleArea, color);
 				String label = labelProvider.getText(brick.data());
-				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pxlHint, zoom);
+				renderers.getLabelPainter().drawLabel(label, brick.position(), gc, rectangleArea, pxl2One, zoom);
 				// renderers.getDurationPainter().drawObjectDuration(brick, gc, pyHint);
 			}
 			shiftInGroup += (BrickStyler.getHeight() + BrickStyler.getHeight() / 2);
 		}
 	}
 
-	public void navigateToUnit(int hint) {
-		pX = hint * pxlHint * scale;
+	public void navigateToUnit(int localDatetoUnits) {
+		pX = localDatetoUnits * pxl2One * scale;
+		applyHint();
+		redraw();
+	}
+
+	public void navigateToUnit(int countDays, int x) {
+		pX = (countDays) * pxl2One * scale;
+		pX = pX - x * pxl2One;
+		if (pX < 0) {
+			pX = 0;
+		}
 		applyHint();
 		redraw();
 	}
@@ -313,24 +349,25 @@ public final class Stage extends Canvas {
 		if (scale <= 0) {
 			scale = 1;
 		}
-		pxlHint = scale;
+		pxl2One = scale;
 	}
 
 	public void scaleUp() {
 		checkWidget();
 		scale--;
 		updateStageScale();
-		redraw();
-		updateScrollers();
-		navigateToUnit(pxHint);
+		// redraw();
+		// updateScrollers();
+		// navigateToUnit(pxHint);
 	}
 
 	public void scaleDown() {
 		checkWidget();
 		scale++;
 		updateStageScale();
-		redraw();
-		navigateToUnit(pxHint);
+		// redraw();
+		// updateScrollers();
+		// navigateToUnit(pxHint);
 	}
 
 	@Override
@@ -360,7 +397,13 @@ public final class Stage extends Canvas {
 	}
 
 	void applyHint() {
-		pxHint = pX / (pxlHint * scale);
+		pxHint = pX / (pxl2One * scale);
+	}
+
+	public LocalDate computeDateByCursor(int cursorPosition) {
+		int localDateTime = cursorPosition / (pxl2One);
+		return UnitConverter.unitsToLocalDate(localDateTime + pxHint);
+
 	}
 
 	public Optional<Brick> brickAt(int x, int y) {
@@ -372,13 +415,15 @@ public final class Stage extends Canvas {
 
 	}
 
-	public void select(Drawing object) {
+	public void setSelected(StageObjects objectType, Drawable object) {
+		List<Drawable> selectedList = selectedObjects2types.computeIfAbsent(objectType, s -> new ArrayList<Drawable>());
 		if (selectedList.contains(object)) {
 			selectedList.remove(object);
 		} else {
 			selectedList.add(object);
 		}
 		redraw();
+
 	}
 
 	public void setZoomLevelDown() {
@@ -402,8 +447,10 @@ public final class Stage extends Canvas {
 		redraw();
 	}
 
-	public void structure(List<Object> input) {
+	public void structure(Object[] input) {
 		structureProvider.restructure(input);
+		calculator.restructure();
+		reset();
 		handleResize();
 	}
 
@@ -435,7 +482,7 @@ public final class Stage extends Canvas {
 		// TODO log something
 	}
 
-	public void setToolTipForObject(Drawing b, int x, int y) {
+	public void setToolTipForObject(Drawable b, int x, int y) {
 		Position p = new PositionImpl(x, y);
 		objectWithToolTips.put(b, p);
 		redraw();
@@ -446,4 +493,16 @@ public final class Stage extends Canvas {
 		redraw();
 	}
 
+	public void setCursorPosition(int x, int y) {
+		xCursor = x;
+		yCursor = y;
+	}
+
+	public Calculator getCalculator() {
+		return calculator;
+	}
+
+	public AbstractStructureDataProvider getStructureProvider() {
+		return (AbstractStructureDataProvider) structureProvider;
+	}
 }

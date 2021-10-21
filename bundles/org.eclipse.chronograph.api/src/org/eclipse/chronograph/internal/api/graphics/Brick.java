@@ -17,7 +17,7 @@ package org.eclipse.chronograph.internal.api.graphics;
  * The Brick describes the drawing element on the stage
  *
  */
-public interface Brick extends Drawing {
+public interface Brick extends Drawable {
 
 	/**
 	 * 
